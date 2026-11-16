@@ -236,3 +236,239 @@ window.PUNGSU_WRITER = {
     },
   },
 };
+
+// English versions of the nine readings above (owner 2026-11-15: 한국어 / ENG toggle). Same shape,
+// same facts and numbers, nothing added. Hand-translated, not generated. Plain words first; the
+// romanized 풍수 terms appear only in the folded "pungsu" section, where the terms are the point.
+window.PUNGSU_WRITER_EN = {
+  gyeongbokgung: {
+    headline: "A well-set home, with Bugaksan behind it and Namsan facing it in front.",
+    good: [
+      "Bugaksan rises behind and gives the home strong support. The back, where the cold winter wind comes from, is sheltered too.",
+      "In front, Namsan faces the home, low, and the space in between is wide and open.",
+      "The home faces south, so the winter sun comes in well. The hills block it for only about 15 minutes.",
+    ],
+    watch: [
+      "The left (east) side is low and open, so it wraps the home less than the right side does.",
+      "The water of Gyeonghoeji doesn't curve toward the home; it runs straight past.",
+    ],
+    sal: {},
+    pungsu: {
+      sides: "In feng shui, the high land behind a home is called hyeonmu, the land in front jujak, and the low hill in front ansan. Here Bugaksan is the hyeonmu and also the main mountain of this land (jusan), and Namsan is the ansan. The land on the left (cheongnyong) is low, and Inwangsan wraps the right (baekho).",
+      ohaeng: "By peak shape, round metal (金) hills (Inwangsan, Gujinbong, Namsan) are the most common, followed by tall, straight wood (木) hills (Bugaksan, Ansan).",
+      giun: {
+        wealth: "Feng shui says wealth stays where water curves around a home, but the water here runs straight. Namsan in front is seen as a hill that holds on to wealth.",
+        health: "The shelter from the wind, which feng shui links to health, is good, and the land is level.",
+        harmony: "The sun comes in well, but the low, open left side tips the balance to one side.",
+        career: "Namsan supports the front and Bugaksan supports the back. The front is a little open.",
+        stability: "The hill behind is high and the cold-wind side is sheltered.",
+      },
+    },
+  },
+  eunma: {
+    headline: "Yangjaecheon curves toward this home, but the back is low and the hill in front is taller.",
+    good: [
+      "On the left (east), Yangjaecheon bends and curves toward the home.",
+    ],
+    watch: [
+      "The rise behind the home is low, so its support is weak, and the back, where the cold winter wind comes from, is open.",
+      "The biggest hill in the area (Daemosan) is in front of the home, not behind it, and the hill in front is taller than the back, so the front feels pressed down.",
+      "Both sides are low and open too.",
+    ],
+    sal: {},
+    pungsu: {
+      sides: "In feng shui, sitting with your back to the main mountain of the land (jusan) is seen as right, but this home faces its jusan, Daemosan. The high land behind (hyeonmu) is low, and Daemosan and Guryongsan in front are taller, which feng shui calls the guest hill pressing down on the host hill. The left (cheongnyong) and right (baekho) are open. Yangjaecheon curves toward the home, which is called hwanpo.",
+      ohaeng: "Daemosan and Guryongsan in front are round metal (金) hills, and on the right there are a pointed fire (火) peak and a wavy water (水) peak.",
+      giun: {
+        wealth: "Feng shui says wealth stays where water curves toward a home, and Yangjaecheon does just that.",
+        health: "The land is level, but the side the cold winter wind comes from is open.",
+        harmony: "Both sides are open, with no land wrapping around the home.",
+        career: "The hill in front is taller than the back, and the home sits facing the main mountain.",
+        stability: "The back is low, the home faces the main mountain, and the cold-wind side is open.",
+      },
+    },
+  },
+  mokdong7: {
+    headline: "A low hill faces this home in front, but the back and both sides are open, so the wind comes in.",
+    good: [
+      "In front (south), Galsan faces the home, low.",
+      "The home faces south, so the winter sun comes in well. The hills block it for only about 10 minutes.",
+    ],
+    watch: [
+      "The high land behind the home is far away, so its support is weak, and the back, where the cold winter wind comes from, is open.",
+      "Both sides are low and open too.",
+    ],
+    sal: {
+      bangung: { line: "On the left (east), Anyangcheon doesn't curve around the home; it bends away from it.",
+                 bibo: "Plant a row of trees or put up a fence on the side facing the water." },
+    },
+    pungsu: {
+      sides: "Bongjesan, the main mountain of this land (jusan), is behind the home, so the home sits in line with the land. But the high land behind (hyeonmu) is far and low. Galsan in front is the ansan (the low hill in front). The left (cheongnyong) and right (baekho) are open. Anyangcheon bends away from the home (bangungsu), so there is one thing to watch: bangungsu-sal.",
+      ohaeng: "Bongjesan and Yongwangsan behind and Galsan in front are round metal (金) hills, Galtanbong is a wavy water (水) peak, and on the right there is a flat earth (土) peak.",
+      giun: {
+        wealth: "The ansan in front is seen as a hill that holds on to wealth, but the water bends away, which feng shui says is not the shape where wealth stays.",
+        health: "The land is level, but the cold-wind side is open and the water bends away.",
+        harmony: "The sun comes in well, but both sides are open.",
+        career: "There is an ansan, and the land behind gives support. The front is wide open.",
+        stability: "There is land behind, but the cold-wind side is open.",
+      },
+    },
+  },
+  wolgok_highway: {
+    headline: "The back is sheltered from the cold wind, but an overpass and a big road are close to this home.",
+    good: [
+      "The high land behind supports the home, and the back, where the cold winter wind comes from, is sheltered.",
+      "In front (southeast), Cheonjangsan faces the home, low.",
+    ],
+    watch: [
+      "The biggest hill in the area (Cheonjangsan) is in front of the home, not behind it. Feng shui sees it as right to have the big hill at your back.",
+      "Both sides are low and open.",
+      "The home doesn't face south, so less winter sun comes in, and the hills block it for about 55 minutes.",
+    ],
+    sal: {
+      nochung: { line: "Hwarang-ro, 40 m in front, runs straight at the home.",
+                 bibo: "Put two tall plant pots, or a low wall or flower bed, in front of the door, and if you can, turn the door's direction a little." },
+      bangung: { line: "On the right (southwest), Jeongneungcheon doesn't curve around the home; it bends away from it.",
+                 bibo: "Plant a row of trees or put up a fence on the side facing the water." },
+      overpass: { line: "The Bukbu Expressway overpass passes as close as 18 m.",
+                  bibo: "A thick hedge or a screen in front helps." },
+    },
+    pungsu: {
+      sides: "In feng shui, it is right to have the main mountain of the land (jusan) at your back, but this home faces its jusan, Cheonjangsan. Cheonjangsan is also the ansan (the low hill in front). The high land behind (hyeonmu) gives support, but the left (cheongnyong) and right (baekho) are low and open. Things to watch: a road aimed straight at the home (nochung-sal), water bending away (bangungsu-sal), and an overpass or bridge pressing in.",
+      ohaeng: "Cheonjangsan, Gaeunsan and the peaks behind are mostly flat earth (土), with one round metal (金) peak behind.",
+      giun: {
+        wealth: "The ansan is seen as a hill that holds on to wealth, but the water bends away and a road comes straight at the home.",
+        health: "The cold-wind side is sheltered and the land is level, but the road, the overpass and the water bending away are things to watch.",
+        harmony: "Both sides are open and less winter sun comes in.",
+        career: "There is an ansan, but the home sits facing the main mountain.",
+        stability: "The land behind supports it and the cold-wind side is sheltered, but it faces the main mountain.",
+      },
+    },
+  },
+
+  us_filoli: {
+    headline: "A big mountain backs this home and water curves toward it, but the left side is a little low.",
+    good: [
+      "Behind (southwest), a big ridge rises and gives the home strong support. The back left, where the cold winter wind comes from, is sheltered too.",
+      "Water nearby bends and curves toward the home, and a low hill faces it in front, just right.",
+    ],
+    watch: [
+      "The left (northwest) side is low, so it wraps the home less.",
+      "The home doesn't face the sun, so less winter sun comes in, and the hills block it for about 85 minutes.",
+    ],
+    sal: {},
+    pungsu: {
+      sides: "Kings Mountain is behind, and the high land behind (hyeonmu) rises 549 m. The main mountain of this land (jusan) is behind the home, so the direction fits too. There is an ansan (a low hill in front), and the water is hwanpo (curving toward the home). But the left side (cheongnyong) is low.",
+      ohaeng: "A pointed fire (火) peak and the round metal (金) Kings Mountain stand out behind, and in front there are wavy water (水) and flat earth (土) peaks.",
+      giun: {
+        wealth: "Feng shui says wealth stays when water curves toward the home and there is an ansan in front, and that is the case here.",
+        health: "The cold-wind side is sheltered and the land is level.",
+        harmony: "The left side is low and a little less winter sun comes in.",
+        career: "There is both a big mountain behind and an ansan in front.",
+        stability: "A big mountain backs the home and the cold-wind side is sheltered.",
+      },
+    },
+  },
+  us_glenmont: {
+    headline: "The high land behind supports this home and the cold wind is blocked, but the right side is open.",
+    good: [
+      "The land behind (southwest) is high and supports the home.",
+      "On the left (northwest), where the cold winter wind comes from, the land wraps around and blocks it.",
+    ],
+    watch: [
+      "The right (southeast) side is low and open.",
+      "The front is open, with no low hill facing the home.",
+      "The home doesn't face the sun, so less winter sun comes in, and it is blocked for about 40 minutes.",
+    ],
+    sal: {},
+    pungsu: {
+      sides: "The high land behind (hyeonmu) rises 99 m and gives support, and the left (cheongnyong) wraps around. The right (baekho) is open, and there is no ansan (low hill in front) in the land in front (jujak). The area around is level, so there is no main mountain (jusan), and the home's direction is read from the door. Second River, 109 m to the left, runs straight.",
+      ohaeng: "There are no standout peaks around.",
+      giun: {
+        wealth: "The water runs straight, so it doesn't wrap around the home.",
+        health: "The cold-wind side is sheltered and the land is level.",
+        harmony: "The right side is open and a little less winter sun comes in.",
+        career: "The land behind gives support, but the front is open.",
+        stability: "The land behind supports it and the cold-wind side is sheltered.",
+      },
+    },
+  },
+  us_mount_vernon: {
+    headline: "Water curves toward this home, but it is open on all sides and takes the wind head-on.",
+    good: [
+      "Water close behind (southeast) bends and curves toward the home.",
+      "No hills block the winter sun.",
+    ],
+    watch: [
+      "The front (northwest), where the cold winter wind comes from, is open.",
+      "The land behind is low, and both sides are open, with no land wrapping around the home.",
+    ],
+    sal: {},
+    pungsu: {
+      sides: "The high land behind (hyeonmu) is low, the land in front (jujak) is wide open, and there is no ansan (low hill in front). The left (cheongnyong) and right (baekho) are open too. The area around is level, so there is no main mountain (jusan). The water is hwanpo (curving toward the home).",
+      ohaeng: "There are no standout peaks around.",
+      giun: {
+        wealth: "Feng shui says wealth stays where water curves toward a home, and the water here does that.",
+        health: "The land is level, but the cold-wind side is open.",
+        harmony: "Nothing blocks the sun, but both sides are open.",
+        career: "The front is open and the land behind is low.",
+        stability: "The back is low and the cold-wind side is open.",
+      },
+    },
+  },
+  us_hearst: {
+    headline: "Water curves toward this home, but it is open on all sides and sits at an angle to the land.",
+    good: [
+      "On the left (south), Arryo del Puerto bends and curves toward the home.",
+      "There is high land behind (east).",
+    ],
+    watch: [
+      "The biggest hill in the area is beside the home, not behind it, so the home sits at an angle to the land.",
+      "The front and both sides are open, and the left (southeast), where the cold winter wind comes from, is open too.",
+      "The home doesn't face the sun, so less winter sun comes in.",
+    ],
+    sal: {},
+    pungsu: {
+      sides: "In feng shui, it is right to have the main mountain of the land (jusan) at your back, but here the jusan is to the side. The high land behind (hyeonmu) rises 108 m, but the land in front (jujak) is open and there is no ansan (low hill in front). The left (cheongnyong) and right (baekho) are open too. The water is hwanpo (curving toward the home).",
+      ohaeng: "There is a flat earth (土) peak on the left and a pointed fire (火) peak behind.",
+      giun: {
+        wealth: "Feng shui says wealth stays where water curves toward a home, and Arryo del Puerto does that.",
+        health: "The land is level, but the cold-wind side is open.",
+        harmony: "Both sides are open.",
+        career: "The land behind gives support, but the front is open.",
+        stability: "There is land behind, but the cold-wind side is open.",
+      },
+    },
+  },
+  us_fallingwater: {
+    headline: "Hills wrap the back and both sides of this home, but Bear Run flows right under it.",
+    good: [
+      "The land behind and on both sides is high, so it wraps the home like a chair with a back and armrests.",
+      "The front (north), where the cold winter wind comes from, is sheltered too.",
+    ],
+    watch: [
+      "The front is closed in, close by.",
+      "The home doesn't face the sun, so less winter sun comes in, and the hills block it for about 75 minutes.",
+      "The ground around the home slopes.",
+    ],
+    sal: {
+      dead_end: { line: "There is a dead-end street 26 m away.",
+                  bibo: "Put lights and plant pots at the entrance to the lane." },
+      eumseup: { line: "Bear Run flows at almost the same height as the home, and most of the land around is higher than the home, so the ground is damp.",
+                 bibo: "Check the drains and gutters, and slope the soil around the home away from it. Dry the air with a dehumidifier and cross-breezes, and before the rainy season check the backflow protection and the low windows and vents." },
+      halgak: { line: "Bear Run flows right under the home.",
+                bibo: "Check every year that the water isn't wearing away the foundation and retaining walls, and dry out the damp under the home and on the walls facing the water. Put bedrooms on the side away from the water." },
+    },
+    pungsu: {
+      sides: "The high land behind (hyeonmu) rises 295 m, and the left (cheongnyong) and right (baekho) both wrap around. The land in front (jujak) is closed in close by, and there is no ansan (low hill in front). There is no separate main mountain (jusan) around, so the home's direction is read from the door. Things to watch: a dead-end lane, damp ground (eumseup-sal), and water passing under the home (halgaksu-sal).",
+      ohaeng: "There are no standout peaks around.",
+      giun: {
+        wealth: "The water runs straight and there is water close behind the home too, so it isn't the shape feng shui sees as wealth staying.",
+        health: "The cold-wind side is sheltered, but the slope, the water and the damp are things to watch.",
+        harmony: "Both sides wrap around, but less winter sun comes in.",
+        career: "The land behind is high, but the front is closed in close by.",
+        stability: "The land behind is high and the cold-wind side is sheltered.",
+      },
+    },
+  },
+};
