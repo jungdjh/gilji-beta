@@ -4,7 +4,7 @@
 <meta name="robots" content="noindex, nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>길지 Gilji · 베타</title>
+<title>길지 Gilji · 클로즈드 베타</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -278,6 +278,81 @@ details.card[open] > summary { margin-bottom: 14px; }
 @keyframes glide { 0%,100% { transform: translate(0,0) rotate(-4deg); } 50% { transform: translate(-6px,-10px) rotate(3deg); } }
 .tip .who .char { animation: glide 3.2s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .think, .pop, .rise, .flap, .hero .duo .char:first-child, .tip .who .char { animation: none !important; } .pc-img img { transition: none; } }
+
+/* Zillow lessons (Nov 16): media first, big key facts, save/share, jump tabs, a thumb-reach action dock */
+.hero-media { position: relative; margin: 4px 0 0; border-radius: 22px; overflow: hidden; aspect-ratio: 16 / 10; background: #e9ecef; box-shadow: var(--shadow); }
+.hero-media img { width: 100%; height: 100%; object-fit: cover; display: block; animation: kenburns 14s ease-out both; }
+@keyframes kenburns { from { transform: scale(1.08); } to { transform: scale(1); } }
+.hero-media em { position: absolute; left: 12px; bottom: 8px; font-style: normal; font-size: 10px; color: rgba(255,255,255,.9); text-shadow: 0 1px 2px rgba(0,0,0,.55); }
+.sum-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.sum-actions { display: flex; gap: 8px; flex: none; }
+.icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 0; background: #f2f4f6; color: var(--ink-2); display: grid; place-items: center; }
+.icon-btn.on { color: var(--accent); background: var(--accent-soft); }
+.icon-btn.beat { animation: beat .45s ease; }
+@keyframes beat { 30% { transform: scale(1.25); } 60% { transform: scale(.92); } }
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); margin: 14px 0 4px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.facts div { text-align: center; }
+.facts div + div { border-left: 1px solid var(--line); }
+.facts b { display: block; font-size: 20px; font-weight: 800; letter-spacing: -.5px; line-height: 1.3; }
+.facts span { font-size: 11.5px; color: var(--ink-3); }
+.jump { position: sticky; top: 64px; z-index: 4; display: flex; gap: 6px; margin: 14px -16px 0; padding: 8px 16px; background: rgba(245,246,248,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); overflow-x: auto; }
+.jump a { flex: 1; text-align: center; white-space: nowrap; text-decoration: none; color: var(--ink-2); font-weight: 700; font-size: 14px; background: var(--card); border-radius: 99px; padding: 8px 12px; box-shadow: var(--shadow); }
+.jump a:active { background: var(--accent-soft); color: var(--accent); }
+#sec-sum, #sec-land, #sec-reading, #sec-ask { scroll-margin-top: 124px; }
+#report.has-dock { padding-bottom: 92px; }
+.dock { position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; z-index: 6; width: 100%; max-width: 460px; display: grid; grid-template-columns: 1fr; gap: 8px;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: rgba(255,255,255,.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 -4px 20px rgba(25,31,40,.08); animation: dockup .5s cubic-bezier(.2,.8,.2,1) both .4s; }
+@keyframes dockup { from { transform: translate(-50%, 100%); } to { transform: translate(-50%, 0); } }
+.dock .btn { padding: 13px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.25; }
+.dock .btn small { font-size: 11px; font-weight: 500; opacity: .85; }
+#toast { position: fixed; left: 50%; bottom: 96px; transform: translate(-50%, 20px); opacity: 0; z-index: 20; background: rgba(25,31,40,.92); color: #fff; font-size: 14px; padding: 10px 16px; border-radius: 12px; max-width: 86vw; text-align: center; transition: opacity .25s, transform .25s; pointer-events: none; }
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+@media (prefers-reduced-motion: reduce) { .hero-media img, .dock, .icon-btn.beat { animation: none !important; } }
+
+/* 좋은 점 / 아쉬운 점 tabs */
+.pros { margin-top: 16px; }
+.pc-tabs { display: grid; grid-template-columns: 1fr 1fr; background: #f2f4f6; border-radius: 12px; padding: 4px; gap: 4px; }
+.pc-tabs button { border: 0; background: transparent; border-radius: 9px; padding: 9px 6px; font-weight: 700; font-size: 14px; color: var(--ink-3); transition: background .2s, color .2s; }
+.pc-tabs button[aria-selected="true"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 4px rgba(25,31,40,.08); }
+.pc-tabs i { font-style: normal; font-size: 12px; margin-left: 4px; color: var(--accent); }
+.pc-tabs button[data-t="good"] i { color: var(--sage); }
+.pc-list { list-style: none; margin: 12px 2px 0; padding: 0; display: grid; gap: 8px; animation: rise .35s ease both; }
+.pc-list li { position: relative; padding-left: 28px; font-size: 15px; line-height: 1.5; }
+.pc-list li::before { position: absolute; left: 0; top: 1px; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 800; }
+.pc-list li.good::before { content: "✓"; background: var(--sage-soft); color: var(--sage); }
+.pc-list li.weak::before { content: "!"; background: var(--accent-soft); color: var(--accent); }
+.pc-list li.none { padding-left: 0; color: var(--ink-3); font-size: 14px; }
+.pc-note { font-size: 12px; color: var(--ink-3); margin: 10px 2px 0; }
+
+/* floating 터주 button + chat sheet (Zillow's "Ask Zillow") */
+.ask-card .ask-row { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; margin-bottom: 12px; }
+.ask-card .ask-row p { margin: 2px 0 0; font-size: 14px; color: var(--ink-2); }
+.fab { position: fixed; right: max(16px, calc(50% - 214px)); bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 7; border: 0; border-radius: 99px; background: var(--card);
+  box-shadow: 0 6px 20px rgba(25,31,40,.18); padding: 4px 14px 4px 4px; display: flex; align-items: center; gap: 4px; font-weight: 800; color: var(--accent); animation: fabin .6s cubic-bezier(.34,1.56,.64,1) both 1s; }
+.fab .char { height: 44px !important; }
+.fab::after { content: ""; position: absolute; inset: -4px; border-radius: 99px; border: 2px solid var(--accent); opacity: 0; animation: ring 2.4s ease-out 1.8s 2; }
+@keyframes fabin { from { transform: scale(0) rotate(-20deg); } to { transform: none; } }
+@keyframes ring { 0% { opacity: .6; transform: scale(.95); } 100% { opacity: 0; transform: scale(1.25); } }
+.chat-sheet { position: fixed; inset: 0; z-index: 30; visibility: hidden; }
+.chat-sheet.open { visibility: visible; }
+.cs-backdrop { position: absolute; inset: 0; background: rgba(25,31,40,.38); opacity: 0; transition: opacity .25s; }
+.chat-sheet.open .cs-backdrop { opacity: 1; }
+.cs-panel { position: absolute; left: 50%; bottom: 0; width: 100%; max-width: 460px; height: min(82vh, 680px); transform: translate(-50%, 100%); transition: transform .35s cubic-bezier(.2,.8,.2,1);
+  background: var(--card); border-radius: 24px 24px 0 0; overflow-y: auto; padding-bottom: env(safe-area-inset-bottom); }
+.chat-sheet.open .cs-panel { transform: translate(-50%, 0); }
+.cs-grab { width: 40px; height: 5px; border-radius: 3px; background: var(--line); margin: 10px auto 0; }
+.cs-x { position: absolute; right: 12px; top: 10px; width: 36px; height: 36px; border-radius: 50%; border: 0; background: #f2f4f6; color: var(--ink-2); font-size: 15px; }
+.cs-panel { display: flex; flex-direction: column; overflow: hidden; }
+.cs-panel .card.chat { box-shadow: none; margin: 0; border-radius: 0; padding-top: 14px; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.cs-panel .card.chat h2 { padding-right: 44px; }
+.cs-panel #chat-msgs { flex: 1; min-height: 0; overflow-y: auto; align-content: start; padding: 2px 2px 8px; }
+.cs-x { z-index: 2; }
+.chat .hi { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: end; margin-top: 8px; }
+body.noscroll { overflow: hidden; }
+#report.has-dock .fab { bottom: calc(86px + env(safe-area-inset-bottom)); }
+.chat .a ul { margin: 6px 0 2px; padding-left: 18px; }
+.chat .a li { margin: 3px 0; }
+@media (prefers-reduced-motion: reduce) { .fab, .fab::after, .pc-list { animation: none !important; } .cs-panel, .cs-backdrop { transition: none; } }
 </style>
 </head>
 <body>
@@ -292,7 +367,7 @@ details.card[open] > summary { margin-bottom: 14px; }
       <b>길지</b><span class="en hidden" id="brand-en">Gilji</span>
     </button>
     <div class="bar-right">
-      <span class="demo-tag" data-i18n="tag">베타 · 초대 전용</span>
+      <span class="demo-tag" data-i18n="tag">클로즈드 베타 · 초대 전용</span>
       <div class="lang" role="group" aria-label="언어 / Language" id="lang">
         <button type="button" data-lang="ko" lang="ko" aria-pressed="true">한국어</button>
         <button type="button" data-lang="en" lang="en" aria-pressed="false">ENG</button>
@@ -321,8 +396,8 @@ details.card[open] > summary { margin-bottom: 14px; }
     <div class="section-label" data-i18n="how">이용 방법 (가격은 시험 중이에요)</div>
     <div class="ladder">
       <div><b data-i18n="free">무료</b><span data-i18n="free2">점수·등급<br>오늘의 박씨</span></div>
-      <div><b data-i18n="full">전체 해설</b><span data-i18n="full2">한눈에 보는 해설<br>우리 집 보완법</span><em>$1</em></div>
-      <div><b data-i18n="cmp">집 비교</b><span data-i18n="cmp2">2~3곳을<br>나란히</span><em>$1</em></div>
+      <div><b data-i18n="full">전체 해설</b><span data-i18n="full2">한눈에 보는 해설<br>우리 집 보완법</span><em data-i18n="price">$1</em></div>
+      <div><b data-i18n="cmp">집 비교</b><span data-i18n="cmp2">2~3곳을<br>나란히</span><em data-i18n="price">$1</em></div>
     </div>
 
     <p class="disclaimer"><button class="btn ghost small" id="open-about" data-i18n="about">길지는 어떻게 읽나요?</button></p>
@@ -477,8 +552,8 @@ const MONTHS = ["January", "February", "March", "April", "May", "June", "July", 
 
 // the fixed text in the page markup (data-i18n="key"); Korean is in the HTML itself
 const STATIC = {
-  title: { ko: "길지 Gilji · 베타", en: "Gilji 길지 · Beta" },
-  tag: { ko: "베타 · 초대 전용", en: "Beta · invite only" },
+  title: { ko: "길지 Gilji · 클로즈드 베타", en: "Gilji 길지 · Closed beta" },
+  tag: { ko: "클로즈드 베타 · 초대 전용", en: "Closed beta · invite only" },
   home: { ko: "처음으로", en: "Home" },
   h1: { ko: "우리 집의 기운을<br>읽어 드려요", en: "We read the energy<br>of your home" },
   lead: { ko: "뒷산과 물길, 바람길로 집터를 쉬운 말로 읽어 드려요", en: "From the hills behind, the water and the wind, we read your home's land in plain words" },
@@ -486,7 +561,10 @@ const STATIC = {
   addr: { ko: "주소", en: "Address" },
   go: { ko: "보기", en: "Go" },
   nine: { ko: "이런 곳은 어떻게 읽힐까요?", en: "How do these places read?" },
-  how: { ko: "이용 방법 (가격은 시험 중이에요)", en: "How it works (prices are still being tested)" },
+  how: (window.GILJI_CONFIG || {}).beta
+    ? { ko: "이용 방법 (베타 테스터는 모두 무료예요)", en: "How it works (all free for beta testers)" }
+    : { ko: "이용 방법 (가격은 시험 중이에요)", en: "How it works (prices are still being tested)" },
+  price: (window.GILJI_CONFIG || {}).beta ? { ko: "무료", en: "Free" } : { ko: "$1", en: "$1" },
   free: { ko: "무료", en: "Free" },
   free2: { ko: "점수·등급<br>오늘의 박씨", en: "Score · grade<br>Today's tip" },
   full: { ko: "전체 해설", en: "Full reading" },
@@ -523,12 +601,15 @@ const store = {
   set(k, v) { try { localStorage.setItem("pungsu." + k, JSON.stringify(v)); } catch (_) {} },
 };
 let unlocked = new Set(store.get("unlocked", []));
+// closed beta (config.js beta: true): every reading is open to the testers; no paywall anywhere
+const BETA_FREE = !!(window.GILJI_CONFIG || {}).beta;
 let dayOffset = 0;   // demo only: "내일 미리 보기" moves the tip date forward
 let current = null;
 let screen = "home";
 
 function show(id) {
   screen = id;
+  document.body.classList.remove("noscroll");
   ["home", "reading", "report", "compare"].forEach((s) => $(s).classList.toggle("hidden", s !== id));
   if (id === "home") renderSavedTip();
   if (id === "report" && leafMap) setTimeout(() => leafMap.invalidateSize(), 50);
@@ -564,6 +645,13 @@ function renderHome() {
 }
 renderHome();
 riseIn("home");
+function toast(msg) {
+  let t = document.getElementById("toast");
+  if (!t) { t = document.createElement("div"); t.id = "toast"; t.setAttribute("role", "status"); document.body.appendChild(t); }
+  t.textContent = msg; t.classList.remove("show"); void t.offsetWidth; t.classList.add("show");
+  clearTimeout(toast.timer); toast.timer = setTimeout(() => t.classList.remove("show"), 2400);
+}
+{ const m = location.hash.match(/^#p=([a-z_]+)$/); if (m && ORDER.includes(m[1])) setTimeout(() => read(m[1]), 0); }
 $("samples").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) read(b.dataset.id); });
 $("search").addEventListener("submit", (e) => {
   e.preventDefault();
@@ -813,6 +901,44 @@ function usLiving(r) {
 function stars(n) { return "★".repeat(n) + `<i>${"★".repeat(5 - n)}</i>`; }
 
 const autoAsked = new Set();   // live homes: ask for a reading in a new language once per visit, never in a loop
+
+/* 좋은 점 / 아쉬운 점 (Zillow's "What's special" / "Tradeoffs", owner Nov 16). Same fixed rules as
+   api/card.py _chips, so it is free, instant and the same every time. */
+function prosCons(r) {
+  const c = r.score.components, good = [], weak = [];
+  const A = c.hyeonmu, B = c.jujak, C = c.enclosure, D = c.jangpung, E = c.deuksu, F = c.jwahyang, G = c.stability;
+  const g = (ok, ko, en) => { if (ok) good.push(T({ ko, en })); };
+  const w = (ok, ko, en) => { if (ok) weak.push(T({ ko, en })); };
+  g(A.score >= 80, "뒤가 든든해요", "Strong hill behind");
+  g(B.score >= 80 && B.facts.ansan, "앞에 알맞은 안산이 있어요", "A well-sized hill in front");
+  g(E.score >= 80, "물이 감싸 흘러요", "Water curves toward it");
+  g(C.score >= 80, "좌우가 감싸 줘요", "Sheltered on both sides");
+  g(D.score >= 90, "겨울바람이 막혀요", "Sheltered from winter wind");
+  g(F.score >= 85, "겨울 햇빛이 잘 들어요", "Good winter sun");
+  g(G.score >= 80, "땅이 평평하고 안정돼요", "Steady, level ground");
+  r.sal.slice().sort((a, b) => (b.penalty || 0) - (a.penalty || 0)).forEach((x) => weak.push(salName(x)));
+  w(C.facts.weak_side === "cheongryong", "왼쪽이 낮아요", "Left side is low");
+  w(C.facts.weak_side === "baekho", "오른쪽이 낮아요", "Right side is low");
+  w(A.score < 50, "뒤가 허전해요", "Little support behind");
+  w(E.facts.distance_m == null, "가까운 물이 없어요", "No water close by");
+  w(D.facts.wind_open, "겨울바람이 들어요", "Open to winter wind");
+  w((F.facts.sun_lost_h || 0) >= 2, "겨울 햇빛이 적어요", "Little winter sun");
+  w(G.score <= 40, "경사가 있어요", "Sloping ground");
+  return { good, weak };
+}
+function prosConsHtml(r) {
+  const { good, weak } = prosCons(r);
+  const li = (arr, kind, none) => arr.length ? arr.map((t) => `<li class="${kind}">${t}</li>`).join("") : `<li class="none">${none}</li>`;
+  return `<div class="pros">
+    <div class="pc-tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-t="good">${T({ ko: "좋은 점", en: "What's special" })} <i>${good.length}</i></button>
+      <button role="tab" aria-selected="false" data-t="weak">${T({ ko: "아쉬운 점", en: "Tradeoffs" })} <i>${weak.length}</i></button>
+    </div>
+    <ul class="pc-list" data-t="good">${li(good, "good", T({ ko: "눈에 띄는 장점은 적어요. 아쉬운 점과 보완법을 함께 보세요.", en: "Few standout strengths. See the tradeoffs and fixes." }))}</ul>
+    <ul class="pc-list hidden" data-t="weak">${li(weak, "weak", T({ ko: "크게 아쉬운 점은 없어요.", en: "No big tradeoffs." }))}</ul>
+    <p class="pc-note">${T({ ko: "아쉬운 점에는 집 안에서 할 수 있는 보완법이 있어요.", en: "Each tradeoff comes with fixes you can do inside." })}</p>
+  </div>`;
+}
 function renderReport(id) {
   current = id;
   const live = window.GILJI && GILJI.isLive(id);
@@ -822,9 +948,10 @@ function renderReport(id) {
   // a saved live home whose reading never arrived has no text yet: show the placeholder, never crash
   const w = WR[id] || (live ? GILJI.placeholder(id) : W[id]) || (window.GILJI ? GILJI.placeholder(id) : null)
     || { headline: "", good: [], watch: [], sal: {}, pungsu: { sides: "", ohaeng: "", giun: {} } };
-  const paid = unlocked.has(id) && !!WR[id];
+  const open = BETA_FREE || unlocked.has(id);
+  const paid = open && !!WR[id];
   // a live reading opened in the other language: fetch this language once (the server caches it)
-  if (live && unlocked.has(id) && !WR[id] && !autoAsked.has(id + ":" + window.GILJI_LANG)) {
+  if (live && open && !WR[id] && !autoAsked.has(id + ":" + window.GILJI_LANG)) {
     autoAsked.add(id + ":" + window.GILJI_LANG);
     setTimeout(() => GILJI.unlock(id, () => { if (current === id && screen === "report") renderReport(id); }), 0);
   }
@@ -862,9 +989,31 @@ function renderReport(id) {
       <div class="section-label" style="margin:16px 0 8px">${T({ ko: "오행", en: "Five elements (ohaeng)" })} <small>${T({ ko: "주변 봉우리의 모양", en: "the shapes of nearby peaks" })}</small></div>${ohHtml}
     </details>`;
 
+  // Zillow-style top (owner, Nov 16: "learn from Zillow"): picture first, key facts in big type,
+  // save and share up top, jump tabs, and the main action always within thumb reach
+  const ph = PHOTO[id];
+  const heroMedia = ph ? `<div class="hero-media"><img src="${ph.src}" alt="${shortName(id)}"><em>${typeof ph.credit === "string" ? ph.credit : T(ph.credit)}</em></div>` : "";
+  const nWatch = r.sal.length;
+  const fact = (big, small) => `<div><b>${big}</b><span>${small}</span></div>`;
+  const factsRow = `<div class="facts">
+      ${fact(s.level_land ? T({ ko: "평지", en: "Level" }) : gradeName(s.grade).replace(/ site$/, ""), T({ ko: "등급", en: s.level_land ? "land" : "site" }))}
+      ${fact(T({ ko: DIR8.ko[facingIx] + "향", en: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"][facingIx] }), T({ ko: "현관 방향", en: "door faces" }))}
+      ${fact(deuksu.distance_m != null ? (deuksu.distance_m >= 1000 ? (deuksu.distance_m / 1000).toFixed(1) + "km" : deuksu.distance_m + "m") : "—", T({ ko: "가까운 물", en: "to water" }))}
+      ${fact(nWatch, T({ ko: "살펴볼 점", en: nWatch === 1 ? "thing to watch" : "things to watch" }))}
+    </div>`;
+  const savedNow = store.get("saved") === id;
+  const shareSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>`;
+  const heartSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="${savedNow ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>`;
+
   $("report").innerHTML = `
-    <div class="card">
-      <div class="addr">${addrOf(id)}</div>
+    ${heroMedia}
+    <div class="card" id="sec-sum">
+      <div class="sum-head"><div class="addr">${addrOf(id)}</div>
+        <div class="sum-actions">
+          <button class="icon-btn${savedNow ? " on" : ""}" id="heart" aria-pressed="${savedNow}" aria-label="${T({ ko: "내 집으로 저장", en: "Save as my home" })}">${heartSvg}</button>
+          <button class="icon-btn" id="share" aria-label="${T({ ko: "공유하기", en: "Share" })}">${shareSvg}</button>
+        </div></div>
+      ${factsRow}
       <div class="top">
         ${s.level_land ? levelDial() : dial(s.total)}
         <div>
@@ -875,11 +1024,16 @@ function renderReport(id) {
       </div>
       <div class="says">${CH.toad(64, { pose: !s.level_land && s.total >= 70 ? "yay" : "hello", cls: "pop" })}<div class="bubble">${s.level_land ? levelLine(r) : w.headline}</div></div>
       ${s.level_land ? levelChips(r) : ""}
+      ${prosConsHtml(r)}
     </div>
+
+    <nav class="jump" aria-label="${T({ ko: "바로 가기", en: "Jump to" })}">
+      <a href="#sec-sum">${T({ ko: "요약", en: "Summary" })}</a><a href="#sec-land">${T({ ko: "땅", en: "Land" })}</a><a href="#sec-reading">${T({ ko: "해설", en: "Reading" })}</a><a href="#sec-ask">${T({ ko: "묻기", en: "Ask" })}</a>
+    </nav>
 
     ${tipCard(id, { saveBtn: true })}
 
-    <div class="card map"><h2>${T({ ko: "집 주변 땅", en: "Land around the home" })} <small>${T({ ko: "지도는 북쪽이 위", en: "North is up" })}</small></h2>
+    <div class="card map" id="sec-land"><h2>${T({ ko: "집 주변 땅", en: "Land around the home" })} <small>${T({ ko: "지도는 북쪽이 위", en: "North is up" })}</small></h2>
       <div id="sasinsa-map" class="leaf" role="img" aria-label="${T({ ko: "집 주변 지도: 사방의 산과 물길", en: "Map around the home: hills and water on all four sides" })}"></div>
       <div class="legend">
         <span><span class="dot" style="background:var(--accent)"></span>${T({ ko: "집과 현관 방향", en: "Home and door direction" })}</span>
@@ -892,7 +1046,13 @@ function renderReport(id) {
         : `살펴볼 곳: ${x.evidence.road} 고가, 현관 앞 ${x.evidence.distance_m}m (빨간 점선)`}</span>`).join("")}</div>
     </div>
 
-    ${paid ? paidBlock : `
+    <div id="sec-reading"></div>
+    ${paid ? paidBlock : BETA_FREE ? `
+    <div class="card" style="text-align:center">
+      <h3>${T({ ko: "이 집만을 위한 해설을 쓰고 있어요", en: "Writing a reading just for this home" })}</h3>
+      <p>${T({ ko: "베타 테스터는 모두 무료예요. 20초쯤 걸려요.", en: "Everything is free for beta testers. It takes about 20 seconds." })}</p>
+      <button class="btn accent" id="buy">${T({ ko: "다시 불러오기", en: "Try again" })}</button>
+    </div>` : `
     <div class="locked">
       <div class="blur" aria-hidden="true">${paidBlock}</div>
       <div class="pay">
@@ -906,7 +1066,17 @@ function renderReport(id) {
 
     ${usLiving(r)}
 
-    ${window.GILJI ? GILJI.chatCard(id) : ""}
+    ${window.GILJI && GILJI.api ? `<div class="card ask-card" id="sec-ask">
+      <div class="ask-row">${CH.toad(52, { pose: "hello" })}<div><b>${T({ ko: "터주에게 물어보세요", en: "Ask Teoju" })}</b>
+        <p>${T({ ko: "이 집 땅에 대해 궁금한 건 무엇이든요.", en: "Anything about this home's land." })}</p></div></div>
+      <button class="btn accent block" id="ask-open">${T({ ko: "대화 열기", en: "Open chat" })}</button></div>
+    <button class="fab" id="fab" aria-label="${T({ ko: "터주에게 묻기", en: "Ask Teoju" })}">${CH.toad(44, { pose: "hello" })}<span>${T({ ko: "묻기", en: "Ask" })}</span></button>
+    <div class="chat-sheet" id="chat-sheet" aria-hidden="true">
+      <div class="cs-backdrop" data-close></div>
+      <div class="cs-panel" role="dialog" aria-label="${T({ ko: "터주에게 물어보기", en: "Ask Teoju" })}">
+        <div class="cs-grab"></div><button class="cs-x" data-close aria-label="${T({ ko: "닫기", en: "Close" })}">✕</button>
+        ${GILJI.chatCard(id)}
+      </div></div>` : ""}
 
     <details class="card"><summary>${T({ ko: "자세한 지형 판독", en: "Detailed land reading" })} <span>${T({ ko: "일곱 가지 · 펼치기", en: "Seven parts · open" })}</span></summary>
       <div class="comp">${Object.keys(COMP).map((k) => {
@@ -926,7 +1096,9 @@ function renderReport(id) {
       <button class="btn ghost" id="to-compare">${T({ ko: "다른 집과 비교", en: "Compare homes" })}</button>
       <button class="btn ghost" id="to-home">${T({ ko: "다른 집 보기", en: "See another home" })}</button>
     </div>
-    <p class="disclaimer">${T(DISCLAIMER)}<br>${T({ ko: "데이터", en: "Data" })}: Copernicus GLO-30, © OpenStreetMap contributors</p>`;
+    <p class="disclaimer">${T(DISCLAIMER)}<br>${T({ ko: "데이터", en: "Data" })}: Copernicus GLO-30, © OpenStreetMap contributors</p>
+    ${paid || BETA_FREE ? "" : `<div class="dock"><button class="btn accent" id="dock-buy">${T({ ko: "이 집 전체 해설 열기", en: "Open the full reading" })}<small>${T({ ko: "$1 · 베타 동안 무료", en: "$1 · free during the beta" })}</small></button></div>`}`;
+  $("report").classList.toggle("has-dock", !paid && !BETA_FREE);
 
   // timers, not requestAnimationFrame: rAF stalls in background tabs and the bars would stay empty
   setTimeout(() => {
@@ -936,7 +1108,40 @@ function renderReport(id) {
   $("report").querySelectorAll("details").forEach((d) => d.addEventListener("toggle", (e) => {
     if (e.target.open) setTimeout(() => e.target.querySelectorAll(".fill").forEach((f) => (f.style.width = f.dataset.w)), 30);
   }));
-  if (!paid) $("buy").addEventListener("click", () => fakeDoor(id));
+  if ($("buy")) $("buy").addEventListener("click", () => fakeDoor(id));
+  if ($("dock-buy")) $("dock-buy").addEventListener("click", () => fakeDoor(id));
+  const openChat = () => {
+    const sh = $("chat-sheet"); if (!sh) return;
+    sh.classList.add("open"); sh.setAttribute("aria-hidden", "false"); document.body.classList.add("noscroll");
+    setTimeout(() => { const i = $("chat-q"); if (i && !matchMedia("(pointer: coarse)").matches) i.focus(); }, 350);
+  };
+  const closeChat = () => { const sh = $("chat-sheet"); if (!sh) return; sh.classList.remove("open"); sh.setAttribute("aria-hidden", "true"); document.body.classList.remove("noscroll"); };
+  ["fab", "ask-open"].forEach((k) => { if ($(k)) $(k).addEventListener("click", openChat); });
+  if ($("chat-sheet")) $("chat-sheet").addEventListener("click", (e) => { if (e.target.closest("[data-close]")) closeChat(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeChat(); }, { once: true });
+  $("report").querySelectorAll(".pc-tabs button").forEach((b) => b.addEventListener("click", () => {
+    $("report").querySelectorAll(".pc-tabs button").forEach((x) => x.setAttribute("aria-selected", x === b));
+    $("report").querySelectorAll(".pc-list").forEach((l) => l.classList.toggle("hidden", l.dataset.t !== b.dataset.t));
+  }));
+  $("report").querySelectorAll(".jump a").forEach((a) => a.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (a.getAttribute("href") === "#sec-ask") { openChat(); return; }
+    const t = $(a.getAttribute("href").slice(1)); if (t) t.scrollIntoView({ behavior: "smooth" });
+  }));
+  $("heart").addEventListener("click", () => {
+    const on = store.get("saved") !== id; store.set("saved", on ? id : null);
+    const b = $("heart"); b.classList.toggle("on", on); b.setAttribute("aria-pressed", on);
+    b.querySelector("path").parentNode.setAttribute("fill", on ? "currentColor" : "none");
+    b.classList.remove("beat"); void b.offsetWidth; b.classList.add("beat");
+    rerenderTip(id);
+    toast(on ? T({ ko: "내 집으로 저장했어요. 매일 박씨를 받아요.", en: "Saved as your home. You'll get a daily tip." }) : T({ ko: "저장을 취소했어요.", en: "Removed." }));
+  });
+  $("share").addEventListener("click", async () => {
+    const url = location.origin + location.pathname + (ORDER.includes(id) ? "#p=" + id : "");
+    const data = { title: T({ ko: "길지 · 우리 집의 기운", en: "Gilji · the energy of a home" }), text: `${shortName(id)} — ${s.level_land ? T({ ko: "평지", en: "Level ground" }) : s.total + T({ ko: "점", en: " / 100" })}`, url };
+    try { if (navigator.share) { await navigator.share(data); return; } } catch (e) { return; }
+    try { await navigator.clipboard.writeText(url); toast(T({ ko: "링크를 복사했어요.", en: "Link copied." })); } catch (e) { toast(url); }
+  });
   if (window.GILJI) GILJI.bindChat(id);
   bindTip(id);
   setTimeout(() => drawMap(id), 0);   // after show("report") makes the container visible

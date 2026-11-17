@@ -213,11 +213,27 @@
       <p class="chat-note">${T({ ko: "지도와 지형 데이터로만 답해요. 주소는 보내지 않아요.", en: "Answers come from map and terrain data only. Your address is not sent." })}</p>
     </div>`;
   }
+  // Teoju answers like Zillow's AI: one summary line, then short bullets with a bold label
+  function fmt(text) {
+    const out = []; let list = [];
+    const flush = () => { if (list.length) { out.push(`<ul>${list.map((x) => `<li>${x}</li>`).join("")}</ul>`); list = []; } };
+    esc(text).split(/\n/).forEach((line) => {
+      const l = line.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+      const m = l.match(/^\s*(?:[-•·*]|\d+[.)])\s+(.*)$/);
+      if (m) list.push(m[1]); else { flush(); if (l.trim()) out.push(`<p style="margin:0 0 4px">${l}</p>`); }
+    });
+    flush();
+    return out.join("");
+  }
   function renderChat(id, sugg) {
     const turns = chats[id] || [];
     $("chat-msgs").innerHTML = turns.map((t) => `<div class="q">${esc(t.q)}</div>` + (t.a == null
       ? `<div class="a wait">${T({ ko: "터주가 생각하는 중…", en: "Teoju is thinking…" })}</div>`
-      : `<div class="a">${esc(t.a).replace(/\n/g, "<br>")}${(t.facts || []).length ? `<div class="facts">${t.facts.map((f) => `<span><b>${esc(f.label)}</b> ${esc(f.value)}</span>`).join("")}</div>` : ""}</div>`)).join("");
+      : `<div class="a">${fmt(t.a)}${(t.facts || []).length ? `<div class="facts">${t.facts.map((f) => `<span><b>${esc(f.label)}</b> ${esc(f.value)}</span>`).join("")}</div>` : ""}</div>`)).join("");
+    if (!turns.length && window.PUNGSU_CHARS) $("chat-msgs").innerHTML = `<div class="hi">${PUNGSU_CHARS.toad(64, { pose: "hello", cls: "pop" })}
+      <div class="a">${T({ ko: "안녕하세요, 이 집 땅을 지키는 터주예요. 뒷산, 물길, 바람길처럼 이 집 땅에 대해 궁금한 걸 물어보세요.",
+        en: "Hi, I'm Teoju, the guardian of this home's land. Ask me anything about its land: the hills behind, the water, the wind." })}</div></div>`;
+    $("chat-msgs").scrollTop = $("chat-msgs").scrollHeight;   // newest message in view
     const list = sugg || (turns.length ? [] : STARTERS[lang()] || STARTERS.ko);
     $("chat-sugg").innerHTML = list.slice(0, 3).map((s) => `<button type="button" class="btn ghost small">${esc(s)}</button>`).join("");
   }
