@@ -197,8 +197,8 @@
 
   // ---- chat ----
   const STARTERS = {
-    ko: ["이 집 점수가 왜 이렇게 나왔어요?", "가장 신경 써야 할 점은 뭐예요?", "집 안에서 할 수 있는 보완법이 있어요?"],
-    en: ["Why did this home get this score?", "What should I watch most?", "Is there anything I can do inside the home?"],
+    ko: ["이 집 별점이 왜 이렇게 나왔어요?", "가장 신경 써야 할 점은 뭐예요?", "집 안에서 할 수 있는 보완법이 있어요?"],
+    en: ["Why did this home get these stars?", "What should I watch most?", "Is there anything I can do inside the home?"],
   };
   const chats = {};   // id -> [{q, a}], this page visit only
   function chatCard(id) {

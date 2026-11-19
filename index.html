@@ -119,7 +119,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .dial .num { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
 .dial .num b { font: 700 38px/1 var(--display); }
 .dial .num span { font-size: 12px; color: var(--ink-3); }
-.dial.level .num b { font-size: 30px; }
+.dial .num span.stars { font-size: 12px; letter-spacing: 1px; margin-top: 4px; color: var(--accent); }
+.facts b small { font-size: .6em; color: var(--ink-3); font-weight: 600; }
 .level-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .level-chips .chip { background: var(--paper); color: var(--ink-2); font-size: 12px; }
 .level-chips .chip.warn { color: var(--accent); }
@@ -395,7 +396,7 @@ body.noscroll { overflow: hidden; }
 
     <div class="section-label" data-i18n="how">이용 방법 (가격은 시험 중이에요)</div>
     <div class="ladder">
-      <div><b data-i18n="free">무료</b><span data-i18n="free2">점수·등급<br>오늘의 박씨</span></div>
+      <div><b data-i18n="free">무료</b><span data-i18n="free2">별점·등급<br>오늘의 박씨</span></div>
       <div><b data-i18n="full">전체 해설</b><span data-i18n="full2">한눈에 보는 해설<br>우리 집 보완법</span><em data-i18n="price">$1</em></div>
       <div><b data-i18n="cmp">집 비교</b><span data-i18n="cmp2">2~3곳을<br>나란히</span><em data-i18n="price">$1</em></div>
     </div>
@@ -529,11 +530,12 @@ const BEND = {
 };
 const bend = (b) => (BEND[b] ? T(BEND[b]) : "");
 // grade names: plain English first, the Korean term romanized once (api/card.py GRADE_EN says the same)
+// rules v0.8 (owner, Nov 17): one rating for every home, 1-5 stars with a word
 const GRADE = {
-  도읍지격: { ko: "도읍지격", en: "Capital-grade site", term: "doeupjigyeok" },
   명당: { ko: "명당", en: "Excellent site", term: "myeongdang" },
   길지: { ko: "길지", en: "Good site", term: "gilji" },
-  평지: { ko: "평지", en: "Level ground", term: "pyeongji" },
+  "무난한 터": { ko: "무난한 터", en: "Fair site" },
+  "아쉬운 터": { ko: "아쉬운 터", en: "Somewhat lacking" },
   "보완 필요": { ko: "보완 필요", en: "Needs care" },
 };
 function gradeName(g, withTerm) {
@@ -566,7 +568,7 @@ const STATIC = {
     : { ko: "이용 방법 (가격은 시험 중이에요)", en: "How it works (prices are still being tested)" },
   price: (window.GILJI_CONFIG || {}).beta ? { ko: "무료", en: "Free" } : { ko: "$1", en: "$1" },
   free: { ko: "무료", en: "Free" },
-  free2: { ko: "점수·등급<br>오늘의 박씨", en: "Score · grade<br>Today's tip" },
+  free2: { ko: "별점·등급<br>오늘의 박씨", en: "Stars · grade<br>Today's tip" },
   full: { ko: "전체 해설", en: "Full reading" },
   full2: { ko: "한눈에 보는 해설<br>우리 집 보완법", en: "Reading at a glance<br>Fixes for your home" },
   cmp: { ko: "집 비교", en: "Compare" },
@@ -638,7 +640,7 @@ function renderHome() {
       : id.startsWith("us_") ? ` <span class="chip">${T({ ko: "미국", en: "US" })}</span>` : "";
     const ph = PHOTO[id];
     const credit = ph ? (typeof ph.credit === "string" ? ph.credit : T(ph.credit)) : "";
-    const score = r && r.score && !r.score.level_land ? `<span class="pc-score">${r.score.total}</span>` : "";
+    const score = r && r.score && r.score.stars ? `<span class="pc-score">★ ${r.score.stars}</span>` : "";
     return `<button data-id="${id}" class="pcard">${ph ? `<span class="pc-img"><img src="${ph.src}" alt="">${score}<em>${credit}</em></span>` : ""}
       <span class="pc-body"><span><b style="font-size:17px">${shortName(id)}</b>${tag}<small>${addrOf(id)}</small></span><span class="arrow">→</span></span></button>`;
   }).join("");
@@ -723,21 +725,22 @@ function countUp(el) {      // the score climbs with the ring
   const step = (t) => { const k = Math.min(1, (t - t0) / dur); el.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
   el.textContent = "0"; requestAnimationFrame(step);
 }
-function dial(total) {
-  const r = 52, c = 2 * Math.PI * r, off = c * (1 - total / 100);
-  return `<div class="dial"><svg viewBox="0 0 124 124" aria-hidden="true">
+function dial(n) {      // one rating for every home: n of 5 stars (rules v0.8)
+  const r = 52, c = 2 * Math.PI * r, off = c * (1 - n / 5);
+  return `<div class="dial" role="img" aria-label="${T({ ko: `별 5개 중 ${n}개`, en: `${n} of 5 stars` })}"><svg viewBox="0 0 124 124" aria-hidden="true">
     <circle cx="62" cy="62" r="${r}" fill="none" stroke="var(--line)" stroke-width="9"/>
     <circle cx="62" cy="62" r="${r}" fill="none" stroke="var(--accent)" stroke-width="9" stroke-linecap="round"
       stroke-dasharray="${c}" stroke-dashoffset="${c}" data-off="${off}" style="transition:stroke-dashoffset 1s ease"/>
-  </svg><div class="num"><b>${total}</b><span>/ 100</span></div></div>`;
+  </svg><div class="num" aria-hidden="true"><b>${n}</b><span>/ 5</span><span class="stars">${stars(n)}</span></div></div>`;
 }
 
-/* 평지 (rules v0.6, "say less"): level land shows the grade, not a number, and names only the
-   real differences: water and things to watch. Mirrors api/card.py's level card. */
-function levelDial() {
-  return `<div class="dial level"><svg viewBox="0 0 124 124" aria-hidden="true">
-    <circle cx="62" cy="62" r="52" fill="none" stroke="var(--line)" stroke-width="9"/></svg>
-    <div class="num"><b>${T({ ko: "평지", en: "Level" })}</b><span>${T({ ko: "보통 · 점수 없음", en: "Ordinary · no score" })}</span></div></div>`;
+/* 평지 (level land): rated in stars like every home (rules v0.8); the bubble says the land is level
+   and what the stars rest on, and the chips name the real differences. Mirrors api/card.py. */
+function starsRange(r) {   // the stars hang on the exact spot (stability ring, live readings only)
+  const st = r.stability && r.stability.stars;
+  if (!st || st[0] === st[1]) return "";
+  return `<div class="meta" style="margin-top:6px">${T({ ko: `집의 정확한 위치에 따라 별 ${st[0]}개에서 ${st[1]}개 사이로 달라질 수 있어요.`,
+    en: `Depending on exactly where the house sits, this could be ${st[0]} to ${st[1]} stars.` })}</div>`;
 }
 function levelLine(r) {
   const n = r.sal.length, water = r.score.components.deuksu.facts.distance_m != null;
@@ -746,12 +749,12 @@ function levelLine(r) {
     const second = water && n ? `The water nearby and ${thing} to watch are what set this home apart.`
       : water ? "The water nearby is what sets this home apart."
       : n ? `${thing[0].toUpperCase() + thing.slice(1)} to watch ${n === 1 ? "is" : "are"} what sets this home apart.` : "Nothing nearby to watch.";
-    return `The land is level here, so it says little. ${second}`;
+    return `The land is level here, so this rating rests on water, roads and the things to watch. ${second}`;
   }
   const second = water && n ? `가까운 물과 살펴볼 점 ${n}가지가 이 집을 다르게 해요.`
     : water ? "가까운 물이 이 집을 다르게 해요."
     : n ? `살펴볼 점 ${n}가지가 이 집을 다르게 해요.` : "가까이 살펴볼 점은 없어요.";
-  return `땅이 평평해서, 땅이 알려 주는 것은 많지 않아요. ${second}`;
+  return `땅이 평평한 집이라 물과 길, 살펴볼 점으로 읽었어요. ${second}`;
 }
 function levelChips(r) {
   const chips = r.sal.map((x) => `<span class="chip warn">${salName(x)}</span>`).slice(0, 3);
@@ -894,7 +897,7 @@ function usLiving(r) {
   const body = u.items.length
     ? u.items.map((x) => `<div class="it"><span class="k ${x.kind}">${T(KIND[x.kind])}</span><span>${fix(x.text)}</span></div>`).join("")
     : `<p style="margin:0;font-size:14px">${fix(u.nothing)}</p>`;
-  return `<div class="card usl"><h2>${fix(u.title)} <small>${T({ ko: "풍수 점수와 별개", en: "Separate from the feng shui score" })}</small></h2><p class="usl-note">${fix(u.note)}</p>${body}
+  return `<div class="card usl"><h2>${fix(u.title)} <small>${T({ ko: "풍수 별점과 별개", en: "Separate from the feng shui stars" })}</small></h2><p class="usl-note">${fix(u.note)}</p>${body}
     ${u.lot_note ? `<p class="usl-note" style="margin:8px 0 0">${fix(u.lot_note)}</p>` : ""}</div>`;
 }
 
@@ -996,7 +999,7 @@ function renderReport(id) {
   const nWatch = r.sal.length;
   const fact = (big, small) => `<div><b>${big}</b><span>${small}</span></div>`;
   const factsRow = `<div class="facts">
-      ${fact(s.level_land ? T({ ko: "평지", en: "Level" }) : gradeName(s.grade).replace(/ site$/, ""), T({ ko: "등급", en: s.level_land ? "land" : "site" }))}
+      ${fact(`★ ${s.stars}<small>/5</small>`, gradeName(s.grade).replace(/ site$/, ""))}
       ${fact(T({ ko: DIR8.ko[facingIx] + "향", en: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"][facingIx] }), T({ ko: "현관 방향", en: "door faces" }))}
       ${fact(deuksu.distance_m != null ? (deuksu.distance_m >= 1000 ? (deuksu.distance_m / 1000).toFixed(1) + "km" : deuksu.distance_m + "m") : "—", T({ ko: "가까운 물", en: "to water" }))}
       ${fact(nWatch, T({ ko: "살펴볼 점", en: nWatch === 1 ? "thing to watch" : "things to watch" }))}
@@ -1015,14 +1018,14 @@ function renderReport(id) {
         </div></div>
       ${factsRow}
       <div class="top">
-        ${s.level_land ? levelDial() : dial(s.total)}
+        ${dial(s.stars)}
         <div>
-          ${s.level_land ? "" : `<span class="grade">${gradeName(s.grade, true)}</span>`}
+          <span class="grade">${gradeName(s.grade, true)}</span>${starsRange(r)}
           <div class="meta">${isEn() ? `The door faces ${DIR8.en[facingIx]} (assumed)<br>Read from maps only`
             : `현관이 ${DIR8.ko[facingIx]}쪽을 봐요 (가정)<br>지도만으로 읽었어요`}</div>
         </div>
       </div>
-      <div class="says">${CH.toad(64, { pose: !s.level_land && s.total >= 70 ? "yay" : "hello", cls: "pop" })}<div class="bubble">${s.level_land ? levelLine(r) : w.headline}</div></div>
+      <div class="says">${CH.toad(64, { pose: s.stars >= 4 ? "yay" : "hello", cls: "pop" })}<div class="bubble">${s.level_land ? levelLine(r) : w.headline}</div></div>
       ${s.level_land ? levelChips(r) : ""}
       ${prosConsHtml(r)}
     </div>
@@ -1138,7 +1141,7 @@ function renderReport(id) {
   });
   $("share").addEventListener("click", async () => {
     const url = location.origin + location.pathname + (ORDER.includes(id) ? "#p=" + id : "");
-    const data = { title: T({ ko: "길지 · 우리 집의 기운", en: "Gilji · the energy of a home" }), text: `${shortName(id)} — ${s.level_land ? T({ ko: "평지", en: "Level ground" }) : s.total + T({ ko: "점", en: " / 100" })}`, url };
+    const data = { title: T({ ko: "길지 · 우리 집의 기운", en: "Gilji · the energy of a home" }), text: `${shortName(id)} — ★ ${s.stars}/5 · ${gradeName(s.grade)}`, url };
     try { if (navigator.share) { await navigator.share(data); return; } } catch (e) { return; }
     try { await navigator.clipboard.writeText(url); toast(T({ ko: "링크를 복사했어요.", en: "Link copied." })); } catch (e) { toast(url); }
   });
@@ -1188,8 +1191,7 @@ function openCompare(fromId) {
 }
 function renderCompare() {
   const ids = ORDER.filter((k) => picked.has(k));
-  const shown = ids.filter((k) => !R[k].score.level_land);   // level land has no number to compare
-  const best = shown.length ? Math.max(...shown.map((k) => R[k].score.total)) : null;
+  const best = Math.max(...ids.map((k) => R[k].score.stars));   // one rating for every home (v0.8)
   const row = (label, f) => `<tr><th>${label}</th>${ids.map((k) => `<td>${f(R[k], k)}</td>`).join("")}</tr>`;
   $("compare").innerHTML = `
     <div class="card"><h2>${T({ ko: "집 비교", en: "Compare homes" })} <small>${T({ ko: "최대 세 곳", en: "Up to three" })}</small></h2>
@@ -1198,7 +1200,7 @@ function renderCompare() {
       <div class="cmp"><table>
         <thead><tr><th></th>${ids.map((k) => `<th>${shortName(k)}</th>`).join("")}</tr></thead>
         <tbody>
-          ${row(T({ ko: "점수", en: "Score" }), (r) => r.score.level_land ? `<span style="color:var(--ink-3);font-size:13px">${T({ ko: "평지라 점수 없음", en: "Level land, no score" })}</span>` : `<span class="big ${r.score.total === best ? "best" : ""}">${r.score.total}</span>${r.score.total === best ? `<span class="tag">${T({ ko: "가장 높아요", en: "Highest" })}</span>` : ""}`)}
+          ${row(T({ ko: "별점", en: "Stars" }), (r) => `<span class="big ${r.score.stars === best ? "best" : ""}">★ ${r.score.stars}<small style="font-size:13px;color:var(--ink-3)">/5</small></span>${r.score.stars === best ? `<span class="tag">${T({ ko: "가장 높아요", en: "Highest" })}</span>` : ""}`)}
           ${row(T({ ko: "등급", en: "Grade" }), (r) => `<b class="serif">${gradeName(r.score.grade)}</b>`)}
           ${Object.keys(GIUN).map((g) => row(T(GIUN[g]), (r) => `<span class="stars" style="letter-spacing:0">${stars(r.giun.find((x) => x.key === g).stars)}</span>`)).join("")}
           ${row(T({ ko: "물길", en: "Water" }), (r) => `${riverName(r.score.components.deuksu.facts)}<br><span style="color:var(--ink-3);font-size:12px">${bend(r.score.components.deuksu.facts.bend)}</span>`)}
@@ -1206,7 +1208,7 @@ function renderCompare() {
           ${row(T({ ko: "보완법", en: "Fixes" }), (r) => T({ ko: `${TIPS.siteTips(r).length}가지`, en: `${TIPS.siteTips(r).length}` }))}
         </tbody></table></div>`}
     </div>
-    <p class="disclaimer">${T({ ko: "점수는 참고용이에요. 어느 집이 좋을지는 직접 판단해 주세요.", en: "Scores are for reference. Which home is right for you is your call." })}<br>${T(DISCLAIMER)}</p>
+    <p class="disclaimer">${T({ ko: "별점은 참고용이에요. 어느 집이 좋을지는 직접 판단해 주세요.", en: "Stars are for reference. Which home is right for you is your call." })}<br>${T(DISCLAIMER)}</p>
     <div class="actions"><button class="btn ghost" id="cmp-home">${T({ ko: "처음으로", en: "Home" })}</button><button class="btn ghost" id="cmp-back">${T({ ko: "보고서로", en: "Back to the report" })}</button></div>`;
   $("compare").querySelector(".pick").addEventListener("click", (e) => {
     const b = e.target.closest("button"); if (!b) return;
@@ -1222,8 +1224,8 @@ function renderCompare() {
 const ABOUT = {
   ko: `<h3 style="margin-top:0">형기론 한 가지로 읽어요</h3>
     <p>산과 물, 땅의 모양으로 터를 읽는 형기론(形氣論)만 써요. 나경과 공식으로 보는 이기론은 다루지 않아요.</p>
-    <h3>같은 집은 같은 점수</h3>
-    <p>점수는 정해진 규칙이 매겨요. 해설은 그 결과를 풀어 쓸 뿐, 숫자를 바꾸거나 새 판단을 더하지 않아요.</p>
+    <h3>같은 집은 같은 별점</h3>
+    <p>모든 집을 같은 별 다섯 개로 매겨요. 땅이 평평한 집도 같은 별점이에요. 별점은 정해진 규칙이 매기고, 해설은 그 결과를 풀어 쓸 뿐 별점을 바꾸거나 새 판단을 더하지 않아요.</p>
     <h3>무엇을 보나요</h3>
     <p>반경 3.5km의 지형으로 현무·주작·청룡·백호와 바람길을, 물길의 굽음으로 득수를, 주변 도로·고가·송전선·묘지로 살펴볼 점을 찾아요.</p>
     <h3>터주와 흥이</h3>
@@ -1233,8 +1235,8 @@ const ABOUT = {
     <h3>데이터</h3>`,
   en: `<h3 style="margin-top:0">One school: the landform school</h3>
     <p>We read a site only by the shape of its hills, water and land, the landform school of feng shui (hyeonggiron, 形氣論). We don't use the compass-and-formula school.</p>
-    <h3>Same home, same score</h3>
-    <p>A fixed set of rules gives the score. The written reading only explains that result. It never changes the numbers or adds new judgments.</p>
+    <h3>Same home, same stars</h3>
+    <p>Every home is rated on the same five stars, homes on level land too. A fixed set of rules gives the stars. The written reading only explains that result. It never changes the rating or adds new judgments.</p>
     <h3>What we look at</h3>
     <p>From the land within 3.5 km we read the four sides (back, front, left and right) and the wind. From how the water bends we read the water. And we look for things to watch nearby, like roads, overpasses, power lines and cemeteries.</p>
     <h3>Teoju and Heungi</h3>
