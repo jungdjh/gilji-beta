@@ -1,4 +1,4 @@
-// Gilji beta: look up a real US address and chat about a home, through the web service
+// Bakseed beta: look up a real US address and chat about a home, through the web service
 // (api/server.py). The page still works without it (the nine sample places stay local).
 // What a person types stays in this browser; the service geocodes it once and keeps only an
 // opaque id for the home. Settings: config.js sets window.GILJI_CONFIG = { api: "https://..." }.
@@ -34,7 +34,7 @@
     questions_today: { ko: "오늘 질문을 다 쓰셨어요. 내일 다시 물어봐 주세요.", en: "You've used today's questions. Please ask again tomorrow." },
     budget: { ko: "이번 달 베타 사용량이 다 찼어요. 다음 달에 다시 열려요.", en: "This month's beta use is full. It opens again next month." },
     invite: { ko: "초대 코드가 필요해요.", en: "You need an invite code." },
-    offline: { ko: "길지 서버에 닿지 못했어요. 조금 뒤에 다시 해 주세요.", en: "We couldn't reach the Gilji server. Please try again in a little while." },
+    offline: { ko: "박씨 서버에 닿지 못했어요. 조금 뒤에 다시 해 주세요.", en: "We couldn't reach the Bakseed server. Please try again in a little while." },
     other: { ko: "잠시 문제가 생겼어요. 조금 뒤에 다시 해 주세요.", en: "Something went wrong. Please try again in a little while." },
   };
   const msg = (code) => T(MSG[code] || MSG.other);
@@ -118,8 +118,8 @@
     const typed = $("inv") ? $("inv").value : "";   // keep what was typed when the language changes
     const code = T({ ko: "초대 코드", en: "Invite code" });
     window.giljiSheet(`<h3>${T({ ko: "초대 코드를 넣어 주세요", en: "Enter your invite code" })}</h3>
-      <p>${T({ ko: "길지는 지금 초대받은 분들만 쓰는 베타예요. 받으신 링크나 코드를 넣어 주세요.",
-               en: "Gilji is a beta for invited people only for now. Enter the link or code you received." })}</p>
+      <p>${T({ ko: "박씨는 지금 초대받은 분들만 쓰는 베타예요. 받으신 링크나 코드를 넣어 주세요.",
+               en: "Bakseed is a beta for invited people only for now. Enter the link or code you received." })}</p>
       <form id="inv-form" class="search" style="margin:12px 0 0"><input id="inv" type="text" autocomplete="off" aria-label="${code}" placeholder="${code}">
       <button class="btn" type="submit">${T({ ko: "확인", en: "OK" })}</button></form>`, () => askInvite(then));
     $("inv").value = typed;
