@@ -189,6 +189,17 @@ details.card[open] > summary .fold::after { transform: rotate(180deg); }
 .card.foldable:not(.closed) > h2::after { transform: rotate(180deg); }
 .card.closed > h2 { margin-bottom: 0; }
 .card.closed > :not(h2) { display: none !important; }
+.link-btn { border: 0; background: none; padding: 4px 0 0; color: var(--accent); font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.dirs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 260px; margin: 8px auto 0; }
+.dirs .dir { min-height: 52px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); font-weight: 700; font-size: 15px; color: var(--ink); }
+.dirs .dir.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.dirs .dir:disabled { opacity: .5; }
+.dir-home { display: grid; place-items: center; font-size: 24px; }
+.compass { text-align: center; margin-top: 10px; }
+.compass .needle { font-size: 44px; line-height: 1; color: var(--accent); transition: transform .15s linear; display: inline-block; margin: 6px 0; }
+.compass .heading { font: 700 18px var(--display); margin: 4px 0 10px; }
+#sheet .small { font-size: 13px; color: var(--ink-3); }
+#sheet .err { color: #c0392b; }
 .fold-all { display: flex; justify-content: flex-end; margin: 4px 2px -4px; }
 .fold-all button { border: 0; background: none; color: var(--ink-3); font-size: 13px; font-weight: 600; padding: 6px 4px; }
 .comp { display: grid; gap: 12px; }
@@ -969,6 +980,91 @@ function bindFolds() {
   });
 }
 
+// where the door direction came from: guessed from the street, or set by the person
+function doorLine(r, ix) {
+  const src = r.site.facing_source;
+  const how = src === "compass" ? { ko: "나침반으로 잼", en: "measured with a compass" }
+    : src === "manual" ? { ko: "직접 고침", en: "set by you" } : { ko: "길 방향으로 추정", en: "guessed from the street" };
+  return isEn() ? `The door faces ${DIR8.en[ix]} (${how.en})` : `현관이 ${DIR8.ko[ix]}쪽을 봐요 (${T(how)})`;
+}
+
+/* ---------- fix the door direction: 8-way dial, or the phone's compass ---------- */
+const DIR_SHORT = { ko: DIR8.ko, en: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"] };
+let compassStop = null;
+function doorSheet(id, busy) {
+  const r = R[id], cur = Math.round(((r.site.facing_deg % 360) + 360) % 360 / 45) % 8;
+  const lab = (i) => (isEn() ? DIR_SHORT.en[i] : DIR_SHORT.ko[i]);
+  // compass layout: NW N NE / W home E / SW S SE
+  const cell = (i) => `<button type="button" class="dir${i === cur ? " on" : ""}" data-deg="${i * 45}">${lab(i)}</button>`;
+  const canCompass = "DeviceOrientationEvent" in window && matchMedia("(pointer: coarse)").matches;
+  sheet(`<h3>${T({ ko: "현관이 어느 쪽을 보나요?", en: "Which way does the front door face?" })}</h3>
+    <p>${T({ ko: "현관문을 열고 밖으로 나설 때 바라보는 쪽이에요. 풍수에서는 이 방향이 집의 앞이에요.",
+             en: "It's the way you face when you step out the front door. In feng shui, that is the front of the home." })}</p>
+    ${canCompass ? `<div class="compass" id="compass">
+      <button class="btn accent" type="button" id="compass-go">${T({ ko: "폰 나침반으로 재기", en: "Measure with the phone's compass" })}</button>
+      <p class="small">${T({ ko: "집에 있을 때만 쓸 수 있어요. 현관문 밖에 서서 집을 등지고, 폰을 평평하게 들어 주세요.",
+                            en: "Only works at the home. Stand outside the front door with your back to the house, and hold the phone flat." })}</p>
+    </div>` : ""}
+    <p class="small" style="margin-top:14px">${T({ ko: canCompass ? "또는 직접 골라 주세요" : "방향을 골라 주세요", en: canCompass ? "Or pick it yourself" : "Pick the direction" })}</p>
+    <div class="dirs">${cell(7)}${cell(0)}${cell(1)}${cell(6)}<span class="dir-home" aria-hidden="true">🏠</span>${cell(2)}${cell(5)}${cell(4)}${cell(3)}</div>
+    <p class="small" id="door-msg">${busy ? T({ ko: "이 방향으로 다시 읽는 중이에요…", en: "Reading the home again for this direction…" }) : ""}</p>`,
+    () => doorSheet(id));
+  document.querySelectorAll("#sheet .dir").forEach((b) => b.addEventListener("click", () => applyDoor(id, +b.dataset.deg, "manual")));
+  if ($("compass-go")) $("compass-go").addEventListener("click", () => startCompass(id));
+}
+
+async function applyDoor(id, deg, source) {
+  if (compassStop) compassStop();
+  $("door-msg").classList.remove("err");
+  $("door-msg").textContent = T({ ko: "이 방향으로 다시 읽는 중이에요…", en: "Reading the home again for this direction…" });
+  document.querySelectorAll("#sheet button").forEach((b) => (b.disabled = true));
+  try {
+    const vid = await GILJI.setFacing(id, deg, source);
+    closeSheet();
+    renderReport(vid); show("report");
+    scrollTo({ top: 0 });
+  } catch (e) {
+    document.querySelectorAll("#sheet button").forEach((b) => (b.disabled = false));
+    $("door-msg").classList.add("err");
+    $("door-msg").textContent = GILJI.message(e.code);
+  }
+}
+
+// heading the top of the phone points to, clockwise from north (iPhone: webkitCompassHeading;
+// Android: an absolute alpha, which turns the other way)
+async function startCompass(id) {
+  const box = $("compass");
+  try {
+    if (typeof DeviceOrientationEvent.requestPermission === "function"
+        && (await DeviceOrientationEvent.requestPermission()) !== "granted") throw new Error("denied");
+  } catch (_) {
+    box.innerHTML = `<p class="small err">${T({ ko: "나침반을 쓰도록 허락되지 않았어요. 아래에서 직접 골라 주세요.", en: "The compass wasn't allowed. Please pick the direction below." })}</p>`;
+    return;
+  }
+  let heading = null;
+  box.innerHTML = `<div class="needle" id="needle" aria-hidden="true">▲</div>
+    <p class="heading" id="heading">${T({ ko: "방향을 읽는 중…", en: "Reading the direction…" })}</p>
+    <button class="btn accent" type="button" id="compass-ok" disabled>${T({ ko: "이 방향으로", en: "Use this direction" })}</button>`;
+  const turn = () => ((screen.orientation && screen.orientation.angle) || window.orientation || 0);
+  const on = (e) => {
+    let h = e.webkitCompassHeading != null ? e.webkitCompassHeading : (e.absolute && e.alpha != null ? 360 - e.alpha : null);
+    if (h == null) return;
+    heading = (((h + turn()) % 360) + 360) % 360;
+    const ix = Math.round(heading / 45) % 8;
+    $("needle").style.transform = `rotate(${-heading}deg)`;
+    $("heading").textContent = `${isEn() ? DIR8.en[ix] : DIR8.ko[ix] + "쪽"} · ${Math.round(heading)}°`;
+    $("compass-ok").disabled = false;
+  };
+  const ev = "ondeviceorientationabsolute" in window ? "deviceorientationabsolute" : "deviceorientation";
+  window.addEventListener(ev, on);
+  compassStop = () => { window.removeEventListener(ev, on); compassStop = null; };
+  setTimeout(() => {
+    if (heading == null && $("heading")) $("heading").textContent =
+      T({ ko: "이 폰에서는 나침반을 읽지 못했어요. 아래에서 직접 골라 주세요.", en: "This phone didn't give a compass reading. Please pick the direction below." });
+  }, 3000);
+  $("compass-ok").addEventListener("click", () => heading != null && applyDoor(id, heading, "compass"));
+}
+
 function renderReport(id) {
   current = id;
   const live = window.GILJI && GILJI.isLive(id);
@@ -1048,8 +1144,8 @@ function renderReport(id) {
         ${dial(s.stars)}
         <div>
           <span class="grade">${gradeName(s.grade, true)}</span>${starsRange(r)}
-          <div class="meta">${isEn() ? `The door faces ${DIR8.en[facingIx]} (assumed)<br>Read from maps only`
-            : `현관이 ${DIR8.ko[facingIx]}쪽을 봐요 (가정)<br>지도만으로 읽었어요`}</div>
+          <div class="meta">${doorLine(r, facingIx)}<br>${T({ ko: "지도만으로 읽었어요", en: "Read from maps only" })}
+            ${window.GILJI && GILJI.isLive(id) ? `<br><button class="link-btn" id="fix-door" type="button">${T({ ko: "현관 방향 고치기", en: "Fix the door direction" })}</button>` : ""}</div>
         </div>
       </div>
       <div class="says">${CH.toad(64, { pose: s.stars >= 4 ? "yay" : "hello", cls: "pop" })}<div class="bubble">${s.level_land ? levelLine(r) : w.headline}</div></div>
@@ -1175,6 +1271,7 @@ function renderReport(id) {
   });
   if (window.GILJI) GILJI.bindChat(id);
   bindFolds();
+  if ($("fix-door")) $("fix-door").addEventListener("click", () => doorSheet(id));
   bindTip(id);
   setTimeout(() => drawMap(id), 0);   // after show("report") makes the container visible
   $("to-compare").addEventListener("click", () => openCompare(id));
@@ -1294,7 +1391,7 @@ function sheet(html, redraw) {
   $("sheet").innerHTML = html; $("modal").classList.remove("hidden");
   $("sheet").scrollTop = keepScroll;
 }
-function closeSheet() { $("modal").classList.add("hidden"); sheetRedraw = null; }
+function closeSheet() { $("modal").classList.add("hidden"); sheetRedraw = null; if (compassStop) compassStop(); }
 $("modal").addEventListener("click", (e) => { if (e.target === $("modal")) closeSheet(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSheet(); });
 

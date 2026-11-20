@@ -34,6 +34,7 @@
     questions_today: { ko: "오늘 질문을 다 쓰셨어요. 내일 다시 물어봐 주세요.", en: "You've used today's questions. Please ask again tomorrow." },
     budget: { ko: "이번 달 베타 사용량이 다 찼어요. 다음 달에 다시 열려요.", en: "This month's beta use is full. It opens again next month." },
     invite: { ko: "초대 코드가 필요해요.", en: "You need an invite code." },
+    facing_today: { ko: "오늘은 방향을 많이 바꾸셨어요. 내일 다시 해 주세요.", en: "You've changed the direction many times today. Please try again tomorrow." },
     offline: { ko: "박씨 서버에 닿지 못했어요. 조금 뒤에 다시 해 주세요.", en: "We couldn't reach the Bakseed server. Please try again in a little while." },
     other: { ko: "잠시 문제가 생겼어요. 조금 뒤에 다시 해 주세요.", en: "Something went wrong. Please try again in a little while." },
   };
@@ -157,6 +158,13 @@
     window.giljiOpen(r.id);
   }
 
+  // the door direction set by the person: the server scores it again as its own home id
+  async function setFacing(id, deg, source) {
+    const r = await call("POST", `/api/homes/${id}/facing`, { deg: Math.round(deg) % 360, source });
+    remember(r.id, { report: r.report, map: r.map, card: r.card, label: (homes[id] && homes[id].label) || "" });
+    return r.id;
+  }
+
   // the free card's headline stands in until the full reading is opened
   function placeholder(id) {
     const h = homes[id] || {};
@@ -266,5 +274,5 @@
 
   I.onLang(() => { if (waitMsg && $("reading-wait")) $("reading-wait").textContent = T(waitMsg); });
 
-  window.GILJI = { api: API, lookup, placeholder, unlock, hasReading, chatCard, bindChat, isLive: (id) => !!homes[id], homes };
+  window.GILJI = { api: API, lookup, placeholder, unlock, hasReading, chatCard, bindChat, setFacing, message: msg, isLive: (id) => !!homes[id], homes };
 })();
