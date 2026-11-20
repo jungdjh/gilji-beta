@@ -69,6 +69,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
   background: var(--card); color: var(--ink); font: inherit;
 }
 .search input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+#sugg { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 15; margin: 0; padding: 6px 0; list-style: none; background: #fff; border-radius: 14px; box-shadow: 0 8px 28px rgba(25,31,40,.16); }
+#sugg li { padding: 10px 16px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
+#sugg li b { font-weight: 600; font-size: 15px; color: var(--ink); }
+#sugg li span { font-size: 13px; color: var(--ink-3); }
+#sugg li.on, #sugg li:hover { background: #f4f5f7; }
 .btn {
   border: 0; border-radius: 14px; padding: 14px 18px; background: var(--accent); color: #fff;
   font-weight: 700; white-space: nowrap;
@@ -200,6 +205,9 @@ details.card[open] > summary .fold::after { transform: rotate(180deg); }
 .compass .heading { font: 700 18px var(--display); margin: 4px 0 10px; }
 #sheet .small { font-size: 13px; color: var(--ink-3); }
 #sheet .err { color: #c0392b; }
+#sheet .inv-ok { text-align: center; padding: 8px 0 4px; }
+#sheet .inv-check { width: 56px; height: 56px; margin: 0 auto 10px; border-radius: 50%; background: #2fb36b; color: #fff; font-size: 30px; line-height: 56px; font-weight: 700; }
+#sheet .inv-ok .btn { margin-top: 14px; min-width: 140px; }
 .fold-all { display: flex; justify-content: flex-end; margin: 4px 2px -4px; }
 .fold-all button { border: 0; background: none; color: var(--ink-3); font-size: 13px; font-weight: 600; padding: 6px 4px; }
 .comp { display: grid; gap: 12px; }

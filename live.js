@@ -1,6 +1,7 @@
 // Bakseed beta: look up a real US address and chat about a home, through the web service
 // (api/server.py). The page still works without it (the nine sample places stay local).
-// What a person types stays in this browser; the service geocodes it once and keeps only an
+// What a person types stays in this browser; the service geocodes it once (and, while typing, asks
+// OpenStreetMap's Photon for address suggestions) and keeps only an
 // opaque id for the home. Settings: config.js sets window.GILJI_CONFIG = { api: "https://..." }.
 (function () {
   const cfg = window.GILJI_CONFIG || {};
@@ -125,14 +126,37 @@
       <button class="btn" type="submit">${T({ ko: "확인", en: "OK" })}</button></form>`, () => askInvite(then));
     $("inv").value = typed;
     $("inv").focus();
-    $("inv-form").addEventListener("submit", (e) => {
+    $("inv-form").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const v = $("inv").value.trim();
+      let v = $("inv").value.trim();
+      const m = v.match(/[?&]invite=([^&#\s]+)/);   // a whole pasted link works too
+      if (m) v = decodeURIComponent(m[1]);
       if (!v) return;
+      const btn = $("inv-form").querySelector("button");
+      btn.disabled = true;
+      const before = keep.get("invite", "");
       keep.set("invite", v);
-      window.giljiCloseSheet();
-      window.giljiHint({ ko: "고마워요. 주소를 다시 넣고 '보기'를 눌러 주세요.", en: "Thank you. Enter the address again and tap 'Go'." }, false);
-      if (then) then();
+      let ok = true;
+      try { await call("GET", "/api/invite"); } catch (err) { ok = err.code !== "invite"; }   // offline: keep it and move on
+      btn.disabled = false;
+      if (!ok) {
+        keep.set("invite", before);
+        let er = $("inv-err");
+        if (!er) { er = document.createElement("p"); er.id = "inv-err"; er.className = "err"; $("inv-form").after(er); }
+        er.textContent = T({ ko: "이 코드는 맞지 않아요. 받으신 링크의 invite= 뒤 글자를 확인해 주세요.",
+                             en: "That code doesn't work. Check the letters after invite= in your link." });
+        $("inv").focus();
+        return;
+      }
+      window.giljiSheet(`<div class="inv-ok"><div class="inv-check">✓</div>
+        <h3>${T({ ko: "확인됐어요! 환영해요.", en: "You're in. Welcome!" })}</h3>
+        <p>${T({ ko: then ? "하던 걸 이어서 할게요." : "이제 집 주소를 넣고 '보기'를 눌러 보세요.",
+                 en: then ? "Picking up where you left off." : "Now enter a home address and tap 'Go'." })}</p>
+        <button class="btn" id="inv-go" type="button">${T({ ko: "시작하기", en: "Start" })}</button></div>`);
+      $("inv-go").addEventListener("click", () => {
+        window.giljiCloseSheet();
+        if (then) then(); else { const a = $("q"); if (a) a.focus(); }
+      });
     });
   }
 
@@ -273,6 +297,59 @@
   }
 
   I.onLang(() => { if (waitMsg && $("reading-wait")) $("reading-wait").textContent = T(waitMsg); });
+
+  // address suggestions while typing (OpenStreetMap, through our server; nothing is kept)
+  function bindSuggest() {
+    const input = $("q"), form = $("search");
+    if (!API || !input || !form) return;
+    form.style.position = "relative"; form.style.zIndex = "16";   // above the cards below it
+    const box = document.createElement("ul");
+    box.id = "sugg"; box.setAttribute("role", "listbox"); box.hidden = true;
+    form.appendChild(box);
+    input.setAttribute("aria-autocomplete", "list"); input.setAttribute("aria-controls", "sugg");
+    let timer = 0, seq = 0, items = [], on = -1;
+    const hide = () => { box.hidden = true; items = []; on = -1; };
+    const pick = (line) => { input.value = line; hide(); form.requestSubmit(); };
+    const paint = () => {
+      box.innerHTML = "";
+      items.forEach((line, i) => {
+        const li = document.createElement("li");
+        li.setAttribute("role", "option"); li.className = i === on ? "on" : "";
+        const c = line.indexOf(",");
+        li.innerHTML = "<b></b><span></span>";
+        li.firstChild.textContent = c > 0 ? line.slice(0, c) : line;
+        li.lastChild.textContent = c > 0 ? line.slice(c + 1).trim() : "";
+        li.addEventListener("pointerdown", (e) => { e.preventDefault(); pick(line); });
+        box.appendChild(li);
+      });
+      box.hidden = !items.length;
+    };
+    input.addEventListener("input", () => {
+      clearTimeout(timer);
+      const q = input.value.trim();
+      if (!/^\d+[A-Za-z]?\s+\S{2,}/.test(q)) { seq++; hide(); return; }
+      timer = setTimeout(async () => {
+        const my = ++seq;
+        let r;
+        try { r = await call("GET", "/api/suggest?q=" + encodeURIComponent(q)); } catch (_) { return; }
+        if (my !== seq || input.value.trim() !== q) return;   // a newer letter was typed
+        items = (r.items || []).filter((x) => x.toLowerCase() !== q.toLowerCase()); on = -1; paint();
+      }, 280);
+    });
+    input.addEventListener("keydown", (e) => {
+      if (box.hidden) return;
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (e.key === "ArrowDown") on = on + 1 >= items.length ? -1 : on + 1;
+        else on = on - 1 < -1 ? items.length - 1 : on - 1;
+        paint();
+      } else if (e.key === "Enter" && on >= 0) { e.preventDefault(); pick(items[on]); }
+      else if (e.key === "Escape") hide();
+    });
+    input.addEventListener("blur", () => setTimeout(hide, 150));
+    form.addEventListener("submit", () => { seq++; clearTimeout(timer); hide(); });
+  }
+  bindSuggest();
 
   window.GILJI = { api: API, lookup, placeholder, unlock, hasReading, chatCard, bindChat, setFacing, message: msg, isLive: (id) => !!homes[id], homes };
 })();
