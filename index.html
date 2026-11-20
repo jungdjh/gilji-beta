@@ -925,14 +925,74 @@ function drawMap(id) {
 }
 
 // The separate "US living" card (api/us_living.py): what US buyers value; never part of the 풍수 score.
+/* 해와 향 (household feedback, Nov 20): which way the big windows face matters differently by climate.
+   US homes put most glass on the front (door) and back (yard) sides. Hot places: afternoon sun from the
+   west is the costly one, a north-south front/back is easiest. Cold places: a side facing south warms the
+   home in winter. Mild coast: small effect. Climate is a rough guess from where the home is (Texas; in
+   California, mountains above 1,200 m, or more than 50 km from the ocean). Never part of the 풍수 stars. */
+const CA_COAST = [[41.99,-124.21],[40.8,-124.16],[40.44,-124.4],[39.8,-123.85],[38.95,-123.73],[38.3,-123.05],
+  [37.8,-122.51],[37.5,-122.5],[36.95,-122.03],[36.6,-121.9],[36.3,-121.9],[35.65,-121.25],[35.15,-120.65],
+  [34.45,-120.45],[34.4,-119.7],[34.03,-118.8],[33.75,-118.4],[33.55,-117.8],[33.2,-117.38],[32.53,-117.12]];
+function climateOf(site) {
+  const { lat, lng } = site, el = site.elevation_m || 0;
+  if (lng > -107 && lng < -93 && lat < 36.6) return "hot_tx";
+  if (lng < -114 && lat > 32.4 && lat < 42.1) {
+    if (el >= 1200) return "cold";
+    const km = Math.min(...CA_COAST.map(([a, b]) => Math.hypot((a - lat) * 111, (b - lng) * 111 * Math.cos(lat * Math.PI / 180))));
+    return km > 50 ? "hot_ca" : "mild";
+  }
+  return null;
+}
+function sunNote(r) {
+  const s = r.site || {}, cl = climateOf(s);
+  if (!cl || s.facing_deg == null) return null;
+  const f = ((s.facing_deg % 360) + 360) % 360, b = (f + 180) % 360;
+  const near = (a, t) => Math.abs(((a - t + 540) % 360) - 180) <= 45;
+  const dir = (a) => { const i = Math.round(a / 45) % 8; return { ko: DIR8.ko[i] + "쪽", en: DIR8.en[i] }; };
+  const side = (which) => {
+    const d = dir(which === "front" ? f : b);
+    return which === "front" ? { ko: `앞(현관 쪽)이 ${d.ko}을`, en: `The front (door side) faces ${d.en}` }
+                             : { ko: `뒤(뒷마당 쪽)가 ${d.ko}을`, en: `The back (yard side) faces ${d.en}` };
+  };
+  const west = near(f, 270) ? "front" : near(b, 270) ? "back" : null;
+  const south = near(f, 180) ? "front" : near(b, 180) ? "back" : null;
+  const lead = { ko: "해와 향 · ", en: "Sun and facing · " };
+  const say = (kind, ko, en) => ({ kind, text: T(lead) + T({ ko, en }) });
+  if (cl === "hot_tx" || cl === "hot_ca") {
+    const where = cl === "hot_tx" ? { ko: "텍사스처럼 더운 곳에서는", en: "In a hot place like Texas," }
+                                  : { ko: "여름이 덥고 건조한 내륙에서는", en: "Inland, where summers are hot and dry," };
+    if (west) { const w = side(west); return say("know",
+      `${w.ko} 봐요. ${where.ko} 여름 오후 햇볕이 그쪽 창으로 강하게 들어 냉방비가 더 들 수 있어요. 차양, 블라인드, 나무 그늘이 도움돼요.`,
+      `${w.en}. ${where.en} strong afternoon sun comes through those windows and cooling costs more. Awnings, blinds or tree shade help.`); }
+    return say("good",
+      `앞이 ${dir(f).ko}, 뒤가 ${dir(b).ko}을 봐요. ${where.ko} 뜨거운 오후 햇볕이 큰 창에 덜 들어 여름이 수월해요.`,
+      `The front faces ${dir(f).en} and the back ${dir(b).en}. ${where.en} that keeps the hot afternoon sun off the big windows.`);
+  }
+  if (cl === "cold") {
+    if (south) { const w = side(south); return say("good",
+      `${w.ko} 봐요. 겨울이 추운 곳이라 그쪽 창으로 드는 햇볕이 집을 데워 줘요.`,
+      `${w.en}. Winters are cold here, and sun through those windows helps warm the home.`); }
+    return say("know", "남쪽을 보는 큰 창이 없어요. 겨울이 추운 곳이라 난방이 더 들 수 있어요.",
+      "No big windows face south. Winters are cold here, so heating may cost more.");
+  }
+  if (south) { const w = side(south), hot = south === west; return say("good",
+    `${w.ko} 봐요. 날씨가 온화한 곳이라 그쪽으로 햇살이 고르게 들어요.${hot ? " 여름 오후엔 조금 더울 수 있어요." : ""}`,
+    `${w.en}. The weather is mild here, so sun comes in evenly on that side.${hot ? " It can get warm on summer afternoons." : ""}`); }
+  if (west) { const w = side(west); return say("know",
+    `${w.ko} 봐요. 날씨가 온화해 방향의 영향은 작지만, 그쪽은 여름 오후에 더워질 수 있어요.`,
+    `${w.en}. The weather is mild, so facing matters little, but that side can get warm on summer afternoons.`); }
+  return say("know", "날씨가 온화해 방향의 영향은 작아요.", "The weather is mild, so facing matters little.");
+}
+
 function usLiving(r) {
   const ul = r.us_living || {};
   const u = (isEn() && ul.en) || ul.ko;
   if (!u) return "";
   const fix = (s) => (isEn() ? String(s || "").replace(/풍수/g, "feng shui") : s);   // the engine's English note says "풍수"
   const KIND = { good: { ko: "좋아요", en: "Good" }, mixed: { ko: "의견이 갈려요", en: "Opinions differ" }, know: { ko: "알아 두세요", en: "Good to know" } };
-  const body = u.items.length
-    ? u.items.map((x) => `<div class="it"><span class="k ${x.kind}">${T(KIND[x.kind])}</span><span>${fix(x.text)}</span></div>`).join("")
+  const sun = sunNote(r), items = sun ? [sun, ...u.items] : u.items;
+  const body = items.length
+    ? items.map((x) => `<div class="it"><span class="k ${x.kind}">${T(KIND[x.kind])}</span><span>${fix(x.text)}</span></div>`).join("")
     : `<p style="margin:0;font-size:14px">${fix(u.nothing)}</p>`;
   return `<div class="card usl"><h2>${fix(u.title)} <small>${T({ ko: "풍수 별점과 별개", en: "Separate from the feng shui stars" })}</small></h2><p class="usl-note">${fix(u.note)}</p>${body}
     ${u.lot_note ? `<p class="usl-note" style="margin:8px 0 0">${fix(u.lot_note)}</p>` : ""}</div>`;
