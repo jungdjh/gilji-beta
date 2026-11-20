@@ -201,6 +201,9 @@ details.card[open] > summary .fold::after { transform: rotate(180deg); }
 .dirs .dir:disabled { opacity: .5; }
 .dir-home { display: grid; place-items: center; font-size: 24px; }
 .compass { text-align: center; margin-top: 10px; }
+.door-busy { text-align: center; padding: 12px 0 8px; }
+.door-busy .char-wrap { display: inline-block; margin-bottom: 6px; }
+.door-busy h3 { margin: 6px 0 4px; }
 #cam { position: fixed; inset: 0; z-index: 1000; background: #000; color: #fff; }
 #cam video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 #cam.no-video video { display: none; }
@@ -1036,16 +1039,23 @@ function doorSheet(id, busy) {
 
 async function applyDoor(id, deg, source) {
   if (compassStop) compassStop();
-  $("door-msg").classList.remove("err");
-  $("door-msg").textContent = T({ ko: "이 방향으로 다시 읽는 중이에요…", en: "Reading the home again for this direction…" });
-  document.querySelectorAll("#sheet button").forEach((b) => (b.disabled = true));
+  const ix = Math.round((((deg % 360) + 360) % 360) / 45) % 8;
+  const dirName = isEn() ? DIR8.en[ix] : DIR8.ko[ix] + "쪽";
+  const before = R[id] && R[id].score && R[id].score.stars;
+  // a clear "working" screen: re-reading takes a few seconds
+  sheet(`<div class="door-busy"><div class="char-wrap think">${CH.toad(96, { pose: "think" })}</div>
+    <h3>${T({ ko: `현관을 ${dirName}으로 두고 다시 읽는 중이에요…`, en: `Reading the home again with the door facing ${dirName}…` })}</h3>
+    <p class="small">${T({ ko: "몇 초면 돼요.", en: "This takes a few seconds." })}</p></div>`);
   try {
     const vid = await GILJI.setFacing(id, deg, source);
     closeSheet();
     renderReport(vid); show("report");
     scrollTo({ top: 0 });
+    const after = R[vid] && R[vid].score && R[vid].score.stars;
+    const change = before && after && before !== after ? ` · ★${before} → ★${after}` : after ? ` · ★${after}` : "";
+    toast(T({ ko: `현관 방향을 ${dirName}으로 바꿨어요${change}`, en: `Door set to ${dirName}${change}` }));
   } catch (e) {
-    document.querySelectorAll("#sheet button").forEach((b) => (b.disabled = false));
+    doorSheet(id);
     $("door-msg").classList.add("err");
     $("door-msg").textContent = GILJI.message(e.code);
   }

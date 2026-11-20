@@ -207,10 +207,23 @@
     if (pending.has(key)) return;
     pending.add(key);
     const writing = () => window.giljiSheet(`<h3>${T({ ko: "이 집만을 위한 해설을 쓰는 중이에요", en: "Writing a reading just for this home" })}</h3>
-      <p>${T({ ko: "터주가 땅을 다시 읽고 있어요. 20초쯤 걸려요.", en: "Teoju is reading the land again. It takes about 20 seconds." })}</p>`, writing);
+      <p>${T({ ko: "터주가 땅을 다시 읽고 있어요. 1분쯤 걸릴 수 있어요. 이 화면을 열어 두세요.", en: "Teoju is reading the land again. It can take about a minute. Keep this screen open." })}</p>`, writing);
     writing();
     try {
-      const rd = await call("POST", `/api/homes/${id}/reading`, { lang: lg });
+      // a new reading is written in the background; ask again every few seconds until it is ready.
+      // a dropped connection (the phone gave up, or slept for a moment) is retried, not shown as a failure.
+      let rd = null, misses = 0;
+      for (let tries = 0; tries < 60 && !rd; tries++) {
+        try {
+          const r = await call("POST", `/api/homes/${id}/reading`, { lang: lg });
+          misses = 0;
+          if (r.status !== "working") rd = r;
+        } catch (err) {
+          if (err.code !== "offline" || ++misses > 3) throw err;
+        }
+        if (!rd) await new Promise((ok) => setTimeout(ok, 3000));
+      }
+      if (!rd) throw new ApiError("offline");
       homes[id].readings = Object.assign(homes[id].readings || {}, { [lg]: rd });
       remember(id, homes[id]);
       window.giljiCloseSheet();
