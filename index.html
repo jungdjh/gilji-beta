@@ -201,8 +201,21 @@ details.card[open] > summary .fold::after { transform: rotate(180deg); }
 .dirs .dir:disabled { opacity: .5; }
 .dir-home { display: grid; place-items: center; font-size: 24px; }
 .compass { text-align: center; margin-top: 10px; }
-.compass .needle { font-size: 44px; line-height: 1; color: var(--accent); transition: transform .15s linear; display: inline-block; margin: 6px 0; }
-.compass .heading { font: 700 18px var(--display); margin: 4px 0 10px; }
+#cam { position: fixed; inset: 0; z-index: 1000; background: #000; color: #fff; }
+#cam video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#cam.no-video video { display: none; }
+#cam .cam-top { position: absolute; top: 0; left: 0; right: 0; padding: calc(env(safe-area-inset-top) + 14px) 0 14px; background: linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,0)); text-align: center; }
+#cam .cam-top p { margin: 10px 16px 0; font-size: 15px; }
+#cam .cam-tape { position: relative; height: 34px; overflow: hidden; }
+#cam .cam-tape span { position: absolute; top: 18px; width: 2px; height: 10px; margin-left: -1px; background: rgba(255,255,255,.7); font-size: 0; }
+#cam .cam-tape span.big { top: 0; width: auto; white-space: nowrap; height: auto; background: none; transform: translateX(-50%); font: 700 17px var(--display); }
+#cam .cam-mark { width: 0; height: 0; margin: 2px auto 0; border: 8px solid transparent; border-bottom-color: #f5b400; border-top: 0; }
+#cam .cam-cross { position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; border: 2px solid rgba(255,255,255,.85); border-radius: 50%; }
+#cam .cam-cross::after { content: ""; position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: #f5b400; }
+#cam .cam-bottom { position: absolute; left: 0; right: 0; bottom: 0; padding: 24px 16px calc(env(safe-area-inset-bottom) + 20px); background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.7)); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+#cam .cam-dir { margin: 0; font: 800 30px var(--display); text-shadow: 0 1px 6px rgba(0,0,0,.5); }
+#cam .cam-bottom .btn { min-width: 200px; }
+#cam .cam-x { background: none; border: 0; color: #fff; font-size: 15px; padding: 6px 12px; }
 #sheet .small { font-size: 13px; color: var(--ink-3); }
 #sheet .err { color: #c0392b; }
 #sheet .inv-ok { text-align: center; padding: 8px 0 4px; }
@@ -1009,9 +1022,9 @@ function doorSheet(id, busy) {
     <p>${T({ ko: "현관문을 열고 밖으로 나설 때 바라보는 쪽이에요. 풍수에서는 이 방향이 집의 앞이에요.",
              en: "It's the way you face when you step out the front door. In feng shui, that is the front of the home." })}</p>
     ${canCompass ? `<div class="compass" id="compass">
-      <button class="btn accent" type="button" id="compass-go">${T({ ko: "폰 나침반으로 재기", en: "Measure with the phone's compass" })}</button>
-      <p class="small">${T({ ko: "집에 있을 때만 쓸 수 있어요. 현관문 밖에 서서 집을 등지고, 폰을 평평하게 들어 주세요.",
-                            en: "Only works at the home. Stand outside the front door with your back to the house, and hold the phone flat." })}</p>
+      <button class="btn accent" type="button" id="compass-go">📷 ${T({ ko: "카메라로 방향 재기", en: "Measure with the camera" })}</button>
+      <p class="small">${T({ ko: "집에 있을 때만 쓸 수 있어요. 현관문에 서서 사진 찍듯이 폰을 세워 문 밖을 비춰 주세요.",
+                            en: "Only works at the home. Stand in the front doorway and point the camera out the door, as if taking a photo." })}</p>
     </div>` : ""}
     <p class="small" style="margin-top:14px">${T({ ko: canCompass ? "또는 직접 골라 주세요" : "방향을 골라 주세요", en: canCompass ? "Or pick it yourself" : "Pick the direction" })}</p>
     <div class="dirs">${cell(7)}${cell(0)}${cell(1)}${cell(6)}<span class="dir-home" aria-hidden="true">🏠</span>${cell(2)}${cell(5)}${cell(4)}${cell(3)}</div>
@@ -1038,39 +1051,87 @@ async function applyDoor(id, deg, source) {
   }
 }
 
-// heading the top of the phone points to, clockwise from north (iPhone: webkitCompassHeading;
-// Android: an absolute alpha, which turns the other way)
+// the way the back camera looks, clockwise from north. iPhone: webkitCompassHeading (tilt-compensated);
+// Android: from an absolute alpha/beta/gamma (the W3C orientation spec's compass-heading formula).
+function cameraHeading(e) {
+  if (e.webkitCompassHeading != null && e.webkitCompassHeading >= 0) return e.webkitCompassHeading;
+  if (!e.absolute || e.alpha == null || e.beta == null || e.gamma == null) return null;
+  const r = Math.PI / 180, x = e.beta * r, y = e.gamma * r, z = e.alpha * r;
+  const vx = -Math.cos(z) * Math.sin(y) - Math.sin(z) * Math.sin(x) * Math.cos(y);
+  const vy = -Math.sin(z) * Math.sin(y) + Math.cos(z) * Math.sin(x) * Math.cos(y);
+  let h = Math.atan(vx / vy);
+  if (vy < 0) h += Math.PI; else if (vx < 0) h += 2 * Math.PI;
+  return h / r;
+}
+
+// full-screen camera view with the direction written over it. Nothing from the camera leaves the phone.
 async function startCompass(id) {
-  const box = $("compass");
   try {
     if (typeof DeviceOrientationEvent.requestPermission === "function"
         && (await DeviceOrientationEvent.requestPermission()) !== "granted") throw new Error("denied");
   } catch (_) {
-    box.innerHTML = `<p class="small err">${T({ ko: "나침반을 쓰도록 허락되지 않았어요. 아래에서 직접 골라 주세요.", en: "The compass wasn't allowed. Please pick the direction below." })}</p>`;
+    $("compass").innerHTML = `<p class="small err">${T({ ko: "방향 센서를 쓰도록 허락되지 않았어요. 아래에서 직접 골라 주세요.", en: "Motion access wasn't allowed. Please pick the direction below." })}</p>`;
     return;
   }
-  let heading = null;
-  box.innerHTML = `<div class="needle" id="needle" aria-hidden="true">▲</div>
-    <p class="heading" id="heading">${T({ ko: "방향을 읽는 중…", en: "Reading the direction…" })}</p>
-    <button class="btn accent" type="button" id="compass-ok" disabled>${T({ ko: "이 방향으로", en: "Use this direction" })}</button>`;
-  const turn = () => ((screen.orientation && screen.orientation.angle) || window.orientation || 0);
+  const cam = document.createElement("div");
+  cam.id = "cam";
+  cam.innerHTML = `<video id="cam-video" autoplay playsinline muted></video>
+    <div class="cam-top"><div class="cam-tape" id="cam-tape"></div><div class="cam-mark"></div>
+      <p>${T({ ko: "현관문에 서서 문 밖을 비춰 주세요", en: "Stand in the doorway and point the camera outside" })}</p></div>
+    <div class="cam-cross" aria-hidden="true"></div>
+    <div class="cam-bottom">
+      <p class="cam-dir" id="cam-dir">${T({ ko: "방향을 읽는 중…", en: "Reading the direction…" })}</p>
+      <button class="btn accent" type="button" id="cam-ok" disabled>${T({ ko: "이 방향으로", en: "Use this direction" })}</button>
+      <button class="cam-x" type="button" id="cam-x">${T({ ko: "취소", en: "Cancel" })}</button>
+    </div>`;
+  document.body.appendChild(cam);
+  let stream = null;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false });
+    $("cam-video").srcObject = stream;
+  } catch (_) { cam.classList.add("no-video"); }       // no camera: the direction still works on a dark screen
+  // smooth the jitter: average unit vectors
+  let sx = 0, sy = 0, heading = null;
+  const tape = $("cam-tape"), PX = 4;                 // 4px per degree; the strip shows about ±45°
+  const marks = [];
+  for (let d = 0; d < 360; d += 15) marks.push(d);
   const on = (e) => {
-    let h = e.webkitCompassHeading != null ? e.webkitCompassHeading : (e.absolute && e.alpha != null ? 360 - e.alpha : null);
-    if (h == null) return;
-    heading = (((h + turn()) % 360) + 360) % 360;
+    const h = cameraHeading(e);
+    if (h == null || isNaN(h)) return;
+    const r = h * Math.PI / 180;
+    sx = heading == null ? Math.sin(r) : sx * 0.8 + Math.sin(r) * 0.2;
+    sy = heading == null ? Math.cos(r) : sy * 0.8 + Math.cos(r) * 0.2;
+    heading = ((Math.atan2(sx, sy) * 180 / Math.PI) + 360) % 360;
     const ix = Math.round(heading / 45) % 8;
-    $("needle").style.transform = `rotate(${-heading}deg)`;
-    $("heading").textContent = `${isEn() ? DIR8.en[ix] : DIR8.ko[ix] + "쪽"} · ${Math.round(heading)}°`;
-    $("compass-ok").disabled = false;
+    $("cam-dir").textContent = `${isEn() ? DIR8.en[ix] : DIR8.ko[ix] + "쪽"} · ${Math.round(heading)}°`;
+    tape.innerHTML = marks.map((d) => {
+      const off = ((d - heading + 540) % 360) - 180;
+      if (Math.abs(off) > 60) return "";
+      const big = d % 45 === 0;
+      const lab = big ? (isEn() ? DIR_SHORT.en[d / 45] : DIR_SHORT.ko[d / 45]) : "";
+      return `<span class="${big ? "big" : ""}" style="left:calc(50% + ${off * PX}px)">${lab}</span>`;
+    }).join("");
+    $("cam-ok").disabled = false;
   };
   const ev = "ondeviceorientationabsolute" in window ? "deviceorientationabsolute" : "deviceorientation";
   window.addEventListener(ev, on);
-  compassStop = () => { window.removeEventListener(ev, on); compassStop = null; };
+  compassStop = () => {
+    window.removeEventListener(ev, on);
+    if (stream) stream.getTracks().forEach((t) => t.stop());
+    cam.remove();
+    compassStop = null;
+  };
   setTimeout(() => {
-    if (heading == null && $("heading")) $("heading").textContent =
-      T({ ko: "이 폰에서는 나침반을 읽지 못했어요. 아래에서 직접 골라 주세요.", en: "This phone didn't give a compass reading. Please pick the direction below." });
+    if (heading == null && $("cam-dir")) $("cam-dir").textContent =
+      T({ ko: "이 폰에서는 방향을 읽지 못했어요. 취소하고 직접 골라 주세요.", en: "This phone didn't give a direction. Cancel and pick it yourself." });
   }, 3000);
-  $("compass-ok").addEventListener("click", () => heading != null && applyDoor(id, heading, "compass"));
+  $("cam-x").addEventListener("click", () => compassStop && compassStop());
+  $("cam-ok").addEventListener("click", () => {
+    if (heading == null) return;
+    const h = heading;
+    compassStop();
+    applyDoor(id, h, "compass");
+  });
 }
 
 function renderReport(id) {
