@@ -162,8 +162,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .map .legend { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 12px; color: var(--ink-2); margin-top: 8px; }
 .dot { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 4px; vertical-align: 0; }
 .leaf { height: 380px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); z-index: 0; }
-.leaf .sect-label span { display: inline-block; transform: translate(-50%, -50%); background: rgba(255,255,255,.94); color: #191f28; border: 1.5px solid; border-radius: 10px; padding: 2px 8px; font: 12px/1.35 var(--display); text-align: center; white-space: nowrap; }
-.leaf .sect-label em { font-style: normal; font-size: 11px; color: #6b625a; }
 .leaf .peak { white-space: nowrap; }
 .leaf .peak i { display: block; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 12px solid; transform: translate(-50%, -100%); filter: drop-shadow(0 0 1px #fff); }
 .leaf .peak span { display: block; transform: translate(-50%, -6px); font: 700 11px var(--display); color: #2e2925; text-shadow: 0 0 3px #fff, 0 0 3px #fff; }
@@ -800,7 +798,6 @@ function factLine(key, f) {
 const SIDE = { hyeonmu: { ko: "뒤", en: "Back" }, jujak: { ko: "앞", en: "Front" },
                cheongryong: { ko: "왼쪽", en: "Left" }, baekho: { ko: "오른쪽", en: "Right" } };
 // 오방색: 현무 black, 주작 red, 청룡 blue-green, 백호 white
-const SECT_COLOR = { hyeonmu: "#3a3f55", jujak: "#c0503a", cheongryong: "#2f7a6e", baekho: "#8f969e" };
 const OH_COLOR = { wood: "#6f8f74", fire: "#c9705a", earth: "#c9a15a", metal: "#a3a7ad", water: "#5b6f8f" };
 
 function verdict(r, k) {
@@ -831,21 +828,16 @@ function drawMap(id) {
   const m = L.map(el, { scrollWheelZoom: false, zoomControl: true, attributionControl: true });
   m.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
   leafMap = m;
-  L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
-    maxZoom: 17,
-    attribution: `© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, SRTM · ${T({ ko: "지도 스타일", en: "map style" })} © <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)`,
+  // quiet light-gray base (Esri Light Gray Canvas) so the home, water and hills stand out
+  const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/";
+  L.tileLayer(ESRI + "World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 16, attribution: "Esri, HERE, Garmin, © OpenStreetMap contributors",
   }).addTo(m);
+  L.tileLayer(ESRI + "World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16, opacity: .7 }).addTo(m);
 
-  // four wedges, turned with the house: 현무 behind, 주작 in front, 청룡 on the left looking out
-  const center = { hyeonmu: facing + 180, jujak: facing, cheongryong: facing - 90, baekho: facing + 90 };
+  // the area the engine read, as one faint ring; the four sides are listed under the map
   const RAD = 3300;
-  Object.entries(center).forEach(([k, c]) => {
-    const pts = [[lat, lng]];
-    for (let a = c - 45; a <= c + 45; a += 5) pts.push(dest(lat, lng, a, RAD));
-    L.polygon(pts, { color: SECT_COLOR[k], weight: 1, opacity: .5, fillColor: SECT_COLOR[k], fillOpacity: .16, interactive: false }).addTo(m);
-    L.marker(dest(lat, lng, c, RAD * 1.02), { interactive: false, icon: L.divIcon({ className: "sect-label",
-      html: `<span style="border-color:${SECT_COLOR[k]}"><b>${T(SIDE[k])}</b><br><em>${verdict(r, k)}</em></span>`, iconSize: null }) }).addTo(m);
-  });
+  L.circle([lat, lng], { radius: RAD, color: "#f0675c", weight: 1, opacity: .45, dashArray: "3 6", fill: false, interactive: false }).addTo(m);
 
   // river and overpass lines from the engine's own map data
   const lay = (window.PUNGSU_MAP || {})[id] || {};
@@ -880,9 +872,9 @@ function drawMap(id) {
   L.marker([lat, lng], { icon: L.divIcon({ className: "home-pin", html: CH.toad(40), iconSize: [34, 46], iconAnchor: [17, 44] }) })
     .bindTooltip(T({ ko: "이 집 · 화살표가 현관 방향", en: "This home · the arrow shows the door's direction" })).addTo(m);
 
-  const E = RAD * 1.15;   // room for the side labels at the wedge edges
+  const E = RAD * 1.04;
   const b = L.latLngBounds([dest(lat, lng, 0, E), dest(lat, lng, 180, E), dest(lat, lng, 90, E), dest(lat, lng, 270, E)]);
-  m.fitBounds(b, { padding: [4, 4] });
+  m.fitBounds(b, { padding: [2, 2] });
   setTimeout(() => m.invalidateSize(), 80);
 }
 
