@@ -335,6 +335,10 @@
         li.addEventListener("pointerdown", (e) => { e.preventDefault(); pick(line); });
         box.appendChild(li);
       });
+      if (items.length) {           // credit the suggestion data (Geoapify's free plan asks for it)
+        const c = document.createElement("li"); c.className = "credit"; c.setAttribute("aria-hidden", "true");
+        c.textContent = "Powered by Geoapify · © OpenStreetMap"; box.appendChild(c);
+      }
       box.hidden = !items.length;
     };
     input.addEventListener("input", () => {
@@ -343,8 +347,12 @@
       if (!/^\d+[A-Za-z]?\s+\S{2,}/.test(q)) { seq++; hide(); return; }
       timer = setTimeout(async () => {
         const my = ++seq;
+        if (box.hidden) {              // the free suggestion service can take a few seconds: say so
+          box.innerHTML = `<li class="credit">${T({ ko: "주소 찾는 중…", en: "Finding addresses…" })}</li>`;
+          box.hidden = false;
+        }
         let r;
-        try { r = await call("GET", "/api/suggest?q=" + encodeURIComponent(q)); } catch (_) { return; }
+        try { r = await call("GET", "/api/suggest?q=" + encodeURIComponent(q)); } catch (_) { if (my === seq) hide(); return; }
         if (my !== seq || input.value.trim() !== q) return;   // a newer letter was typed
         items = (r.items || []).filter((x) => x.toLowerCase() !== q.toLowerCase()); on = -1; paint();
       }, 280);
