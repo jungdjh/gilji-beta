@@ -70,12 +70,40 @@
 
   // live homes this browser has looked up (kept here only, so "내 집" and going back still work)
   const homes = keep.get("homes", {});
+  // each home carries `at` (last opened) for the 최근 본 집 list. The oldest go first when the phone
+  // keeps more than 40, but never a home the person favorited or set as their own.
+  function kept() {
+    let p = [];
+    try { p = [JSON.parse(localStorage.getItem("pungsu.saved") || "null"), ...JSON.parse(localStorage.getItem("pungsu.favs") || "[]")]; } catch (_) {}
+    return new Set(p.filter(Boolean));
+  }
   function remember(id, h) {
-    homes[id] = h;
-    const ids = Object.keys(homes);
-    if (ids.length > 12) delete homes[ids[0]];
+    homes[id] = Object.assign({}, h, { at: Date.now(), hidden: false });
+    const ids = Object.keys(homes), keep_ = kept();
+    const old = ids.filter((x) => !keep_.has(x)).sort((a, b) => (homes[a].at || 0) - (homes[b].at || 0));
+    while (Object.keys(homes).length > 40 && old.length) delete homes[old.shift()];
     keep.set("homes", homes);
     install(id);
+  }
+  function touch(id) {
+    if (!homes[id]) return;
+    homes[id].at = Date.now(); homes[id].hidden = false;
+    keep.set("homes", homes);
+  }
+  // one row per address (door-direction versions of a home share its address); newest first
+  function recent() {
+    const byLabel = {};
+    Object.entries(homes).forEach(([id, h]) => {
+      if (h.hidden || !window.PUNGSU_REPORTS[id]) return;
+      const k = h.label || id.split("_d")[0];
+      if (!byLabel[k] || (h.at || 0) > (byLabel[k].at || 0)) byLabel[k] = { id, at: h.at || 0 };
+    });
+    return Object.values(byLabel).sort((a, b) => b.at - a.at);
+  }
+  function forget(id) {                       // hide from the list; favorites and 우리 집 still open it
+    const k = (homes[id] && homes[id].label) || id.split("_d")[0];
+    Object.entries(homes).forEach(([x, h]) => { if ((h.label || x.split("_d")[0]) === k) h.hidden = true; });
+    keep.set("homes", homes);
   }
   function install(id) {
     const h = homes[id];
@@ -345,12 +373,12 @@
       clearTimeout(timer);
       const q = input.value.trim();
       if (!/^\d+[A-Za-z]?\s+\S{2,}/.test(q)) { seq++; hide(); return; }
+      if (box.hidden) {                // say so at once: the free suggestion service can take a few seconds
+        box.innerHTML = `<li class="credit">${T({ ko: "주소 찾는 중…", en: "Finding addresses…" })}</li>`;
+        box.hidden = false;
+      }
       timer = setTimeout(async () => {
         const my = ++seq;
-        if (box.hidden) {              // the free suggestion service can take a few seconds: say so
-          box.innerHTML = `<li class="credit">${T({ ko: "주소 찾는 중…", en: "Finding addresses…" })}</li>`;
-          box.hidden = false;
-        }
         let r;
         try { r = await call("GET", "/api/suggest?q=" + encodeURIComponent(q)); } catch (_) { if (my === seq) hide(); return; }
         if (my !== seq || input.value.trim() !== q) return;   // a newer letter was typed
@@ -372,5 +400,6 @@
   }
   bindSuggest();
 
-  window.GILJI = { api: API, lookup, placeholder, unlock, hasReading, chatCard, bindChat, setFacing, message: msg, isLive: (id) => !!homes[id], homes };
+  window.GILJI = { api: API, lookup, placeholder, unlock, hasReading, chatCard, bindChat, setFacing, message: msg, isLive: (id) => !!homes[id], homes,
+                   recent, touch, forget };
 })();
