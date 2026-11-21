@@ -27,17 +27,17 @@
 
   const MSG = {
     not_found: { ko: "주소를 찾지 못했어요. 번지, 도시, 주(州)까지 넣어 주세요. 예: 1100 Congress Ave, Austin, TX",
-                 en: "We couldn't find that address. Please include the house number, city and state. e.g. 1100 Congress Ave, Austin, TX" },
+                 en: "Hmm, we couldn't find that address. Try adding the house number, city and state, like 1100 Congress Ave, Austin, TX." },
     not_covered: { ko: "지금은 캘리포니아와 텍사스 주소만 볼 수 있어요. 다른 주는 곧 열려요.",
-                   en: "For now we can only read California and Texas addresses. Other states are coming soon." },
+                   en: "We can only read California and Texas homes for now. More states are on the way!" },
     homes_today: { ko: "오늘은 새 집을 다 보셨어요. 내일 다시 와 주세요. 이미 본 집은 언제든 다시 볼 수 있어요.",
-                   en: "You've seen all the new homes for today. Please come back tomorrow. Homes you've already seen are always open." },
-    questions_today: { ko: "오늘 질문을 다 쓰셨어요. 내일 다시 물어봐 주세요.", en: "You've used today's questions. Please ask again tomorrow." },
-    budget: { ko: "이번 달 베타 사용량이 다 찼어요. 다음 달에 다시 열려요.", en: "This month's beta use is full. It opens again next month." },
-    invite: { ko: "초대 코드가 필요해요.", en: "You need an invite code." },
-    facing_today: { ko: "오늘은 방향을 많이 바꾸셨어요. 내일 다시 해 주세요.", en: "You've changed the direction many times today. Please try again tomorrow." },
-    offline: { ko: "박씨 서버에 닿지 못했어요. 조금 뒤에 다시 해 주세요.", en: "We couldn't reach the Bakseed server. Please try again in a little while." },
-    other: { ko: "잠시 문제가 생겼어요. 조금 뒤에 다시 해 주세요.", en: "Something went wrong. Please try again in a little while." },
+                   en: "That's all the new homes for today. Come back tomorrow for more. Homes you've already seen are always here." },
+    questions_today: { ko: "오늘 질문을 다 쓰셨어요. 내일 다시 물어봐 주세요.", en: "That's all the questions for today. Teoju will be happy to chat again tomorrow." },
+    budget: { ko: "이번 달 베타 사용량이 다 찼어요. 다음 달에 다시 열려요.", en: "We've reached this month's beta limit. It opens up again next month. Thanks for your patience!" },
+    invite: { ko: "초대 코드가 필요해요.", en: "You'll need an invite code." },
+    facing_today: { ko: "오늘은 방향을 많이 바꾸셨어요. 내일 다시 해 주세요.", en: "You've changed the door direction a lot today. Try again tomorrow." },
+    offline: { ko: "박씨 서버에 닿지 못했어요. 조금 뒤에 다시 해 주세요.", en: "We couldn't reach Bakseed just now. Please try again in a moment." },
+    other: { ko: "잠시 문제가 생겼어요. 조금 뒤에 다시 해 주세요.", en: "Something went wrong on our end. Please try again in a moment." },
   };
   const msg = (code) => T(MSG[code] || MSG.other);
 
@@ -131,7 +131,7 @@
     const tick = () => { lis.forEach((li, j) => (li.className = j < i % (lis.length + 1) ? "done" : j === i % (lis.length + 1) ? "on" : "")); i++; };
     tick();
     spin = setInterval(tick, 1400);
-    waitMsg = { ko: "처음 보는 집은 30초쯤 걸려요.", en: "A home we haven't seen before takes about 30 seconds." };
+    waitMsg = { ko: "처음 보는 집은 30초쯤 걸려요.", en: "A new home takes about 30 seconds to read." };
     $("reading-wait").textContent = T(waitMsg);
   }
   let waitMsg = null;
@@ -149,7 +149,7 @@
     const code = T({ ko: "초대 코드", en: "Invite code" });
     window.giljiSheet(`<h3>${T({ ko: "초대 코드를 넣어 주세요", en: "Enter your invite code" })}</h3>
       <p>${T({ ko: "박씨는 지금 초대받은 분들만 쓰는 베타예요. 받으신 링크나 코드를 넣어 주세요.",
-               en: "Bakseed is a beta for invited people only for now. Enter the link or code you received." })}</p>
+               en: "Bakseed is in a private beta for invited friends. Paste the link or code you got." })}</p>
       <form id="inv-form" class="search" style="margin:12px 0 0"><input id="inv" type="text" autocomplete="off" aria-label="${code}" placeholder="${code}">
       <button class="btn" type="submit">${T({ ko: "확인", en: "OK" })}</button></form>`, () => askInvite(then));
     $("inv").value = typed;
@@ -172,7 +172,7 @@
         let er = $("inv-err");
         if (!er) { er = document.createElement("p"); er.id = "inv-err"; er.className = "err"; $("inv-form").after(er); }
         er.textContent = T({ ko: "이 코드는 맞지 않아요. 받으신 링크의 invite= 뒤 글자를 확인해 주세요.",
-                             en: "That code doesn't work. Check the letters after invite= in your link." });
+                             en: "That code didn't work. Double-check the letters after invite= in your link." });
         $("inv").focus();
         return;
       }
@@ -180,7 +180,7 @@
         <h3>${T({ ko: "확인됐어요! 환영해요.", en: "You're in. Welcome!" })}</h3>
         <p>${T({ ko: then ? "하던 걸 이어서 할게요." : "이제 집 주소를 넣고 '보기'를 눌러 보세요.",
                  en: then ? "Picking up where you left off." : "Now enter a home address and tap 'Go'." })}</p>
-        <button class="btn" id="inv-go" type="button">${T({ ko: "시작하기", en: "Start" })}</button></div>`);
+        <button class="btn" id="inv-go" type="button">${T({ ko: "시작하기", en: "Let's go" })}</button></div>`);
       $("inv-go").addEventListener("click", () => {
         window.giljiCloseSheet();
         if (then) then(); else { const a = $("q"); if (a) a.focus(); }
@@ -223,8 +223,8 @@
     const h = homes[id] || {};
     const c = (h.card && (h.card[lang()] || h.card.ko)) || {};
     return { headline: c.headline || "",
-      good: [T({ ko: "이 집의 좋은 점을 쉬운 말로 정리해 드려요.", en: "We sum up this home's good points in plain words." })],
-      watch: [T({ ko: "아쉬운 점과 그 이유도 함께 알려 드려요.", en: "We also tell you its weak points, and why." })], sal: {},
+      good: [T({ ko: "이 집의 좋은 점을 쉬운 말로 정리해 드려요.", en: "We'll sum up what's lovely about this home in plain words." })],
+      watch: [T({ ko: "아쉬운 점과 그 이유도 함께 알려 드려요.", en: "We'll also share what could be better, and why." })], sal: {},
       pungsu: { sides: "", ohaeng: "", giun: { wealth: "", health: "", harmony: "", career: "", stability: "" } } };
   }
 
@@ -236,7 +236,7 @@
     if (pending.has(key)) return;
     pending.add(key);
     const writing = () => window.giljiSheet(`<h3>${T({ ko: "이 집만을 위한 해설을 쓰는 중이에요", en: "Writing a reading just for this home" })}</h3>
-      <p>${T({ ko: "터주가 땅을 다시 읽고 있어요. 1분쯤 걸릴 수 있어요. 이 화면을 열어 두세요.", en: "Teoju is reading the land again. It can take about a minute. Keep this screen open." })}</p>`, writing);
+      <p>${T({ ko: "터주가 땅을 다시 읽고 있어요. 1분쯤 걸릴 수 있어요. 이 화면을 열어 두세요.", en: "Teoju is taking a close look. It can take up to a minute, so keep this screen open." })}</p>`, writing);
     writing();
     try {
       // a new reading is written in the background; ask again every few seconds until it is ready.
@@ -260,7 +260,7 @@
     } catch (e) {
       if (e.code === "invite") { window.giljiCloseSheet(); askInvite(() => unlock(id, done)); return; }
       const failed = () => {
-        window.giljiSheet(`<h3>${T({ ko: "해설을 열지 못했어요", en: "We couldn't open the reading" })}</h3><p>${esc(msg(e.code))}</p>
+        window.giljiSheet(`<h3>${T({ ko: "해설을 열지 못했어요", en: "We couldn't open the reading just yet" })}</h3><p>${esc(msg(e.code))}</p>
           <button class="btn block" id="ok">${T({ ko: "닫기", en: "Close" })}</button>`, failed);
         $("ok").addEventListener("click", window.giljiCloseSheet);
       };
@@ -278,13 +278,13 @@
   function chatCard(id) {
     if (!API) return "";
     return `<div class="card chat" id="chat">
-      <h2>${T({ ko: "터주에게 물어보기", en: "Ask Teoju" })} <small>${T({ ko: "이 집 땅 이야기만 답해요", en: "Answers only about this home's land" })}</small></h2>
+      <h2>${T({ ko: "터주에게 물어보기", en: "Ask Teoju" })} <small>${T({ ko: "이 집 땅 이야기만 답해요", en: "Ask me about this home's land" })}</small></h2>
       <div class="msgs" id="chat-msgs"></div>
       <div class="sugg" id="chat-sugg"></div>
       <form class="search" id="chat-form" style="margin:10px 0 0">
         <input id="chat-q" type="text" maxlength="300" autocomplete="off" aria-label="${T({ ko: "질문", en: "Question" })}" placeholder="${T({ ko: "궁금한 점을 물어보세요", en: "Ask a question" })}">
         <button class="btn" type="submit">${T({ ko: "묻기", en: "Ask" })}</button></form>
-      <p class="chat-note">${T({ ko: "지도와 지형 데이터로만 답해요. 주소는 보내지 않아요.", en: "Answers come from map and terrain data only. Your address is not sent." })}</p>
+      <p class="chat-note">${T({ ko: "지도와 지형 데이터로만 답해요. 주소는 보내지 않아요.", en: "Teoju only looks at maps and terrain. Your address is never shared." })}</p>
     </div>`;
   }
   // Teoju answers like Zillow's AI: one summary line, then short bullets with a bold label
@@ -306,7 +306,7 @@
       : `<div class="a">${fmt(t.a)}${(t.facts || []).length ? `<div class="facts">${t.facts.map((f) => `<span><b>${esc(f.label)}</b> ${esc(f.value)}</span>`).join("")}</div>` : ""}</div>`)).join("");
     if (!turns.length && window.PUNGSU_CHARS) $("chat-msgs").innerHTML = `<div class="hi">${PUNGSU_CHARS.toad(64, { pose: "hello", cls: "pop" })}
       <div class="a">${T({ ko: "안녕하세요, 이 집 땅을 지키는 터주예요. 뒷산, 물길, 바람길처럼 이 집 땅에 대해 궁금한 걸 물어보세요.",
-        en: "Hi, I'm Teoju, the guardian of this home's land. Ask me anything about its land: the hills behind, the water, the wind." })}</div></div>`;
+        en: "Hi, I'm Teoju, the guardian of this home's land. Ask me anything about the hills behind you, the water or the wind." })}</div></div>`;
     $("chat-msgs").scrollTop = $("chat-msgs").scrollHeight;   // newest message in view
     const list = sugg || (turns.length ? [] : STARTERS[lang()] || STARTERS.ko);
     $("chat-sugg").innerHTML = list.slice(0, 3).map((s) => `<button type="button" class="btn ghost small">${esc(s)}</button>`).join("");
@@ -375,7 +375,7 @@
       const q = input.value.trim();
       if (!/^\d+[A-Za-z]?\s+\S{2,}/.test(q)) { seq++; hide(); return; }
       if (box.hidden) {                // say so at once: the free suggestion service can take a few seconds
-        box.innerHTML = `<li class="credit">${T({ ko: "주소 찾는 중…", en: "Finding addresses…" })}</li>`;
+        box.innerHTML = `<li class="credit">${T({ ko: "주소 찾는 중…", en: "Looking for addresses…" })}</li>`;
         box.hidden = false;
       }
       timer = setTimeout(async () => {

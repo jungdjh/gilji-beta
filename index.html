@@ -49,10 +49,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .bar { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; margin: 0 -16px; position: sticky; top: 0; z-index: 5; background: rgba(245,246,248,.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .brand { display: flex; align-items: center; gap: 10px; background: none; border: 0; padding: 0; }
 .mark { width: 40px; height: 36px; flex: none; object-fit: contain; }
-.brand b { font: 800 20px var(--display); letter-spacing: -.5px; }
+.brand b { font: 800 20px var(--display); letter-spacing: -.5px; white-space: nowrap; }
+.brand { flex: none; }
+.bar-right { flex-shrink: 1; }
+.demo-tag { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+html[lang="en"] .brand b.ko-name { display: none; }
 .demo-tag { font-size: 12px; color: var(--accent); background: var(--accent-soft); border-radius: 99px; padding: 3px 10px; font-weight: 600; white-space: nowrap; }
 .bar-right { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.brand .en { font: 600 13px var(--display); color: var(--ink-3); margin-left: -4px; }
+.brand .en { font: 800 19px var(--display); color: var(--ink); letter-spacing: -.3px; white-space: nowrap; }
 /* 한국어 / ENG toggle */
 .lang { display: inline-flex; flex: none; background: var(--card); border-radius: 99px; padding: 2px; box-shadow: var(--shadow); }
 .lang button { border: 0; background: none; min-height: 36px; padding: 0 11px; border-radius: 99px; font-size: 13px; font-weight: 700; color: var(--ink-3); }
@@ -96,7 +100,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .ladder { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .ladder div { background: var(--card); border: 0; box-shadow: var(--shadow); border-radius: 16px; padding: 12px 8px; text-align: center; }
 .ladder b { display: block; font: 700 15px var(--display); }
-.ladder span { font-size: 12px; color: var(--ink-2); line-height: 1.5; }
+.ladder span { display: block; font-size: 12px; color: var(--ink-2); line-height: 1.45; margin-top: 4px; }
 .ladder em { display: block; font-style: normal; font-size: 12px; color: var(--accent); margin-top: 4px; font-weight: 700; }
 
 /* reading */
@@ -409,15 +413,19 @@ details.card[open] > summary .fold::after { transform: rotate(180deg); }
 .recent-link { display: flex; justify-content: flex-end; margin: -4px 2px 0; min-height: 4px; }
 .link-quiet { background: none; border: 0; padding: 6px 2px; font-size: 12px; color: var(--ink-3); text-decoration: underline; text-underline-offset: 3px; }
 .sheet-list { margin: 8px 0 12px; background: #f6f7f9; border-radius: 16px; max-height: 50vh; overflow-y: auto; }
-/* bottom tab bar (owner: "take hints from Zillow") */
-body { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
-.tabbar { position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; z-index: 9; width: 100%; max-width: 480px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-  background: rgba(255,255,255,.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--line); padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); }
-.tabbar button { border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 0; color: var(--ink-3); font: 600 11.5px var(--display, inherit); border-radius: 14px; }
-.tabbar button[aria-current] { color: var(--accent); }
-.fab { bottom: calc(88px + env(safe-area-inset-bottom)) !important; }
-.dock { bottom: calc(64px + env(safe-area-inset-bottom)) !important; }
-#toast { bottom: calc(150px + env(safe-area-inset-bottom)); }
+/* floating tab bar (owner: "take hints from Zillow"): a rounded pill that floats above the page */
+body { padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
+.tabbar { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 9;
+  width: calc(100% - 28px); max-width: 430px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px;
+  background: rgba(255,255,255,.88); backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid rgba(25,31,40,.06); border-radius: 30px; padding: 6px; box-shadow: 0 10px 30px rgba(25,31,40,.14), 0 2px 6px rgba(25,31,40,.06); }
+.tabbar button { border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 7px 0 6px; color: var(--ink-3);
+  font: 600 11.5px var(--display, inherit); border-radius: 24px; transition: background .2s, color .2s; white-space: nowrap; }
+.tabbar button[aria-current] { color: var(--accent); background: var(--accent-soft); }
+.tabbar button:active { transform: scale(.96); }
+.fab { bottom: calc(96px + env(safe-area-inset-bottom)) !important; }
+.dock { bottom: calc(84px + env(safe-area-inset-bottom)) !important; }
+#toast { bottom: calc(160px + env(safe-area-inset-bottom)); }
 .tab-title { font: 800 24px var(--display); margin: 8px 4px 14px; }
 .empty-tab { text-align: center; padding: 26px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .empty-tab p { margin: 0; color: var(--ink-2); line-height: 1.6; }
@@ -504,7 +512,7 @@ body.noscroll { overflow: hidden; }
   <div class="bar">
     <button class="brand" id="go-home" aria-label="처음으로" data-i18n-aria="home">
       <img class="mark" src="img/swallow-fly.webp" alt="" width="40" height="36">
-      <b>박씨</b><span class="en hidden" id="brand-en">Bakseed</span>
+      <b class="ko-name">박씨</b><span class="en hidden" id="brand-en">Bakseed</span>
     </button>
     <div class="bar-right">
       <span class="demo-tag" data-i18n="tag">클로즈드 베타 · 초대 전용</span>
@@ -532,12 +540,12 @@ body.noscroll { overflow: hidden; }
     <div class="section-label" data-i18n="nine">이런 곳은 어떻게 읽힐까요?</div>
     <div class="sample" id="samples"></div>
 
-    <div class="section-label" data-i18n="how">이용 방법 (가격은 시험 중이에요)</div>
+    <div id="how-block"><div class="section-label" data-i18n="how">이용 방법 (가격은 시험 중이에요)</div>
     <div class="ladder">
       <div><b data-i18n="free">무료</b><span data-i18n="free2">별점·등급<br>오늘의 박씨</span></div>
       <div><b data-i18n="full">전체 해설</b><span data-i18n="full2">한눈에 보는 해설<br>우리 집 보완법</span><em data-i18n="price">$1</em></div>
       <div><b data-i18n="cmp">집 비교</b><span data-i18n="cmp2">2~3곳을<br>나란히</span><em data-i18n="price">$1</em></div>
-    </div>
+    </div></div>
 
     <p class="disclaimer"><button class="btn ghost small" id="open-about" data-i18n="about">박씨는 어떻게 읽나요?</button></p>
   </section>
@@ -579,19 +587,19 @@ body.noscroll { overflow: hidden; }
   <div class="sheet" id="sheet"></div>
 </div>
 
-<script src="i18n.js?v=20261121071020"></script>
-<script src="data.js?v=20261121071020"></script>
-<script src="writer.js?v=20261121071020"></script>
-<script src="tips.js?v=20261121071020"></script>
-<script src="characters.js?v=20261121071020"></script>
-<script src="config.js?v=20261121071020"></script>
-<script src="live.js?v=20261121071020"></script>
+<script src="i18n.js?v=20261121074718"></script>
+<script src="data.js?v=20261121074718"></script>
+<script src="writer.js?v=20261121074718"></script>
+<script src="tips.js?v=20261121074718"></script>
+<script src="characters.js?v=20261121074718"></script>
+<script src="config.js?v=20261121074718"></script>
+<script src="live.js?v=20261121074718"></script>
 <script>
 /* Auto-update: phones and browsers keep an old copy of this page for a while after a publish.
    deploy/publish-page.sh stamps PAGE_VERSION here and writes version.json. On opening, a newer
    version reloads the page at once (nothing has been touched yet). Coming back to the app later,
    it offers a button instead of reloading under the person. Each version is tried once. */
-const PAGE_VERSION = "20261121071020";
+const PAGE_VERSION = "20261121074718";
 (function () {
   if (PAGE_VERSION === "dev") return;
   let last = 0;
@@ -611,7 +619,7 @@ const PAGE_VERSION = "20261121071020";
     if (document.getElementById("new-version")) return;
     const b = document.createElement("button");
     b.id = "new-version"; b.type = "button";
-    b.textContent = window.GILJI_I18N.t({ ko: "새 버전이 나왔어요 · 새로고침", en: "New version · tap to reload" });
+    b.textContent = window.GILJI_I18N.t({ ko: "새 버전이 나왔어요 · 새로고침", en: "A fresh version is ready · tap to update" });
     b.addEventListener("click", go);
     document.body.appendChild(b);
   }
@@ -679,13 +687,13 @@ const KEYWORDS = {
 };
 // [romanized/Korean term, plain name]; in English the term shows small and romanized
 const COMP = {
-  hyeonmu: [{ ko: "현무", en: "hyeonmu" }, { ko: "집 뒤의 땅", en: "Land behind" }],
-  jujak: [{ ko: "주작", en: "jujak" }, { ko: "집 앞", en: "In front" }],
-  enclosure: [{ ko: "청룡·백호", en: "cheongnyong · baekho" }, { ko: "양옆", en: "Both sides" }],
-  jangpung: [{ ko: "장풍", en: "jangpung" }, { ko: "겨울바람 막이", en: "Winter wind shelter" }],
+  hyeonmu: [{ ko: "현무", en: "hyeonmu" }, { ko: "집 뒤의 땅", en: "Behind your home" }],
+  jujak: [{ ko: "주작", en: "jujak" }, { ko: "집 앞", en: "In front of your home" }],
+  enclosure: [{ ko: "청룡·백호", en: "cheongnyong · baekho" }, { ko: "양옆", en: "On both sides" }],
+  jangpung: [{ ko: "장풍", en: "jangpung" }, { ko: "겨울바람 막이", en: "Shelter from winter wind" }],
   deuksu: [{ ko: "득수", en: "deuksu" }, { ko: "물", en: "Water" }],
-  jwahyang: [{ ko: "좌향", en: "jwahyang" }, { ko: "햇빛·방향", en: "Sun · facing" }],
-  stability: [{ ko: "안정", en: "anjeong" }, { ko: "땅의 경사", en: "Slope of the land" }],
+  jwahyang: [{ ko: "좌향", en: "jwahyang" }, { ko: "햇빛·방향", en: "Sun and facing" }],
+  stability: [{ ko: "안정", en: "anjeong" }, { ko: "땅의 경사", en: "How level the land is" }],
 };
 const GIUN = { wealth: { ko: "재물운", en: "Wealth" }, health: { ko: "건강운", en: "Health" },
   harmony: { ko: "가정화목", en: "Family harmony" }, career: { ko: "학업·커리어", en: "Study · career" },
@@ -706,19 +714,19 @@ const SAL_PLAIN = {
 };
 const salName = (x) => SAL_PLAIN[window.GILJI_LANG][x.id] || SAL_PLAIN.ko[x.id] || x.name;
 const BEND = {
-  hwanpo: { ko: "집 쪽으로 감싸 흘러요", en: "curves toward the home" },
-  bangung: { ko: "집 바깥쪽으로 굽어 흘러요", en: "bends away from the home" },
-  straight: { ko: "곧게 흘러요", en: "runs straight" },
+  hwanpo: { ko: "집 쪽으로 감싸 흘러요", en: "curves toward your home" },
+  bangung: { ko: "집 바깥쪽으로 굽어 흘러요", en: "bends away from your home" },
+  straight: { ko: "곧게 흘러요", en: "runs straight past" },
 };
 const bend = (b) => (BEND[b] ? T(BEND[b]) : "");
 // grade names: plain English first, the Korean term romanized once (api/card.py GRADE_EN says the same)
 // rules v0.8 (owner, Nov 17): one rating for every home, 1-5 stars with a word
 const GRADE = {
-  명당: { ko: "명당", en: "Excellent site", term: "myeongdang" },
-  길지: { ko: "길지", en: "Good site", term: "gilji" },
-  "무난한 터": { ko: "무난한 터", en: "Fair site" },
-  "아쉬운 터": { ko: "아쉬운 터", en: "Somewhat lacking" },
-  "보완 필요": { ko: "보완 필요", en: "Needs care" },
+  명당: { ko: "명당", en: "A rare gem", term: "myeongdang" },
+  길지: { ko: "길지", en: "A lovely spot", term: "gilji" },
+  "무난한 터": { ko: "무난한 터", en: "A solid spot" },
+  "아쉬운 터": { ko: "아쉬운 터", en: "Could use some help" },
+  "보완 필요": { ko: "보완 필요", en: "Needs some extra care" },
 };
 function gradeName(g, withTerm) {
   const x = GRADE[g];
@@ -727,24 +735,24 @@ function gradeName(g, withTerm) {
 }
 // the river the reading names; some places have only an unnamed stream
 const riverName = (f) => (f.bend_river ? place(f.bend_river)
-  : T({ ko: "이름 없는 개울", en: "Unnamed stream" }) + (f.distance_m != null ? ` (${f.distance_m}m)` : ""));
+  : T({ ko: "이름 없는 개울", en: "A small stream" }) + (f.distance_m != null ? ` (${f.distance_m}m)` : ""));
 const DIR8 = { ko: ["북", "북동", "동", "남동", "남", "남서", "서", "북서"],
                en: ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"] };
 const DISCLAIMER = { ko: "본 분석은 전통 풍수 이론(형기론)에 따른 참고용 해석이며, 부동산 거래의 판단 근거가 아닙니다.",
-  en: "This reading is for reference, based on traditional feng shui (the landform school). It is not a basis for real estate decisions." };
+  en: "This is a friendly reading based on traditional feng shui (the landform school). Enjoy it as food for thought, not real estate advice." };
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 // the fixed text in the page markup (data-i18n="key"); Korean is in the HTML itself
 const STATIC = {
-  title: { ko: "박씨 Bakseed · 클로즈드 베타", en: "Bakseed 박씨 · Closed beta" },
-  tag: { ko: "클로즈드 베타 · 초대 전용", en: "Closed beta · invite only" },
+  title: { ko: "박씨 Bakseed · 클로즈드 베타", en: "Bakseed 박씨 · Private beta" },
+  tag: { ko: "클로즈드 베타 · 초대 전용", en: "Private beta" },
   home: { ko: "처음으로", en: "Home" },
-  h1: { ko: "우리 집의 기운을<br>읽어 드려요", en: "We read the energy<br>of your home" },
-  lead: { ko: "뒷산과 물길, 바람길로 집터를 쉬운 말로 읽어 드려요", en: "From the hills behind, the water and the wind, we read your home's land in plain words" },
+  h1: { ko: "우리 집의 기운을<br>읽어 드려요", en: "What does your<br>home's land say?" },
+  lead: { ko: "뒷산과 물길, 바람길로 집터를 쉬운 말로 읽어 드려요", en: "Teoju reads the hills, water, wind and sun the way feng shui does, and tells you in plain words" },
   ph: { ko: "예: 1100 Congress Ave, Austin, TX", en: "e.g. 1100 Congress Ave, Austin, TX" },
   addr: { ko: "주소", en: "Address" },
-  go: { ko: "보기", en: "Go" },
-  nine: { ko: "이런 곳은 어떻게 읽힐까요?", en: "How do these places read?" },
+  go: { ko: "보기", en: "Read it" },
+  nine: { ko: "이런 곳은 어떻게 읽힐까요?", en: "Peek at some famous homes" },
   how: (window.GILJI_CONFIG || {}).beta
     ? { ko: "이용 방법 (베타 테스터는 모두 무료예요)", en: "How it works (all free for beta testers)" }
     : { ko: "이용 방법 (가격은 시험 중이에요)", en: "How it works (prices are still being tested)" },
@@ -756,13 +764,13 @@ const STATIC = {
   cmp: { ko: "집 비교", en: "Compare" },
   cmp2: { ko: "2~3곳을<br>나란히", en: "2–3 homes<br>side by side" },
   about: { ko: "박씨는 어떻게 읽나요?", en: "How does Bakseed read a home?" },
-  step1: { ko: "터주가 뒷산을 살피는 중", en: "Teoju is checking the hills behind" },
-  step2: { ko: "물길을 따라가는 중", en: "Following the water" },
-  step3: { ko: "바람길을 재는 중", en: "Measuring the wind" },
-  step4: { ko: "살펴볼 점을 찾는 중", en: "Looking for things to watch" },
+  step1: { ko: "터주가 뒷산을 살피는 중", en: "Teoju is looking at the hills behind you" },
+  step2: { ko: "물길을 따라가는 중", en: "Following the nearby water" },
+  step3: { ko: "바람길을 재는 중", en: "Feeling out the winter wind" },
+  step4: { ko: "살펴볼 점을 찾는 중", en: "Checking for anything worth a look" },
 };
 const HINT = { ko: "캘리포니아·텍사스 집 주소를 넣거나, 아래 세 곳을 먼저 둘러보세요.",
-               en: "Enter a California or Texas home address, or look at the three places below first." };
+               en: "Type a home address in California or Texas, or peek at a famous home below first." };
 let hint = { text: HINT, err: false };   // kept so a language switch can re-say it
 function setHint(text, err) {
   hint = { text, err: !!err };
@@ -775,6 +783,7 @@ function applyStatic() {
   document.querySelectorAll("[data-i18n-ph]").forEach((el) => { el.placeholder = T(STATIC[el.dataset.i18nPh]); });
   document.querySelectorAll("[data-i18n-aria]").forEach((el) => el.setAttribute("aria-label", T(STATIC[el.dataset.i18nAria])));
   $("brand-en").classList.toggle("hidden", !isEn());
+  if ((window.GILJI_CONFIG || {}).beta) $("how-block").hidden = true;   // everything is free in the beta: the price boxes only add words
   document.querySelectorAll("#lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === window.GILJI_LANG)));
   setHint(hint.text, hint.err);
 }
@@ -848,7 +857,7 @@ $("search").addEventListener("submit", (e) => {
   const id = ORDER.find((k) => KEYWORDS[k].some((w) => q.includes(w)));
   if (id) { read(id); return; }
   if (window.GILJI && GILJI.api) { GILJI.lookup(q); return; }
-  setHint({ ko: "지금은 아래 세 곳만 볼 수 있어요.", en: "For now you can only see the three places below." }, true);
+  setHint({ ko: "지금은 아래 세 곳만 볼 수 있어요.", en: "For now, you can explore the famous homes below." }, true);
 });
 $("go-home").addEventListener("click", () => show("home"));
 $("open-about").addEventListener("click", openAbout);
@@ -858,9 +867,9 @@ function tipCard(id, opts = {}) {
   if (LANDMARK.has(id)) {
     return `<div class="card tip">
       <div class="when"><span class="who">${CH.swallow(40)}${T({ ko: "흥이의 한마디", en: "A word from Heungi" })}</span></div>
-      <h3>${T({ ko: "유명한 곳을 풍수로 읽어 봤어요", en: "We read a famous place with feng shui" })}</h3>
+      <h3>${T({ ko: "유명한 곳을 풍수로 읽어 봤어요", en: "A famous place, read with feng shui" })}</h3>
       <p>${STORY[id] ? T(STORY[id]) + " " : ""}${T({ ko: "지금은 누구나 둘러볼 수 있는 곳이에요. 우리 집을 저장하면 흥이가 매일 그 집에 맞는 박씨를 물어 와요.",
-        en: "Anyone can visit it today. Save your own home, and Heungi the swallow will bring a tip made for it every day." })}</p>
+        en: "You can visit it today. Set your own home, and Heungi the swallow will bring you a tip made just for it every day." })}</p>
     </div>`;
   }
   // the report's card always comes from this home's own reading; the home-screen card also
@@ -874,8 +883,8 @@ function tipCard(id, opts = {}) {
       <span class="chip">${t.tag}</span>
       ${opts.saveBtn ? (store.get("saved", null) === id
           ? `<span class="chip">${T({ ko: "우리 집", en: "My home" })}</span>`
-          : `<button class="btn ghost small" id="save-home">${T({ ko: "우리 집으로 정하고 매일 박씨 받기", en: "Set as my home for a daily tip" })}</button>`) : ""}
-      <button class="btn ghost small" id="${opts.nextId || "tip-next"}">${T({ ko: "내일 미리 보기", en: "Preview tomorrow" })}</button>
+          : `<button class="btn ghost small" id="save-home">${T({ ko: "우리 집으로 정하고 매일 박씨 받기", en: "Make this my home for daily tips" })}</button>`) : ""}
+      <button class="btn ghost small" id="${opts.nextId || "tip-next"}">${T({ ko: "내일 미리 보기", en: "Peek at tomorrow's" })}</button>
     </div>
   </div>`;
 }
@@ -913,8 +922,8 @@ function renderLists() {
   const f = favs();
   $("favs-title").textContent = T({ ko: "찜한 집", en: "Favorites" });
   $("fav-list").innerHTML = f.length ? `<div class="card home-list">${f.map((id) => homeRow(id, { remove: true })).join("")}</div>`
-    : `<div class="card empty-tab">${CH.swallow(72, { pose: "hello" })}<p>${T({ ko: "아직 찜한 집이 없어요.<br>집을 보다가 ♥를 누르면 여기에 모여요.", en: "No favorites yet.<br>Tap ♥ on a home to keep it here." })}</p>
-      <button type="button" class="btn" data-go="home">${T({ ko: "주소 찾기", en: "Find an address" })}</button></div>`;
+    : `<div class="card empty-tab">${CH.swallow(72, { pose: "hello" })}<p>${T({ ko: "아직 찜한 집이 없어요.<br>집을 보다가 ♥를 누르면 여기에 모여요.", en: "Nothing saved yet.<br>Tap ♥ on any home and it'll wait for you here." })}</p>
+      <button type="button" class="btn" data-go="home">${T({ ko: "주소 찾기", en: "Look up a home" })}</button></div>`;
   document.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => { show(b.dataset.go); if (b.dataset.go === "home") setTimeout(() => $("q").focus(), 300); }));
   $("fav-list").querySelectorAll("[data-x]").forEach((b) => b.addEventListener("click", () => {
     store.set("favs", favs().filter((x) => x !== b.dataset.x)); renderLists();
@@ -932,13 +941,13 @@ function renderMine() {
   const id = store.get("saved", null);
   if (id && R[id] && !LANDMARK.has(id)) {
     renderSavedTip();
-    $("mine-body").innerHTML = `<button type="button" class="btn block" id="mine-open">${T({ ko: "우리 집 카드 보기", en: "See my home's cards" })}</button>`;
+    $("mine-body").innerHTML = `<button type="button" class="btn block" id="mine-open">${T({ ko: "우리 집 카드 보기", en: "Open my home" })}</button>`;
     $("mine-open").addEventListener("click", () => openHome(id));
   } else {
     $("saved-tip").innerHTML = "";
-    $("mine-body").innerHTML = `<div class="card empty-tab">${CH.swallow(72, { pose: "yay" })}<p>${T({ ko: "우리 집을 정하면 흥이가<br>매일 우리 집에 맞는 박씨를 물어 와요.", en: "Set your home and Heungi<br>brings a tip made for it every day." })}</p>
-      <p class="small">${T({ ko: "집을 찾은 뒤 '🏠 우리 집으로 정하기'를 누르세요.", en: "Find it, then tap '🏠 Set as my home'." })}</p>
-      <button type="button" class="btn" data-go="home">${T({ ko: "주소 찾기", en: "Find an address" })}</button></div>`;
+    $("mine-body").innerHTML = `<div class="card empty-tab">${CH.swallow(72, { pose: "yay" })}<p>${T({ ko: "우리 집을 정하면 흥이가<br>매일 우리 집에 맞는 박씨를 물어 와요.", en: "Set your home, and Heungi<br>will bring you a tip for it every day." })}</p>
+      <p class="small">${T({ ko: "집을 찾은 뒤 '🏠 우리 집으로 정하기'를 누르세요.", en: "Look it up, then tap '🏠 Make this my home'." })}</p>
+      <button type="button" class="btn" data-go="home">${T({ ko: "주소 찾기", en: "Look up a home" })}</button></div>`;
     document.querySelectorAll("#mine-body [data-go]").forEach((b) => b.addEventListener("click", () => { show("home"); setTimeout(() => $("q").focus(), 300); }));
   }
 }
@@ -951,7 +960,7 @@ function moreSheet() {
       <button type="button" id="more-lang">${T({ ko: "English로 보기", en: "한국어로 보기" })}</button>
       ${nRecent ? `<button type="button" id="more-recent">${T({ ko: `최근 본 집 (${nRecent})`, en: `Recently viewed (${nRecent})` })}</button>` : ""}
     </div>
-    <p class="small" style="margin-top:12px">${T({ ko: "박씨 클로즈드 베타 · 초대받은 분만 써요", en: "Bakseed closed beta · invited people only" })}</p>`, moreSheet);
+    <p class="small" style="margin-top:12px">${T({ ko: "박씨 클로즈드 베타 · 초대받은 분만 써요", en: "Bakseed private beta · just for invited friends" })}</p>`, moreSheet);
   $("more-about").addEventListener("click", () => { closeSheet(); openAbout(); });
   $("more-lang").addEventListener("click", () => { closeSheet(); I18N.setLang(isEn() ? "ko" : "en"); });
   if ($("more-recent")) $("more-recent").addEventListener("click", recentSheet);
@@ -998,10 +1007,10 @@ bindRecentPanel();
 function recentSheet() {
   const recent = window.GILJI ? GILJI.recent() : [];
   sheet(`<h3>${T({ ko: "최근 본 집", en: "Recently viewed" })}</h3>
-    <p class="small">${T({ ko: "이 휴대폰에만 남아요. 언제든 지울 수 있어요.", en: "Kept on this phone only. Clear it any time." })}</p>
+    <p class="small">${T({ ko: "이 휴대폰에만 남아요. 언제든 지울 수 있어요.", en: "Only saved on this phone. Clear it whenever you like." })}</p>
     ${recent.length ? `<div class="home-list sheet-list">${recent.slice(0, 20).map((h) => homeRow(h.id, { remove: true, when: ago(h.at) })).join("")}</div>
     <button type="button" class="btn ghost block" id="recent-clear">${T({ ko: "모두 지우기", en: "Clear all" })}</button>`
-      : `<p>${T({ ko: "기록이 없어요.", en: "Nothing here." })}</p>`}`, recentSheet);
+      : `<p>${T({ ko: "기록이 없어요.", en: "Nothing here yet." })}</p>`}`, recentSheet);
   document.querySelectorAll("#sheet .hr-open").forEach((b) => b.addEventListener("click", () => { closeSheet(); openHome(b.dataset.id); }));
   document.querySelectorAll("#sheet [data-x]").forEach((b) => b.addEventListener("click", () => { GILJI.forget(b.dataset.x); renderLists(); recentSheet(); }));
   if ($("recent-clear")) $("recent-clear").addEventListener("click", () => {
@@ -1050,7 +1059,7 @@ function starsRange(r) {   // the stars hang on the exact spot (stability ring, 
   const st = r.stability && r.stability.stars;
   if (!st || st[0] === st[1]) return "";
   return `<div class="meta" style="margin-top:6px">${T({ ko: `집의 정확한 위치에 따라 별 ${st[0]}개에서 ${st[1]}개 사이로 달라질 수 있어요.`,
-    en: `Depending on exactly where the house sits, this could be ${st[0]} to ${st[1]} stars.` })}</div>`;
+    en: `Depending on exactly where the house sits on the lot, this could be ${st[0]} to ${st[1]} stars.` })}</div>`;
 }
 function levelLine(r) {
   const n = r.sal.length, water = r.score.components.deuksu.facts.distance_m != null;
@@ -1073,7 +1082,7 @@ function levelChips(r) {
   else if (d.bend !== "bangung") chips.push(`<span class="chip">${d.bend === "hwanpo" ? T({ ko: "물이 감싸 흘러요", en: "Water curves around" })
     : d.bend === "straight" ? T({ ko: "물이 곧게 지나요", en: "Water runs straight past" }) : T({ ko: "가까이 물이 있어요", en: "Water close by" })}</span>`);
   chips.push(`<span class="chip">${T({ ko: "평평한 땅", en: "Level ground" })}</span>`);
-  if (!r.sal.length) chips.push(`<span class="chip">${T({ ko: "살펴볼 점 없음", en: "Nothing to watch" })}</span>`);
+  if (!r.sal.length) chips.push(`<span class="chip">${T({ ko: "살펴볼 점 없음", en: "Nothing to worry about" })}</span>`);
   return `<div class="level-chips">${chips.slice(0, 4).join("")}</div>`;
 }
 
@@ -1116,10 +1125,10 @@ const OH_COLOR = { wood: "#6f8f74", fire: "#c9705a", earth: "#c9a15a", metal: "#
 function verdict(r, k) {
   const c = r.score.components;
   if (k === "hyeonmu") return c.hyeonmu.score >= 80 ? T({ ko: "든든해요", en: "Strong" })
-    : c.hyeonmu.score >= 55 ? T({ ko: "보통이에요", en: "Average" }) : T({ ko: "약해요", en: "Weak" });
+    : c.hyeonmu.score >= 55 ? T({ ko: "보통이에요", en: "So-so" }) : T({ ko: "약해요", en: "Not much there" });
   if (k === "jujak") {
     const f = c.jujak.facts;
-    return f.front_overbearing ? T({ ko: "앞산이 뒤보다 높아요", en: "Taller than the back" })
+    return f.front_overbearing ? T({ ko: "앞산이 뒤보다 높아요", en: "Taller than the hill behind" })
       : f.ansan ? T({ ko: "낮은 산이 마주 봐요", en: "A low hill faces it" }) : T({ ko: "트였어요", en: "Open" });
   }
   const deg = c.enclosure.facts[k === "cheongryong" ? "cheongryong_deg" : "baekho_deg"];
@@ -1230,7 +1239,7 @@ function sunNote(r) {
                                   : { ko: "여름이 덥고 건조한 내륙에서는", en: "Inland, where summers are hot and dry," };
     if (west) { const w = side(west); return say("know",
       `${w.ko} 봐요. ${where.ko} 여름 오후 햇볕이 그쪽 창으로 강하게 들어 냉방비가 더 들 수 있어요. 차양, 블라인드, 나무 그늘이 도움돼요.`,
-      `${w.en}. ${where.en} strong afternoon sun comes through those windows and cooling costs more. Awnings, blinds or tree shade help.`); }
+      `${w.en}. ${where.en} strong afternoon sun pours through those windows and can push up cooling bills. Awnings, blinds or a shade tree help.`); }
     return say("good",
       `앞이 ${dir(f).ko}, 뒤가 ${dir(b).ko}을 봐요. ${where.ko} 뜨거운 오후 햇볕이 큰 창에 덜 들어 여름이 수월해요.`,
       `The front faces ${dir(f).en} and the back ${dir(b).en}. ${where.en} that keeps the hot afternoon sun off the big windows.`);
@@ -1238,17 +1247,17 @@ function sunNote(r) {
   if (cl === "cold") {
     if (south) { const w = side(south); return say("good",
       `${w.ko} 봐요. 겨울이 추운 곳이라 그쪽 창으로 드는 햇볕이 집을 데워 줘요.`,
-      `${w.en}. Winters are cold here, and sun through those windows helps warm the home.`); }
+      `${w.en}. Winters are cold here, so that sun is a lovely free heater.`); }
     return say("know", "남쪽을 보는 큰 창이 없어요. 겨울이 추운 곳이라 난방이 더 들 수 있어요.",
-      "No big windows face south. Winters are cold here, so heating may cost more.");
+      "No big windows face south, and winters are cold here, so heating may cost a little more.");
   }
   if (south) { const w = side(south), hot = south === west; return say("good",
     `${w.ko} 봐요. 날씨가 온화한 곳이라 그쪽으로 햇살이 고르게 들어요.${hot ? " 여름 오후엔 조금 더울 수 있어요." : ""}`,
-    `${w.en}. The weather is mild here, so sun comes in evenly on that side.${hot ? " It can get warm on summer afternoons." : ""}`); }
+    `${w.en}. The weather is mild here, so you get soft, even sun on that side.${hot ? " It can get warm on summer afternoons." : ""}`); }
   if (west) { const w = side(west); return say("know",
     `${w.ko} 봐요. 날씨가 온화해 방향의 영향은 작지만, 그쪽은 여름 오후에 더워질 수 있어요.`,
-    `${w.en}. The weather is mild, so facing matters little, but that side can get warm on summer afternoons.`); }
-  return say("know", "날씨가 온화해 방향의 영향은 작아요.", "The weather is mild, so facing matters little.");
+    `${w.en}. The weather is mild, so facing matters less, but that side can get warm on summer afternoons.`); }
+  return say("know", "날씨가 온화해 방향의 영향은 작아요.", "The weather is mild here, so facing matters less.");
 }
 
 function usLiving(r) {
@@ -1256,12 +1265,12 @@ function usLiving(r) {
   const u = (isEn() && ul.en) || ul.ko;
   if (!u) return "";
   const fix = (s) => (isEn() ? String(s || "").replace(/풍수/g, "feng shui") : s);   // the engine's English note says "풍수"
-  const KIND = { good: { ko: "좋아요", en: "Good" }, mixed: { ko: "의견이 갈려요", en: "Opinions differ" }, know: { ko: "알아 두세요", en: "Good to know" } };
+  const KIND = { good: { ko: "좋아요", en: "Nice" }, mixed: { ko: "의견이 갈려요", en: "Mixed feelings" }, know: { ko: "알아 두세요", en: "Good to know" } };
   const sun = sunNote(r), items = sun ? [sun, ...u.items] : u.items;
   const body = items.length
     ? items.map((x) => `<div class="it"><span class="k ${x.kind}">${T(KIND[x.kind])}</span><span>${fix(x.text)}</span></div>`).join("")
     : `<p style="margin:0;font-size:14px">${fix(u.nothing)}</p>`;
-  return `<div class="card usl"><h2>${fix(u.title)} <small>${T({ ko: "풍수 별점과 별개", en: "Separate from the feng shui stars" })}</small></h2><p class="usl-note">${fix(u.note)}</p>${body}
+  return `<div class="card usl"><h2>${fix(u.title)} <small>${T({ ko: "풍수 별점과 별개", en: "Not part of the feng shui stars" })}</small></h2><p class="usl-note">${fix(u.note)}</p>${body}
     ${u.lot_note ? `<p class="usl-note" style="margin:8px 0 0">${fix(u.lot_note)}</p>` : ""}</div>`;
 }
 
@@ -1299,11 +1308,11 @@ function prosConsHtml(r) {
   return `<div class="pros">
     <div class="pc-tabs" role="tablist">
       <button role="tab" aria-selected="true" data-t="good">${T({ ko: "좋은 점", en: "What's special" })} <i>${good.length}</i></button>
-      <button role="tab" aria-selected="false" data-t="weak">${T({ ko: "아쉬운 점", en: "Tradeoffs" })} <i>${weak.length}</i></button>
+      <button role="tab" aria-selected="false" data-t="weak">${T({ ko: "아쉬운 점", en: "Could be better" })} <i>${weak.length}</i></button>
     </div>
-    <ul class="pc-list" data-t="good">${li(good, "good", T({ ko: "눈에 띄는 장점은 적어요. 아쉬운 점과 보완법을 함께 보세요.", en: "Few standout strengths. See the tradeoffs and fixes." }))}</ul>
-    <ul class="pc-list hidden" data-t="weak">${li(weak, "weak", T({ ko: "크게 아쉬운 점은 없어요.", en: "No big tradeoffs." }))}</ul>
-    <p class="pc-note">${T({ ko: "아쉬운 점에는 집 안에서 할 수 있는 보완법이 있어요.", en: "Each tradeoff comes with fixes you can do inside." })}</p>
+    <ul class="pc-list" data-t="good">${li(good, "good", T({ ko: "눈에 띄는 장점은 적어요. 아쉬운 점과 보완법을 함께 보세요.", en: "No big standouts. Take a look at what could be better, and the easy fixes." }))}</ul>
+    <ul class="pc-list hidden" data-t="weak">${li(weak, "weak", T({ ko: "크게 아쉬운 점은 없어요.", en: "Nothing big to worry about." }))}</ul>
+    <p class="pc-note">${T({ ko: "아쉬운 점에는 집 안에서 할 수 있는 보완법이 있어요.", en: "Each one comes with easy things to try at home." })}</p>
   </div>`;
 }
 // Every titled card on the result page folds by its title; one button opens or closes them all. Open by default.
@@ -1334,8 +1343,8 @@ function bindFolds() {
 // where the door direction came from: guessed from the street, or set by the person
 function doorLine(r, ix) {
   const src = r.site.facing_source;
-  const how = src === "compass" ? { ko: "나침반으로 잼", en: "measured with a compass" }
-    : src === "manual" ? { ko: "직접 고침", en: "set by you" } : { ko: "길 방향으로 추정", en: "guessed from the street" };
+  const how = src === "compass" ? { ko: "나침반으로 잼", en: "measured with your camera" }
+    : src === "manual" ? { ko: "직접 고침", en: "set by you" } : { ko: "길 방향으로 추정", en: "our best guess from the street" };
   return isEn() ? `The door faces ${DIR8.en[ix]} (${how.en})` : `현관이 ${DIR8.ko[ix]}쪽을 봐요 (${T(how)})`;
 }
 
@@ -1350,15 +1359,15 @@ function doorSheet(id, busy) {
   const canCompass = "DeviceOrientationEvent" in window && matchMedia("(pointer: coarse)").matches;
   sheet(`<h3>${T({ ko: "현관이 어느 쪽을 보나요?", en: "Which way does the front door face?" })}</h3>
     <p>${T({ ko: "현관문을 열고 밖으로 나설 때 바라보는 쪽이에요. 풍수에서는 이 방향이 집의 앞이에요.",
-             en: "It's the way you face when you step out the front door. In feng shui, that is the front of the home." })}</p>
+             en: "Picture stepping out your front door: the way you're facing is the front of your home in feng shui." })}</p>
     ${canCompass ? `<div class="compass" id="compass">
-      <button class="btn accent" type="button" id="compass-go">📷 ${T({ ko: "카메라로 방향 재기", en: "Measure with the camera" })}</button>
+      <button class="btn accent" type="button" id="compass-go">📷 ${T({ ko: "카메라로 방향 재기", en: "Use my camera" })}</button>
       <p class="small">${T({ ko: "집에 있을 때만 쓸 수 있어요. 현관문에 서서 사진 찍듯이 폰을 세워 문 밖을 비춰 주세요.",
-                            en: "Only works at the home. Stand in the front doorway and point the camera out the door, as if taking a photo." })}</p>
+                            en: "Works when you're at home. Stand in your front doorway and point the camera outside, like you're taking a photo." })}</p>
     </div>` : ""}
     <p class="small" style="margin-top:14px">${T({ ko: canCompass ? "또는 직접 골라 주세요" : "방향을 골라 주세요", en: canCompass ? "Or pick it yourself" : "Pick the direction" })}</p>
     <div class="dirs">${cell(7)}${cell(0)}${cell(1)}${cell(6)}<span class="dir-home" aria-hidden="true">🏠</span>${cell(2)}${cell(5)}${cell(4)}${cell(3)}</div>
-    <p class="small" id="door-msg">${busy ? T({ ko: "이 방향으로 다시 읽는 중이에요…", en: "Reading the home again for this direction…" }) : ""}</p>`,
+    <p class="small" id="door-msg">${busy ? T({ ko: "이 방향으로 다시 읽는 중이에요…", en: "Taking another look for this direction…" }) : ""}</p>`,
     () => doorSheet(id));
   document.querySelectorAll("#sheet .dir").forEach((b) => b.addEventListener("click", () => applyDoor(id, +b.dataset.deg, "manual")));
   if ($("compass-go")) $("compass-go").addEventListener("click", () => startCompass(id));
@@ -1371,8 +1380,8 @@ async function applyDoor(id, deg, source) {
   const before = R[id] && R[id].score && R[id].score.stars;
   // a clear "working" screen: re-reading takes a few seconds
   sheet(`<div class="door-busy"><div class="char-wrap think">${CH.toad(96, { pose: "think" })}</div>
-    <h3>${T({ ko: `현관을 ${dirName}으로 두고 다시 읽는 중이에요…`, en: `Reading the home again with the door facing ${dirName}…` })}</h3>
-    <p class="small">${T({ ko: "몇 초면 돼요.", en: "This takes a few seconds." })}</p></div>`);
+    <h3>${T({ ko: `현관을 ${dirName}으로 두고 다시 읽는 중이에요…`, en: `Taking another look with the door facing ${dirName}…` })}</h3>
+    <p class="small">${T({ ko: "몇 초면 돼요.", en: "Just a few seconds." })}</p></div>`);
   try {
     const vid = await GILJI.setFacing(id, deg, source);
     closeSheet();
@@ -1380,7 +1389,7 @@ async function applyDoor(id, deg, source) {
     scrollTo({ top: 0 });
     const after = R[vid] && R[vid].score && R[vid].score.stars;
     const change = before && after && before !== after ? ` · ★${before} → ★${after}` : after ? ` · ★${after}` : "";
-    toast(T({ ko: `현관 방향을 ${dirName}으로 바꿨어요${change}`, en: `Door set to ${dirName}${change}` }));
+    toast(T({ ko: `현관 방향을 ${dirName}으로 바꿨어요${change}`, en: `Got it, your door faces ${dirName}${change}` }));
   } catch (e) {
     doorSheet(id);
     $("door-msg").classList.add("err");
@@ -1407,14 +1416,14 @@ async function startCompass(id) {
     if (typeof DeviceOrientationEvent.requestPermission === "function"
         && (await DeviceOrientationEvent.requestPermission()) !== "granted") throw new Error("denied");
   } catch (_) {
-    $("compass").innerHTML = `<p class="small err">${T({ ko: "방향 센서를 쓰도록 허락되지 않았어요. 아래에서 직접 골라 주세요.", en: "Motion access wasn't allowed. Please pick the direction below." })}</p>`;
+    $("compass").innerHTML = `<p class="small err">${T({ ko: "방향 센서를 쓰도록 허락되지 않았어요. 아래에서 직접 골라 주세요.", en: "No problem. Motion access is off, so just pick the direction below." })}</p>`;
     return;
   }
   const cam = document.createElement("div");
   cam.id = "cam";
   cam.innerHTML = `<video id="cam-video" autoplay playsinline muted></video>
     <div class="cam-top"><div class="cam-tape" id="cam-tape"></div><div class="cam-mark"></div>
-      <p>${T({ ko: "현관문에 서서 문 밖을 비춰 주세요", en: "Stand in the doorway and point the camera outside" })}</p></div>
+      <p>${T({ ko: "현관문에 서서 문 밖을 비춰 주세요", en: "Stand in your doorway and point the camera outside" })}</p></div>
     <div class="cam-cross" aria-hidden="true"></div>
     <div class="cam-bottom">
       <p class="cam-dir" id="cam-dir">${T({ ko: "방향을 읽는 중…", en: "Reading the direction…" })}</p>
@@ -1460,7 +1469,7 @@ async function startCompass(id) {
   };
   setTimeout(() => {
     if (heading == null && $("cam-dir")) $("cam-dir").textContent =
-      T({ ko: "이 폰에서는 방향을 읽지 못했어요. 취소하고 직접 골라 주세요.", en: "This phone didn't give a direction. Cancel and pick it yourself." });
+      T({ ko: "이 폰에서는 방향을 읽지 못했어요. 취소하고 직접 골라 주세요.", en: "Your phone didn't share a direction. Tap Cancel and pick one yourself." });
   }, 3000);
   $("cam-x").addEventListener("click", () => compassStop && compassStop());
   $("cam-ok").addEventListener("click", () => {
@@ -1480,10 +1489,10 @@ const CARD_IMG = (n) => `img/cards/${n}.webp`;
 const CARD_WEIGHT = { hyeonmu: .20, deuksu: .20, jujak: .15, enclosure: .15, jangpung: .15, jwahyang: .10, stability: .05 };
 const US_IMG = { park: "park", golf: "park", water: "flood-check", busy_road: "busy-road", freeway: "busy-road", power: "power-lines" };
 const SAL_IMG = { overpass: "busy-road", nochung: "busy-road", power: "power-lines", halgak: "river", bangung: "river", eumseup: "flood-check" };
-const CARD_TAG = { good: { ko: "좋아요", en: "Good" }, weak: { ko: "아쉬워요", en: "Falls short" }, know: { ko: "알아 두세요", en: "Good to know" } };
+const CARD_TAG = { good: { ko: "좋아요", en: "Nice" }, weak: { ko: "아쉬워요", en: "Could be better" }, know: { ko: "알아 두세요", en: "Good to know" } };
 const CARD_TOPIC = { back: { ko: "뒤", en: "Behind" }, front: { ko: "앞", en: "Front" }, sides: { ko: "양옆", en: "Sides" },
   wind: { ko: "바람", en: "Wind" }, water: { ko: "물", en: "Water" }, sun: { ko: "해", en: "Sun" }, land: { ko: "땅", en: "Ground" },
-  sal: { ko: "살펴볼 점", en: "To watch" }, us: { ko: "미국 생활", en: "US living" } };
+  sal: { ko: "살펴볼 점", en: "Worth a look" }, us: { ko: "미국 생활", en: "US living" } };
 const CARD_BLOCK_NAME = { tip: { ko: "오늘의 박씨", en: "Today's tip" }, map: { ko: "집 주변 지도", en: "Map around the home" },
   reading: { ko: "터주의 해설", en: "Teoju's reading" }, ask: { ko: "터주에게 묻기", en: "Ask Teoju" }, detail7: { ko: "자세한 지형 판독", en: "Detailed land reading" } };
 let cardFilter = "all";
@@ -1492,63 +1501,63 @@ function insightCards(r, w) {
   const c = r.score.components, out = [], en = isEn();
   const add = (o) => out.push(Object.assign({ topic: o.id, impact: CARD_WEIGHT[o.comp] * Math.abs(c[o.comp].score - 60) }, o));
   { const A = c.hyeonmu, f = A.facts;
-    if (A.score >= 80) add({ id: "back", comp: "hyeonmu", kind: "good", img: "back-strong", title: T({ ko: "뒤가 든든해요", en: "A strong hill behind" }),
-      lines: [T({ ko: `뒤로 ${f.rise_m}m 솟은 땅이 집을 받쳐 줘요.`, en: `Land rising ${f.rise_m} m behind backs the home.` })] });
-    else if (A.score >= 55) add({ id: "back", comp: "hyeonmu", kind: "know", img: "back-strong", title: T({ ko: "뒤가 보통이에요", en: "Some support behind" }),
-      lines: [T({ ko: "뒤에 기댈 땅이 조금 있어요.", en: "There's a little rising ground behind." })] });
-    else add({ id: "back", comp: "hyeonmu", kind: "weak", img: "lowhill", title: T({ ko: "뒤를 받쳐 줄 언덕이 낮아요", en: "Little hill behind for support" }),
-      lines: [T({ ko: `뒤쪽 하늘선이 ${f.back_horizon_deg}°로 낮아 기댈 곳이 약해요.`, en: `The skyline behind is only ${f.back_horizon_deg}° high.` }),
-              T({ ko: "침대 머리를 단단한 벽에 붙이면 보완돼요.", en: "A headboard against a solid wall helps." })] }); }
+    if (A.score >= 80) add({ id: "back", comp: "hyeonmu", kind: "good", img: "back-strong", title: T({ ko: "뒤가 든든해요", en: "A strong hill at your back" }),
+      lines: [T({ ko: `뒤로 ${f.rise_m}m 솟은 땅이 집을 받쳐 줘요.`, en: `Land rises ${f.rise_m} m behind you, like a sturdy chair back.` })] });
+    else if (A.score >= 55) add({ id: "back", comp: "hyeonmu", kind: "know", img: "back-strong", title: T({ ko: "뒤가 보통이에요", en: "A little support behind you" }),
+      lines: [T({ ko: "뒤에 기댈 땅이 조금 있어요.", en: "There's some rising ground at your back." })] });
+    else add({ id: "back", comp: "hyeonmu", kind: "weak", img: "lowhill", title: T({ ko: "뒤를 받쳐 줄 언덕이 낮아요", en: "Not much behind you to lean on" }),
+      lines: [T({ ko: `뒤쪽 하늘선이 ${f.back_horizon_deg}°로 낮아 기댈 곳이 약해요.`, en: `The land behind sits low, only ${f.back_horizon_deg}° above the horizon.` }),
+              T({ ko: "침대 머리를 단단한 벽에 붙이면 보완돼요.", en: "A bed with its headboard on a solid wall helps you feel supported." })] }); }
   { const B = c.jujak, f = B.facts;
-    if (f.front_overbearing) add({ id: "front", comp: "jujak", kind: "weak", img: "back-strong", title: T({ ko: "앞산이 뒤보다 높아요", en: "The hill in front is taller than the back" }),
-      lines: [T({ ko: "앞이 막혀 답답하게 느껴질 수 있어요.", en: "The front can feel closed in." })] });
-    else if (f.ansan) add({ id: "front", comp: "jujak", kind: "good", img: "front-open", title: T({ ko: "앞에 알맞은 낮은 산이 있어요", en: "A well-sized low hill in front" }),
-      lines: [T({ ko: "마주 보는 낮은 산이 집의 기운을 받아 줘요.", en: "A low hill facing the home holds its energy." }), f.ansan_name ? (en ? place(f.ansan_name) : f.ansan_name) : ""].filter(Boolean) });
-    else add({ id: "front", comp: "jujak", kind: B.score >= 60 ? "good" : "know", img: "front-open", title: T({ ko: "앞이 탁 트였어요", en: "Open in front" }),
-      lines: [T({ ko: "앞을 막는 것 없이 시원해요.", en: "Nothing blocks the view in front." }), T({ ko: "마주 볼 낮은 산은 없어요.", en: "There's no low hill facing it." })] }); }
+    if (f.front_overbearing) add({ id: "front", comp: "jujak", kind: "weak", img: "back-strong", title: T({ ko: "앞산이 뒤보다 높아요", en: "The hill in front stands taller than the one behind" }),
+      lines: [T({ ko: "앞이 막혀 답답하게 느껴질 수 있어요.", en: "The front can feel a little crowded." })] });
+    else if (f.ansan) add({ id: "front", comp: "jujak", kind: "good", img: "front-open", title: T({ ko: "앞에 알맞은 낮은 산이 있어요", en: "A gentle hill out front" }),
+      lines: [T({ ko: "마주 보는 낮은 산이 집의 기운을 받아 줘요.", en: "A low hill across from you gathers the good energy in." }), f.ansan_name ? (en ? place(f.ansan_name) : f.ansan_name) : ""].filter(Boolean) });
+    else add({ id: "front", comp: "jujak", kind: B.score >= 60 ? "good" : "know", img: "front-open", title: T({ ko: "앞이 탁 트였어요", en: "Wide open in front" }),
+      lines: [T({ ko: "앞을 막는 것 없이 시원해요.", en: "Nothing crowds your view." }), T({ ko: "마주 볼 낮은 산은 없어요.", en: "There's no little hill across the way to hold the energy." })] }); }
   { const C = c.enclosure, f = C.facts;
-    if (C.score >= 80) add({ id: "sides", comp: "enclosure", kind: "good", img: "back-strong", title: T({ ko: "좌우가 감싸 줘요", en: "Sheltered on both sides" }),
-      lines: [T({ ko: `왼쪽 ${f.cheongryong_deg}°, 오른쪽 ${f.baekho_deg}°로 감싸요.`, en: `Left ${f.cheongryong_deg}°, right ${f.baekho_deg}° high.` })] });
+    if (C.score >= 80) add({ id: "sides", comp: "enclosure", kind: "good", img: "back-strong", title: T({ ko: "좌우가 감싸 줘요", en: "Hugged on both sides" }),
+      lines: [T({ ko: `왼쪽 ${f.cheongryong_deg}°, 오른쪽 ${f.baekho_deg}°로 감싸요.`, en: `Rising land on the left (${f.cheongryong_deg}°) and right (${f.baekho_deg}°) wraps around you.` })] });
     else if (f.weak_side) add({ id: "sides", comp: "enclosure", kind: "weak", img: "sides-open",
-      title: f.weak_side === "cheongryong" ? T({ ko: "왼쪽이 낮아요", en: "The left side is low" }) : T({ ko: "오른쪽이 낮아요", en: "The right side is low" }),
-      lines: [T({ ko: "그쪽이 비어 바람과 시선이 들어와요.", en: "Wind and eyes come in from that side." }), T({ ko: "그쪽에 낮은 울타리나 나무를 두면 도움돼요.", en: "A low fence or trees on that side help." })] });
+      title: f.weak_side === "cheongryong" ? T({ ko: "왼쪽이 낮아요", en: "The left side is a bit open" }) : T({ ko: "오른쪽이 낮아요", en: "The right side is a bit open" }),
+      lines: [T({ ko: "그쪽이 비어 바람과 시선이 들어와요.", en: "Wind and curious eyes can come in from that side." }), T({ ko: "그쪽에 낮은 울타리나 나무를 두면 도움돼요.", en: "A low fence, hedge or trees there make it cozier." })] });
     else add({ id: "sides", comp: "enclosure", kind: C.score >= 55 ? "know" : "weak", img: "sides-open", title: T({ ko: "양옆이 열려 있어요", en: "Open on both sides" }),
-      lines: [T({ ko: "좌우로 감싸 주는 산줄기가 없어요.", en: "No ridges wrap around the sides." }), T({ ko: "낮은 울타리나 나무가 도움돼요.", en: "A low fence or trees help." })] }); }
+      lines: [T({ ko: "좌우로 감싸 주는 산줄기가 없어요.", en: "No ridges wrap around you on the sides." }), T({ ko: "낮은 울타리나 나무가 도움돼요.", en: "A low fence, hedge or trees make it cozier." })] }); }
   { const D = c.jangpung, f = D.facts, IX = { N: 0, NE: 1, E: 2, SE: 3, S: 4, SW: 5, W: 6, NW: 7 };
     const dir = DIR8[en ? "en" : "ko"][IX[f.wind_from] != null ? IX[f.wind_from] : 7];
-    if (f.wind_open) add({ id: "wind", comp: "jangpung", kind: "weak", img: "front-open", title: T({ ko: "겨울바람이 들어요", en: "Open to the winter wind" }),
-      lines: [T({ ko: `찬 바람이 부는 ${dir}쪽이 열려 있어요.`, en: `The cold-wind side (${dir}) is open.` }), T({ ko: "그쪽 창에 두꺼운 커튼이 도움돼요.", en: "Heavy curtains on that side help." })] });
-    else add({ id: "wind", comp: "jangpung", kind: D.score >= 60 ? "good" : "know", img: "wind", title: T({ ko: "겨울바람이 막혀요", en: "Sheltered from the winter wind" }),
-      lines: [T({ ko: `찬 바람이 부는 ${dir}쪽이 막혀 있어요.`, en: `The cold-wind side (${dir}) is sheltered.` })] }); }
+    if (f.wind_open) add({ id: "wind", comp: "jangpung", kind: "weak", img: "front-open", title: T({ ko: "겨울바람이 들어요", en: "Winter wind can reach you" }),
+      lines: [T({ ko: `찬 바람이 부는 ${dir}쪽이 열려 있어요.`, en: `The side the cold wind comes from (${dir}) is open.` }), T({ ko: "그쪽 창에 두꺼운 커튼이 도움돼요.", en: "Thick curtains on that side keep things snug." })] });
+    else add({ id: "wind", comp: "jangpung", kind: D.score >= 60 ? "good" : "know", img: "wind", title: T({ ko: "겨울바람이 막혀요", en: "Tucked away from the winter wind" }),
+      lines: [T({ ko: `찬 바람이 부는 ${dir}쪽이 막혀 있어요.`, en: `Land shields the side the cold wind comes from (${dir}).` })] }); }
   { const E = c.deuksu, f = E.facts;
     if (f.distance_m == null) add({ id: "water", comp: "deuksu", kind: "weak", img: "land-solid", title: T({ ko: "가까운 물이 없어요", en: "No water close by" }),
-      lines: [T({ ko: "풍수에서는 물이 기운을 머물게 한다고 봐요.", en: "In feng shui, water is what holds energy in place." }), T({ ko: "작은 수반이나 어항으로 보완하기도 해요.", en: "A small water bowl or fish tank is a common fix." })] });
+      lines: [T({ ko: "풍수에서는 물이 기운을 머물게 한다고 봐요.", en: "In feng shui, water is what helps good energy stay." }), T({ ko: "작은 수반이나 어항으로 보완하기도 해요.", en: "Many people add a small fountain or fish tank." })] });
     else {
       const d = f.distance_m >= 1000 ? (f.distance_m / 1000).toFixed(1) + "km" : f.distance_m + "m";
       add({ id: "water", comp: "deuksu", kind: f.bend === "hwanpo" || E.score >= 70 ? "good" : f.bend === "bangung" ? "weak" : "know", img: "river",
-        title: f.bend === "hwanpo" ? T({ ko: "물이 집을 감싸 흘러요", en: "Water curves toward the home" })
-          : f.bend === "bangung" ? T({ ko: "물이 바깥으로 굽어요", en: "Water bends away" }) : T({ ko: "가까이에 물이 있어요", en: "Water nearby" }),
+        title: f.bend === "hwanpo" ? T({ ko: "물이 집을 감싸 흘러요", en: "Water hugs your home" })
+          : f.bend === "bangung" ? T({ ko: "물이 바깥으로 굽어요", en: "Water bends away from you" }) : T({ ko: "가까이에 물이 있어요", en: "Water close by" }),
         big: d, bigLabel: T({ ko: "가까운 물까지", en: "to the nearest water" }),
         lines: [`${riverName(f)} ${bend(f.bend)}`.trim(),
-          f.bend === "hwanpo" ? T({ ko: "풍수에서는 이렇게 안기는 물을 기운이 머무는 자리로 봐요.", en: "Feng shui sees water that wraps a home as energy that stays." }) : ""].filter(Boolean) });
+          f.bend === "hwanpo" ? T({ ko: "풍수에서는 이렇게 안기는 물을 기운이 머무는 자리로 봐요.", en: "In feng shui, water that curves around a home keeps good energy close." }) : ""].filter(Boolean) });
     } }
   { const F = c.jwahyang, f = F.facts, lost = f.sun_lost_h || 0;
-    if (lost >= 2) add({ id: "sun", comp: "jwahyang", kind: "weak", img: "sun", title: T({ ko: "겨울 햇빛이 적어요", en: "Little winter sun" }),
-      big: T({ ko: `${lost}시간`, en: `${lost} h` }), bigLabel: T({ ko: "동짓날 산에 가리는 해", en: "of solstice sun blocked by hills" }),
-      lines: [T({ ko: "따뜻한 색 조명으로 집 안을 밝혀 주세요.", en: "Warm lighting inside helps." })] });
-    else add({ id: "sun", comp: "jwahyang", kind: "good", img: "sun", title: T({ ko: "겨울에도 해가 잘 들어요", en: "Good sun even in winter" }),
-      big: f.sun_possible_h != null ? T({ ko: `${f.sun_possible_h}시간`, en: `${f.sun_possible_h} h` }) : null, bigLabel: T({ ko: "동짓날 해", en: "of sun on the winter solstice" }),
-      lines: [lost >= 0.5 ? T({ ko: `산에 가리는 해는 ${lost}시간뿐이에요.`, en: `Hills block only ${lost} h of it.` }) : T({ ko: "산에 가려 잃는 해가 거의 없어요.", en: "Hills block almost none of it." })] }); }
+    if (lost >= 2) add({ id: "sun", comp: "jwahyang", kind: "weak", img: "sun", title: T({ ko: "겨울 햇빛이 적어요", en: "Not much winter sun" }),
+      big: T({ ko: `${lost}시간`, en: `${lost} h` }), bigLabel: T({ ko: "동짓날 산에 가리는 해", en: "of winter sun hidden by hills" }),
+      lines: [T({ ko: "따뜻한 색 조명으로 집 안을 밝혀 주세요.", en: "Warm lights inside make it cozy." })] });
+    else add({ id: "sun", comp: "jwahyang", kind: "good", img: "sun", title: T({ ko: "겨울에도 해가 잘 들어요", en: "Sunny, even in winter" }),
+      big: f.sun_possible_h != null ? T({ ko: `${f.sun_possible_h}시간`, en: `${f.sun_possible_h} h` }) : null, bigLabel: T({ ko: "동짓날 해", en: "of sun on the shortest day" }),
+      lines: [lost >= 0.5 ? T({ ko: `산에 가리는 해는 ${lost}시간뿐이에요.`, en: `Hills hide only ${lost} h of it.` }) : T({ ko: "산에 가려 잃는 해가 거의 없어요.", en: "Hills hardly block any of it." })] }); }
   { const G = c.stability, f = G.facts;
-    if (G.score >= 80) add({ id: "land", comp: "stability", kind: "good", img: "land-solid", title: T({ ko: "땅이 평평하고 단단해요", en: "Level, steady ground" }),
-      lines: [T({ ko: `경사가 ${f.slope_deg}°로 완만해요.`, en: `A gentle ${f.slope_deg}° slope.` })] });
+    if (G.score >= 80) add({ id: "land", comp: "stability", kind: "good", img: "land-solid", title: T({ ko: "땅이 평평하고 단단해요", en: "Steady, level ground" }),
+      lines: [T({ ko: `경사가 ${f.slope_deg}°로 완만해요.`, en: `Only a gentle ${f.slope_deg}° slope.` })] });
     else add({ id: "land", comp: "stability", kind: G.score <= 40 ? "weak" : "know", img: "land-solid", title: G.score <= 40 ? T({ ko: "경사가 있어요", en: "Sloping ground" }) : T({ ko: "조금 기운 땅이에요", en: "Slightly sloping ground" }),
       lines: [T({ ko: `대지 경사가 ${f.slope_deg}°예요.`, en: `The ground slopes ${f.slope_deg}°.` })] }); }
   // things to watch (살): each its own card
   r.sal.forEach((x) => {
     const ws = (w.sal || {})[x.id] || {}, fix = ws.bibo || (en ? "" : (x.bibo || []).join(", "));
     out.push({ id: "sal_" + x.id, topic: "sal", kind: "weak", img: SAL_IMG[x.id] || null, title: salName(x), impact: x.penalty || 5,
-      lines: [ws.line, fix ? T({ ko: "보완법: ", en: "Fix: " }) + fix : ""].filter(Boolean) });
+      lines: [ws.line, fix ? T({ ko: "보완법: ", en: "Try this: " }) + fix : ""].filter(Boolean) });
   });
   // US living: separate from the stars, so it never outranks a 풍수 card by default
   const fixUS = (s) => (en ? String(s || "").replace(/풍수/g, "feng shui") : String(s || ""));
@@ -1609,7 +1618,7 @@ function cardsSection(all) {
   const chip = (f, label) => `<button type="button" data-f="${f}" class="${cardFilter === f ? "on" : ""}" aria-pressed="${cardFilter === f}">${label}</button>`;
   return `<div class="kc-head"><h2>${T({ ko: "내 카드", en: "My cards" })} <small>${T({ ko: `${all.length}장`, en: `${all.length}` })}</small></h2>
       <button type="button" id="cards-edit">${T({ ko: "편집", en: "Edit" })}</button></div>
-    <div class="kc-chips">${chip("all", T({ ko: "전체", en: "All" }))}${chip("good", T({ ko: `좋은 점 ${n.good}`, en: `Good ${n.good}` }))}${chip("weak", T({ ko: `아쉬운 점 ${n.weak}`, en: `Falls short ${n.weak}` }))}${n.us ? chip("us", T({ ko: `미국 생활 ${n.us}`, en: `US living ${n.us}` })) : ""}</div>
+    <div class="kc-chips">${chip("all", T({ ko: "전체", en: "All" }))}${chip("good", T({ ko: `좋은 점 ${n.good}`, en: `Nice ${n.good}` }))}${chip("weak", T({ ko: `아쉬운 점 ${n.weak}`, en: `Could be better ${n.weak}` }))}${n.us ? chip("us", T({ ko: `미국 생활 ${n.us}`, en: `US living ${n.us}` })) : ""}</div>
     <div id="cards-feed">${feedHtml(list)}</div>`;
 }
 
@@ -1627,15 +1636,15 @@ function cardSheet(id, c, r) {
       <h3>${c.title}</h3>${big}
       ${c.lines.map((l) => `<p>${l}</p>`).join("")}
       ${c.comp && c.comp !== "deuksu" ? `<p class="small">${factLine(c.comp, r.score.components[c.comp].facts)}</p>` : ""}
-      ${c.topic === "us" ? `<p class="small">${T({ ko: "풍수 별점과는 별개예요.", en: "Separate from the feng shui stars." })}</p>` : ""}
+      ${c.topic === "us" ? `<p class="small">${T({ ko: "풍수 별점과는 별개예요.", en: "Not part of the feng shui stars." })}</p>` : ""}
       <div class="kd-actions">
-        <button type="button" class="kd-star${starred ? " on" : ""}" id="kd-star">★ ${starred ? T({ ko: "즐겨찾기 빼기", en: "Unstar" }) : T({ ko: "즐겨찾는 카드", en: "Star this card" })}</button>
+        <button type="button" class="kd-star${starred ? " on" : ""}" id="kd-star">★ ${starred ? T({ ko: "즐겨찾기 빼기", en: "Unpin" }) : T({ ko: "즐겨찾는 카드", en: "Pin to top" })}</button>
         <button type="button" id="kd-hide">${T({ ko: "이 카드 숨기기", en: "Hide this card" })}</button>
       </div></div>`, () => cardSheet(id, c, r));
   $("kd-star").addEventListener("click", () => { togglePref("starred", c.id); closeSheet(); rerenderKeepScroll(id);
-    toast(starred ? T({ ko: "즐겨찾기에서 뺐어요.", en: "Unstarred." }) : T({ ko: "맨 위에 둘게요. 모든 집에서요.", en: "Pinned to the top, for every home." })); });
+    toast(starred ? T({ ko: "즐겨찾기에서 뺐어요.", en: "Unpinned." }) : T({ ko: "맨 위에 둘게요. 모든 집에서요.", en: "Pinned to the top for every home." })); });
   $("kd-hide").addEventListener("click", () => { togglePref("hidden", c.id); closeSheet(); rerenderKeepScroll(id);
-    toast(T({ ko: "숨겼어요. '편집'에서 다시 볼 수 있어요.", en: "Hidden. Bring it back from Edit." })); });
+    toast(T({ ko: "숨겼어요. '편집'에서 다시 볼 수 있어요.", en: "Hidden. You can bring it back from Edit." })); });
 }
 function cardEdit(id, all) {
   const p = cardPrefs(), vis = arrangeCards(all), hidden = all.filter((c) => p.hidden.includes(c.id));
@@ -1649,14 +1658,14 @@ function cardEdit(id, all) {
       <button type="button" data-act="hide" data-id="${c.id}" aria-label="${T({ ko: "숨기기", en: "Hide" })}">${ico("M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6")}</button></div>`;
   sheet(`<div class="ke"><div class="ke-top"><h3>${T({ ko: "카드 편집", en: "Edit cards" })}</h3><button type="button" class="btn small" id="ke-done">${T({ ko: "완료", en: "Done" })}</button></div>
     <p class="small">${T({ ko: "별을 누르면 맨 위로 와요. 화살표로 순서를 바꾸고, 눈을 눌러 숨겨요. 이 휴대폰의 모든 집에 똑같이 적용돼요.",
-      en: "Star a card to keep it on top. Use the arrows to reorder, the eye to hide. This applies to every home on this phone." })}</p>
+      en: "Tap ★ to keep a card on top, the arrows to move it, and the eye to hide it. Your layout is used for every home on this phone." })}</p>
     <div class="ke-list">
-      ${favs_.length ? `<div class="ke-sec">★ ${T({ ko: "즐겨찾는 카드", en: "Starred" })}</div>${favs_.map((c) => row(c, true)).join("")}` : ""}
+      ${favs_.length ? `<div class="ke-sec">★ ${T({ ko: "즐겨찾는 카드", en: "Pinned" })}</div>${favs_.map((c) => row(c, true)).join("")}` : ""}
       <div class="ke-sec">${T({ ko: "내 카드", en: "My cards" })}</div>${mine.map((c) => row(c, false)).join("")}
       ${hidden.length ? `<div class="ke-sec">${T({ ko: "숨긴 카드", en: "Hidden" })}</div>${hidden.map((c) => `<div class="ke-row off"><span class="ke-name">${cardName(c)}</span>
         <button type="button" class="btn small ghost" data-act="show" data-id="${c.id}">${T({ ko: "다시 보기", en: "Show" })}</button></div>`).join("")}` : ""}
     </div>
-    <button type="button" class="link-btn" id="ke-reset">${T({ ko: "처음 순서로 되돌리기", en: "Reset to the default order" })}</button></div>`, () => cardEdit(id, all));
+    <button type="button" class="link-btn" id="ke-reset">${T({ ko: "처음 순서로 되돌리기", en: "Go back to the original order" })}</button></div>`, () => cardEdit(id, all));
   $("ke-done").addEventListener("click", closeSheet);
   $("ke-reset").addEventListener("click", () => { store.set("cards", { order: [], starred: [], hidden: [] }); renderReport(id); cardEdit(id, all); });
   document.querySelectorAll("#sheet [data-act]").forEach((b) => b.addEventListener("click", () => {
@@ -1707,7 +1716,7 @@ function renderReport(id) {
       const ws = w.sal[x.id] || {}, fix = ws.bibo || (isEn() ? "" : x.bibo.join(", "));
       return `
       <div class="w"><h4>${salName(x)}</h4><p>${ws.line || ""}</p>
-      ${fix ? `<div class="fix"><b>${T({ ko: "보완법", en: "Fix" })}</b> ${fix}</div>` : ""}</div>`;
+      ${fix ? `<div class="fix"><b>${T({ ko: "보완법", en: "Try this" })}</b> ${fix}</div>` : ""}</div>`;
     }).join("")}</div>` : "";
   const tipsHtml = `<div class="tips">${siteTips.filter((t) => !r.sal.some((x) => x.id === t.id)).map((t) => `
       <div class="t"><h4><span class="chip">${t.tag}</span>${t.title}</h4><p>${t.body}</p></div>`).join("")}</div>`;
@@ -1724,11 +1733,11 @@ function renderReport(id) {
 
   const paidBlock = `
     <div class="card summary"><h2>${T({ ko: "한눈에", en: "At a glance" })}</h2>
-      <div class="section-label" style="margin:0 0 6px">${T({ ko: "좋은 점", en: "Good points" })}</div>${w.good.map((t) => `<p>${t}</p>`).join("")}
-      ${w.watch.length ? `<div class="section-label" style="margin:10px 0 6px">${T({ ko: "아쉬운 점", en: "Weak points" })}</div>${w.watch.map((t) => `<p>${t}</p>`).join("")}` : ""}
-      ${r.confidence !== "high" ? `<p style="color:var(--ink-3);font-size:14px;font-family:inherit">${T({ ko: "현장 사진을 더하면 더 정확해져요.", en: "Adding photos from the site makes this more accurate." })}</p>` : ""}</div>
-    <div class="card"><h2>${LANDMARK.has(id) ? T({ ko: "이 터를 집으로 쓴다면", en: "If this land were your home" }) : T({ ko: "우리 집 보완법", en: "Fixes for this home" })} <small>${T({ ko: "이 집터에 맞춘 방법", en: "Made for this site" })}</small></h2>
-      ${r.sal.length ? `<div class="section-label" style="margin:0 0 8px">${T({ ko: "살펴볼 점", en: "Things to watch" })}</div>${watchHtml}<div class="section-label" style="margin:0 0 8px">${T({ ko: "집 안에서 할 수 있는 것", en: "What you can do inside" })}</div>` : ""}
+      <div class="section-label" style="margin:0 0 6px">${T({ ko: "좋은 점", en: "What's lovely" })}</div>${w.good.map((t) => `<p>${t}</p>`).join("")}
+      ${w.watch.length ? `<div class="section-label" style="margin:10px 0 6px">${T({ ko: "아쉬운 점", en: "What could be better" })}</div>${w.watch.map((t) => `<p>${t}</p>`).join("")}` : ""}
+      ${r.confidence !== "high" ? `<p style="color:var(--ink-3);font-size:14px;font-family:inherit">${T({ ko: "현장 사진을 더하면 더 정확해져요.", en: "A few photos of the place would make this even more accurate." })}</p>` : ""}</div>
+    <div class="card"><h2>${LANDMARK.has(id) ? T({ ko: "이 터를 집으로 쓴다면", en: "If this land were your home" }) : T({ ko: "우리 집 보완법", en: "Little fixes for this home" })} <small>${T({ ko: "이 집터에 맞춘 방법", en: "Made for this spot" })}</small></h2>
+      ${r.sal.length ? `<div class="section-label" style="margin:0 0 8px">${T({ ko: "살펴볼 점", en: "Worth a look" })}</div>${watchHtml}<div class="section-label" style="margin:0 0 8px">${T({ ko: "집 안에서 할 수 있는 것", en: "Easy things to try inside" })}</div>` : ""}
       ${tipsHtml}</div>
     <details class="card" open><summary>${T({ ko: "풍수로 보면", en: "In feng shui terms" })} <span class="fold">${T({ ko: "용어와 전통", en: "Terms and tradition" })}</span></summary>
       <p style="font-family:var(--display);font-size:15px;line-height:1.8;margin:0 0 14px">${w.pungsu.sides}</p>
@@ -1753,12 +1762,12 @@ function renderReport(id) {
   const shareSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>`;
   const heartSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="${favNow ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>`;
 
-  const mapHtml = `<div class="card map" id="sec-land"><h2>${T({ ko: "집 주변 땅", en: "Land around the home" })} <small>${T({ ko: "지도는 북쪽이 위", en: "North is up" })}</small></h2>
+  const mapHtml = `<div class="card map" id="sec-land"><h2>${T({ ko: "집 주변 땅", en: "The land around your home" })} <small>${T({ ko: "지도는 북쪽이 위", en: "North is up" })}</small></h2>
       <div id="sasinsa-map" class="leaf" role="img" aria-label="${T({ ko: "집 주변 지도: 사방의 산과 물길", en: "Map around the home: hills and water on all four sides" })}"></div>
       <div class="legend">
         <span><span class="dot" style="background:var(--accent)"></span>${T({ ko: "집과 현관 방향", en: "Home and door direction" })}</span>
         <span><span class="dot" style="background:var(--water)"></span>${T({ ko: "물길", en: "Water" })}</span>
-        ${r.sal.some((x) => x.id === "overpass") ? `<span><span class="dot" style="background:#c0392b"></span>${T({ ko: "살펴볼 곳", en: "Spot to watch" })}</span>` : ""}
+        ${r.sal.some((x) => x.id === "overpass") ? `<span><span class="dot" style="background:#c0392b"></span>${T({ ko: "살펴볼 곳", en: "Spot worth a look" })}</span>` : ""}
         <span>▲ ${T({ ko: "주변 산", en: "Nearby hills" })}</span></div>
       <div class="sasinsa">${Object.keys(SECT).map((k) => `<div><b>${T(SIDE[k])}</b><span>${verdict(r, k)}</span></div>`).join("")}</div>
       <div class="water-note">${T({ ko: "물길", en: "Water" })}: <b>${riverName(deuksu)}</b>, ${bend(deuksu.bend)}${r.sal.filter((x) => x.id === "overpass" && x.evidence).map((x) => `<br><span class="watch-note">${isEn()
@@ -1769,7 +1778,7 @@ function renderReport(id) {
     ${paid ? paidBlock : BETA_FREE ? `
     <div class="card" style="text-align:center">
       <h3>${T({ ko: "이 집만을 위한 해설을 쓰고 있어요", en: "Writing a reading just for this home" })}</h3>
-      <p>${T({ ko: "베타 테스터는 모두 무료예요. 20초쯤 걸려요.", en: "Everything is free for beta testers. It takes about 20 seconds." })}</p>
+      <p>${T({ ko: "베타 테스터는 모두 무료예요. 20초쯤 걸려요.", en: "It's free for beta testers. This can take about a minute." })}</p>
       <button class="btn accent" id="buy">${T({ ko: "다시 불러오기", en: "Try again" })}</button>
     </div>` : `
     <div class="locked">
@@ -1784,7 +1793,7 @@ function renderReport(id) {
     </div>`}`;
   const askHtml = window.GILJI && GILJI.api ? `<div class="card ask-card" id="sec-ask">
       <div class="ask-row">${CH.toad(52, { pose: "hello" })}<div><b>${T({ ko: "터주에게 물어보세요", en: "Ask Teoju" })}</b>
-        <p>${T({ ko: "이 집 땅에 대해 궁금한 건 무엇이든요.", en: "Anything about this home's land." })}</p></div></div>
+        <p>${T({ ko: "이 집 땅에 대해 궁금한 건 무엇이든요.", en: "Ask anything about this home's land." })}</p></div></div>
       <button class="btn accent block" id="ask-open">${T({ ko: "대화 열기", en: "Open chat" })}</button></div>` : "";
   const detailHtml = `<details class="card" open><summary>${T({ ko: "자세한 지형 판독", en: "Detailed land reading" })} <span class="fold">${T({ ko: "일곱 가지", en: "Seven parts" })}</span></summary>
       <div class="comp">${Object.keys(COMP).map((k) => {
@@ -1804,18 +1813,18 @@ function renderReport(id) {
     <div class="card" id="sec-sum">
       <div class="sum-head"><div class="addr">${addrOf(id)}</div>
         <div class="sum-actions">
-          <button class="icon-btn${favNow ? " on" : ""}" id="heart" aria-pressed="${favNow}" aria-label="${T({ ko: "찜하기", en: "Save to favorites" })}">${heartSvg}</button>
+          <button class="icon-btn${favNow ? " on" : ""}" id="heart" aria-pressed="${favNow}" aria-label="${T({ ko: "찜하기", en: "Save" })}">${heartSvg}</button>
           <button class="icon-btn" id="share" aria-label="${T({ ko: "공유하기", en: "Share" })}">${shareSvg}</button>
         </div></div>
       <div class="own-row"><button type="button" class="own-btn${savedNow ? " on" : ""}" id="own-home" aria-pressed="${savedNow}">🏠 ${savedNow
-          ? T({ ko: "우리 집이에요", en: "This is my home" }) : T({ ko: "우리 집으로 정하기", en: "Set as my home" })}</button></div>
+          ? T({ ko: "우리 집이에요", en: "This is my home" }) : T({ ko: "우리 집으로 정하기", en: "Make this my home" })}</button></div>
       ${factsRow}
       <div class="top">
         ${dial(s.stars)}
         <div>
           <span class="grade">${gradeName(s.grade, true)}</span>${starsRange(r)}
-          <div class="meta">${doorLine(r, facingIx)}<br>${T({ ko: "지도만으로 읽었어요", en: "Read from maps only" })}
-            ${window.GILJI && GILJI.isLive(id) ? `<br><button class="link-btn" id="fix-door" type="button">${T({ ko: "현관 방향 고치기", en: "Fix the door direction" })}</button>` : ""}</div>
+          <div class="meta">${doorLine(r, facingIx)}<br>${T({ ko: "지도만으로 읽었어요", en: "Read from maps (no site visit)" })}
+            ${window.GILJI && GILJI.isLive(id) ? `<br><button class="link-btn" id="fix-door" type="button">${T({ ko: "현관 방향 고치기", en: "Change the door direction" })}</button>` : ""}</div>
         </div>
       </div>
       <div class="says">${CH.toad(64, { pose: s.stars >= 4 ? "yay" : "hello", cls: "pop" })}<div class="bubble">${s.level_land ? levelLine(r) : w.headline}</div></div>
@@ -1840,11 +1849,11 @@ function renderReport(id) {
     <div class="card photo-up"><div class="ico" aria-hidden="true">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="14" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg></div>
       <p>${T({ ko: "<b>현장 사진 다섯 장</b>을 더하면 현관 방향과 길·고가 같은 살펴볼 점을 직접 확인해 더 정확하게 읽어 드려요. (다음 단계)",
-        en: "Add <b>five photos from the site</b>, and we can check the door's direction and things to watch, like roads and overpasses, for a more accurate reading. (Coming next)" })}</p></div>
+        en: "Coming soon: add <b>five photos</b> of the place, and we'll double-check the door and anything worth a look, like nearby roads, for an even better reading." })}</p></div>
 
     <div class="actions">
       <button class="btn ghost" id="to-compare">${T({ ko: "다른 집과 비교", en: "Compare homes" })}</button>
-      <button class="btn ghost" id="to-home">${T({ ko: "다른 집 보기", en: "See another home" })}</button>
+      <button class="btn ghost" id="to-home">${T({ ko: "다른 집 보기", en: "Look up another home" })}</button>
     </div>
     <p class="disclaimer">${T(DISCLAIMER)}<br>${T({ ko: "데이터", en: "Data" })}: Copernicus GLO-30, © OpenStreetMap contributors</p>
     ${paid || BETA_FREE ? "" : `<div class="dock"><button class="btn accent" id="dock-buy">${T({ ko: "이 집 전체 해설 열기", en: "Open the full reading" })}<small>${T({ ko: "$1 · 베타 동안 무료", en: "$1 · free during the beta" })}</small></button></div>`}`;
@@ -1885,19 +1894,19 @@ function renderReport(id) {
     b.querySelector("path").parentNode.setAttribute("fill", on ? "currentColor" : "none");
     b.classList.remove("beat"); void b.offsetWidth; b.classList.add("beat");
     renderLists();
-    toast(on ? T({ ko: "찜한 집에 담았어요.", en: "Saved to favorites." }) : T({ ko: "찜을 취소했어요.", en: "Removed from favorites." }));
+    toast(on ? T({ ko: "찜한 집에 담았어요.", en: "Saved." }) : T({ ko: "찜을 취소했어요.", en: "Removed from Saved." }));
   });
   $("own-home").addEventListener("click", () => {
     const on = store.get("saved") !== id; store.set("saved", on ? id : null);
     const b = $("own-home"); b.classList.toggle("on", on); b.setAttribute("aria-pressed", on);
-    b.textContent = "🏠 " + (on ? T({ ko: "우리 집이에요", en: "This is my home" }) : T({ ko: "우리 집으로 정하기", en: "Set as my home" }));
+    b.textContent = "🏠 " + (on ? T({ ko: "우리 집이에요", en: "This is my home" }) : T({ ko: "우리 집으로 정하기", en: "Make this my home" }));
     rerenderTip(id); renderSavedTip();
-    toast(on ? T({ ko: "우리 집으로 정했어요. 흥이가 매일 박씨를 물어 와요.", en: "Set as your home. Heungi will bring a tip every day." })
-             : T({ ko: "우리 집에서 뺐어요.", en: "No longer your home." }));
+    toast(on ? T({ ko: "우리 집으로 정했어요. 흥이가 매일 박씨를 물어 와요.", en: "This is now your home. Heungi will bring you a tip every day." })
+             : T({ ko: "우리 집에서 뺐어요.", en: "Okay, it's no longer set as your home." }));
   });
   $("share").addEventListener("click", async () => {
     const url = location.origin + location.pathname + (ORDER.includes(id) ? "#p=" + id : "");
-    const data = { title: T({ ko: "박씨 · 우리 집의 기운", en: "Bakseed · the energy of a home" }), text: `${shortName(id)} — ★ ${s.stars}/5 · ${gradeName(s.grade)}`, url };
+    const data = { title: T({ ko: "박씨 · 우리 집의 기운", en: "Bakseed · what a home's land says" }), text: `${shortName(id)} — ★ ${s.stars}/5 · ${gradeName(s.grade)}`, url };
     try { if (navigator.share) { await navigator.share(data); return; } } catch (e) { return; }
     try { await navigator.clipboard.writeText(url); toast(T({ ko: "링크를 복사했어요.", en: "Link copied." })); } catch (e) { toast(url); }
   });
@@ -1966,11 +1975,11 @@ function renderCompare() {
           ${row(T({ ko: "등급", en: "Grade" }), (r) => `<b class="serif">${gradeName(r.score.grade)}</b>`)}
           ${Object.keys(GIUN).map((g) => row(T(GIUN[g]), (r) => `<span class="stars" style="letter-spacing:0">${stars(r.giun.find((x) => x.key === g).stars)}</span>`)).join("")}
           ${row(T({ ko: "물길", en: "Water" }), (r) => `${riverName(r.score.components.deuksu.facts)}<br><span style="color:var(--ink-3);font-size:12px">${bend(r.score.components.deuksu.facts.bend)}</span>`)}
-          ${row(T({ ko: "살펴볼 점", en: "To watch" }), (r) => r.sal.length ? r.sal.map(salName).join("<br>") : T({ ko: "없음", en: "None" }))}
+          ${row(T({ ko: "살펴볼 점", en: "Worth a look" }), (r) => r.sal.length ? r.sal.map(salName).join("<br>") : T({ ko: "없음", en: "None" }))}
           ${row(T({ ko: "보완법", en: "Fixes" }), (r) => T({ ko: `${TIPS.siteTips(r).length}가지`, en: `${TIPS.siteTips(r).length}` }))}
         </tbody></table></div>`}
     </div>
-    <p class="disclaimer">${T({ ko: "별점은 참고용이에요. 어느 집이 좋을지는 직접 판단해 주세요.", en: "Stars are for reference. Which home is right for you is your call." })}<br>${T(DISCLAIMER)}</p>
+    <p class="disclaimer">${T({ ko: "별점은 참고용이에요. 어느 집이 좋을지는 직접 판단해 주세요.", en: "Stars are just one way to look at it. You know what feels like home." })}<br>${T(DISCLAIMER)}</p>
     <div class="actions"><button class="btn ghost" id="cmp-home">${T({ ko: "처음으로", en: "Home" })}</button><button class="btn ghost" id="cmp-back">${T({ ko: "보고서로", en: "Back to the report" })}</button></div>`;
   $("compare").querySelector(".pick").addEventListener("click", (e) => {
     const b = e.target.closest("button"); if (!b) return;
