@@ -46,7 +46,7 @@ window.PUNGSU_TIPS = (function () {
            `The land on this home's right (looking out from the door, the ${right}) is low. A tall plant or a high cabinet on that side helps both sides balance.`));
     } else if (c.enclosure.score <= 40) {
       add("open_sides", "가구", tr("양옆을 감싸 주세요", "Wrap both sides"),
-        tr("좌우가 모두 트인 집이에요. 거실 소파 양옆에 높이가 비슷한 수납장이나 화분을 짝 맞춰 두면 감싸 안는 느낌이 생겨요.",
+        tr("양옆이 모두 트인 집이에요. 거실 소파 양옆에 높이가 비슷한 수납장이나 화분을 짝 맞춰 두면 감싸 안는 느낌이 생겨요.",
            "This home is open on both the left and the right. A matching pair of cabinets or plants of similar height on each side of the sofa makes the room feel wrapped."));
     }
     if (c.hyeonmu.score < 70) {
