@@ -126,6 +126,64 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .top { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; margin-top: 18px; }
 .top .rate-stars { font-size: 26px; letter-spacing: 4px; color: var(--star); line-height: 1; margin-top: 4px; }
 .top .rate-stars i { color: var(--line); font-style: normal; }
+.top .rate-stars .sp { display: inline-block; animation: starpop .45s both; }
+.top .rate-stars .sp.off { color: var(--line); }
+@keyframes starpop { 0% { transform: scale(.2); opacity: 0; } 70% { transform: scale(1.25); opacity: 1; } 100% { transform: scale(1); } }
+/* 내 카드 (one idea per card) */
+.kc-head { display: flex; justify-content: space-between; align-items: center; margin: 24px 4px 8px; }
+.kc-head h2 { font: 800 19px var(--display); margin: 0; }
+.kc-head small { color: var(--ink-3); font-weight: 500; font-size: 14px; }
+.kc-head button { border: 0; background: none; color: var(--accent); font: 700 15px var(--display, inherit); padding: 8px 4px 8px 12px; }
+.kc-chips { display: flex; gap: 6px; margin: 0 0 12px; overflow-x: auto; scrollbar-width: none; }
+.kc-chips button { border: 0; border-radius: 99px; padding: 8px 14px; background: #fff; color: var(--ink-2); font: 600 13px var(--display, inherit); white-space: nowrap; }
+.kc-chips button.on { background: var(--ink); color: #fff; }
+#cards-feed { display: flex; flex-direction: column; gap: 12px; }
+#cards-feed .card { margin: 0; }
+.kc { position: relative; display: flex; flex-direction: column; width: 100%; text-align: left; border: 0; padding: 0; background: #fff; border-radius: 22px; overflow: hidden;
+  color: var(--ink); font: inherit; box-shadow: 0 2px 12px rgba(25,31,40,.05); cursor: pointer; animation: kcrise .5s both; }
+.kc:active { transform: scale(.985); }
+.kc-block { animation: kcrise .5s both; }
+.kc-pic { display: block; overflow: hidden; background: #eef3f6; }
+.kc-pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.kc-big .kc-pic { height: 158px; }
+.kc-big .kc-pic img { animation: kcfloat 7s ease-in-out infinite; }
+.kc-side { flex-direction: row; }
+.kc-side.r { flex-direction: row-reverse; }
+.kc-side .kc-pic { width: 40%; flex: none; min-height: 140px; }
+.kc-half .kc-pic { height: 96px; }
+.kc-body { display: flex; flex-direction: column; gap: 3px; padding: 14px 16px 16px; min-width: 0; }
+.kc-half .kc-body { padding: 10px 13px 13px; }
+.kc-tag { font-size: 12px; font-weight: 700; }
+.kc-tag.good { color: #1f9d55; } .kc-tag.weak { color: var(--accent); } .kc-tag.know { color: #b26b00; }
+.kc-title { font: 800 17px/1.35 var(--display); }
+.kc-big .kc-title { font-size: 19px; }
+.kc-half .kc-title { font-size: 15px; }
+.kc-num { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.kc-num b { font: 800 28px/1.15 var(--display); }
+.kc-num span { font-size: 13px; color: var(--ink-3); }
+.kc-half .kc-num b { font-size: 22px; }
+.kc-lines { font-size: 14px; line-height: 1.55; color: var(--ink-3); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.kc-half .kc-lines { font-size: 12.5px; -webkit-line-clamp: 2; }
+.kc-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@keyframes kcrise { from { transform: translateY(18px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes kcfloat { 0%, 100% { transform: scale(1.03); } 50% { transform: scale(1.07) translateY(-3px); } }
+/* a card opened, and card editing (in the sheet) */
+.kd .kd-pic { width: calc(100% + 40px); margin: -8px -20px 12px; height: 180px; object-fit: cover; display: block; }
+.kd h3 { margin: 4px 0 6px; font-size: 21px; }
+.kd p { margin: 0 0 6px; line-height: 1.6; }
+.kd-num { display: flex; align-items: baseline; gap: 6px; margin: 2px 0 8px; } .kd-num b { font: 800 30px var(--display); } .kd-num span { color: var(--ink-3); font-size: 14px; }
+.kd-actions { display: flex; gap: 8px; margin-top: 14px; }
+.kd-actions button { flex: 1; height: 48px; border-radius: 14px; border: 0; background: #f2f4f6; color: var(--ink-2); font: 700 14px var(--display, inherit); }
+.kd-actions .kd-star { background: var(--accent-soft); color: var(--accent); }
+.ke-top { display: flex; justify-content: space-between; align-items: center; }
+.ke-top h3 { margin: 0; }
+.ke-list { max-height: 56vh; overflow-y: auto; margin: 8px -4px; padding: 0 4px; display: flex; flex-direction: column; gap: 6px; }
+.ke-sec { font-size: 12px; font-weight: 700; color: var(--ink-3); margin: 8px 2px 0; }
+.ke-row { display: flex; align-items: center; gap: 2px; background: #f6f7f9; border-radius: 14px; padding: 4px 4px 4px 12px; }
+.ke-row.off { opacity: .7; }
+.ke-name { flex: 1; min-width: 0; font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ke-row button:not(.btn) { width: 38px; height: 40px; border: 0; background: none; color: var(--ink-3); display: grid; place-items: center; font-size: 18px; }
+.ke-row button[data-act="star"].on { color: var(--star); }
 .top .meta { max-width: 320px; }
 .dial { position: relative; width: 150px; height: 150px; }
 .dial svg { width: 100%; height: 100%; transform: rotate(-90deg); }
@@ -370,7 +428,7 @@ details.card[open] > summary .fold::after { transform: rotate(180deg); }
 #toast { position: fixed; left: 50%; bottom: 96px; transform: translate(-50%, 20px); opacity: 0; z-index: 20; background: rgba(25,31,40,.92); color: #fff; font-size: 14px; padding: 10px 16px; border-radius: 12px; max-width: 86vw; text-align: center; transition: opacity .25s, transform .25s; pointer-events: none; }
 #toast.show { opacity: 1; transform: translate(-50%, 0); }
 #new-version { position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 72px); white-space: nowrap; transform: translateX(-50%); z-index: 30; border: 0; border-radius: 999px; padding: 10px 18px; background: var(--ink); color: #fff; font: 600 14px var(--display, inherit); box-shadow: 0 6px 20px rgba(25,31,40,.25); }
-@media (prefers-reduced-motion: reduce) { .hero-media img, .dock, .icon-btn.beat { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .hero-media img, .dock, .icon-btn.beat, .kc, .kc-block, .kc-pic img, .top .rate-stars .sp { animation: none !important; } }
 
 /* 좋은 점 / 아쉬운 점 tabs */
 .pros { margin-top: 16px; }
@@ -490,19 +548,19 @@ body.noscroll { overflow: hidden; }
   <div class="sheet" id="sheet"></div>
 </div>
 
-<script src="i18n.js?v=20261121060215"></script>
-<script src="data.js?v=20261121060215"></script>
-<script src="writer.js?v=20261121060215"></script>
-<script src="tips.js?v=20261121060215"></script>
-<script src="characters.js?v=20261121060215"></script>
-<script src="config.js?v=20261121060215"></script>
-<script src="live.js?v=20261121060215"></script>
+<script src="i18n.js?v=20261121064625"></script>
+<script src="data.js?v=20261121064625"></script>
+<script src="writer.js?v=20261121064625"></script>
+<script src="tips.js?v=20261121064625"></script>
+<script src="characters.js?v=20261121064625"></script>
+<script src="config.js?v=20261121064625"></script>
+<script src="live.js?v=20261121064625"></script>
 <script>
 /* Auto-update: phones and browsers keep an old copy of this page for a while after a publish.
    deploy/publish-page.sh stamps PAGE_VERSION here and writes version.json. On opening, a newer
    version reloads the page at once (nothing has been touched yet). Coming back to the app later,
    it offers a button instead of reloading under the person. Each version is tried once. */
-const PAGE_VERSION = "20261121060215";
+const PAGE_VERSION = "20261121064625";
 (function () {
   if (PAGE_VERSION === "dev") return;
   let last = 0;
@@ -867,7 +925,7 @@ function dial(n) {      // one rating for every home: n of 5 stars (rules v0.8)
     <circle cx="62" cy="62" r="${r}" fill="none" stroke="var(--star)" stroke-width="9" stroke-linecap="round"
       stroke-dasharray="${c}" stroke-dashoffset="${c}" data-off="${off}" style="transition:stroke-dashoffset 1s ease"/>
   </svg><div class="num" aria-hidden="true"><b>${n}</b><span>/ 5</span></div></div>
-  <div class="rate-stars" aria-hidden="true">${stars(n)}</div>`;
+  <div class="rate-stars" aria-hidden="true">${[1, 2, 3, 4, 5].map((i) => `<span class="sp${i > n ? " off" : ""}" style="animation-delay:${(0.75 + i * 0.12).toFixed(2)}s">★</span>`).join("")}</div>`;
 }
 
 /* 평지 (level land): rated in stars like every home (rules v0.8); the bubble says the land is level
@@ -1297,6 +1355,221 @@ async function startCompass(id) {
   });
 }
 
+/* ---------- 내 카드: one idea per card, with a picture (owner Nov 20; mockup "Bakseed card redesign") ----------
+   Each 풍수 part, each thing to watch and each US-living fact becomes its own card: a tag, a title, at most
+   three short lines, a soft 3D picture. Default order is fair: the parts that move the stars most come
+   first (engine weight x distance from neutral), good or bad alike, whoever's home it is. People can
+   star, reorder and hide cards; that layout is kept on the phone and used for every home. */
+const CARD_IMG = (n) => `img/cards/${n}.webp`;
+const CARD_WEIGHT = { hyeonmu: .20, deuksu: .20, jujak: .15, enclosure: .15, jangpung: .15, jwahyang: .10, stability: .05 };
+const US_IMG = { park: "park", golf: "park", water: "flood-check", busy_road: "busy-road", freeway: "busy-road", power: "power-lines" };
+const SAL_IMG = { overpass: "busy-road", nochung: "busy-road", power: "power-lines", halgak: "river", bangung: "river", eumseup: "flood-check" };
+const CARD_TAG = { good: { ko: "좋아요", en: "Good" }, weak: { ko: "아쉬워요", en: "Falls short" }, know: { ko: "알아 두세요", en: "Good to know" } };
+const CARD_TOPIC = { back: { ko: "뒤", en: "Behind" }, front: { ko: "앞", en: "Front" }, sides: { ko: "양옆", en: "Sides" },
+  wind: { ko: "바람", en: "Wind" }, water: { ko: "물", en: "Water" }, sun: { ko: "해", en: "Sun" }, land: { ko: "땅", en: "Ground" },
+  sal: { ko: "살펴볼 점", en: "To watch" }, us: { ko: "미국 생활", en: "US living" } };
+const CARD_BLOCK_NAME = { tip: { ko: "오늘의 박씨", en: "Today's tip" }, map: { ko: "집 주변 지도", en: "Map around the home" },
+  reading: { ko: "터주의 해설", en: "Teoju's reading" }, ask: { ko: "터주에게 묻기", en: "Ask Teoju" }, detail7: { ko: "자세한 지형 판독", en: "Detailed land reading" } };
+let cardFilter = "all";
+
+function insightCards(r, w) {
+  const c = r.score.components, out = [], en = isEn();
+  const add = (o) => out.push(Object.assign({ topic: o.id, impact: CARD_WEIGHT[o.comp] * Math.abs(c[o.comp].score - 60) }, o));
+  { const A = c.hyeonmu, f = A.facts;
+    if (A.score >= 80) add({ id: "back", comp: "hyeonmu", kind: "good", img: "back-strong", title: T({ ko: "뒤가 든든해요", en: "A strong hill behind" }),
+      lines: [T({ ko: `뒤로 ${f.rise_m}m 솟은 땅이 집을 받쳐 줘요.`, en: `Land rising ${f.rise_m} m behind backs the home.` })] });
+    else if (A.score >= 55) add({ id: "back", comp: "hyeonmu", kind: "know", img: "back-strong", title: T({ ko: "뒤가 보통이에요", en: "Some support behind" }),
+      lines: [T({ ko: "뒤에 기댈 땅이 조금 있어요.", en: "There's a little rising ground behind." })] });
+    else add({ id: "back", comp: "hyeonmu", kind: "weak", img: "lowhill", title: T({ ko: "뒤를 받쳐 줄 언덕이 낮아요", en: "Little hill behind for support" }),
+      lines: [T({ ko: `뒤쪽 하늘선이 ${f.back_horizon_deg}°로 낮아 기댈 곳이 약해요.`, en: `The skyline behind is only ${f.back_horizon_deg}° high.` }),
+              T({ ko: "침대 머리를 단단한 벽에 붙이면 보완돼요.", en: "A headboard against a solid wall helps." })] }); }
+  { const B = c.jujak, f = B.facts;
+    if (f.front_overbearing) add({ id: "front", comp: "jujak", kind: "weak", img: "back-strong", title: T({ ko: "앞산이 뒤보다 높아요", en: "The hill in front is taller than the back" }),
+      lines: [T({ ko: "앞이 막혀 답답하게 느껴질 수 있어요.", en: "The front can feel closed in." })] });
+    else if (f.ansan) add({ id: "front", comp: "jujak", kind: "good", img: "front-open", title: T({ ko: "앞에 알맞은 낮은 산이 있어요", en: "A well-sized low hill in front" }),
+      lines: [T({ ko: "마주 보는 낮은 산이 집의 기운을 받아 줘요.", en: "A low hill facing the home holds its energy." }), f.ansan_name ? (en ? place(f.ansan_name) : f.ansan_name) : ""].filter(Boolean) });
+    else add({ id: "front", comp: "jujak", kind: B.score >= 60 ? "good" : "know", img: "front-open", title: T({ ko: "앞이 탁 트였어요", en: "Open in front" }),
+      lines: [T({ ko: "앞을 막는 것 없이 시원해요.", en: "Nothing blocks the view in front." }), T({ ko: "마주 볼 낮은 산은 없어요.", en: "There's no low hill facing it." })] }); }
+  { const C = c.enclosure, f = C.facts;
+    if (C.score >= 80) add({ id: "sides", comp: "enclosure", kind: "good", img: "back-strong", title: T({ ko: "좌우가 감싸 줘요", en: "Sheltered on both sides" }),
+      lines: [T({ ko: `왼쪽 ${f.cheongryong_deg}°, 오른쪽 ${f.baekho_deg}°로 감싸요.`, en: `Left ${f.cheongryong_deg}°, right ${f.baekho_deg}° high.` })] });
+    else if (f.weak_side) add({ id: "sides", comp: "enclosure", kind: "weak", img: "sides-open",
+      title: f.weak_side === "cheongryong" ? T({ ko: "왼쪽이 낮아요", en: "The left side is low" }) : T({ ko: "오른쪽이 낮아요", en: "The right side is low" }),
+      lines: [T({ ko: "그쪽이 비어 바람과 시선이 들어와요.", en: "Wind and eyes come in from that side." }), T({ ko: "그쪽에 낮은 울타리나 나무를 두면 도움돼요.", en: "A low fence or trees on that side help." })] });
+    else add({ id: "sides", comp: "enclosure", kind: C.score >= 55 ? "know" : "weak", img: "sides-open", title: T({ ko: "양옆이 열려 있어요", en: "Open on both sides" }),
+      lines: [T({ ko: "좌우로 감싸 주는 산줄기가 없어요.", en: "No ridges wrap around the sides." }), T({ ko: "낮은 울타리나 나무가 도움돼요.", en: "A low fence or trees help." })] }); }
+  { const D = c.jangpung, f = D.facts, IX = { N: 0, NE: 1, E: 2, SE: 3, S: 4, SW: 5, W: 6, NW: 7 };
+    const dir = DIR8[en ? "en" : "ko"][IX[f.wind_from] != null ? IX[f.wind_from] : 7];
+    if (f.wind_open) add({ id: "wind", comp: "jangpung", kind: "weak", img: "front-open", title: T({ ko: "겨울바람이 들어요", en: "Open to the winter wind" }),
+      lines: [T({ ko: `찬 바람이 부는 ${dir}쪽이 열려 있어요.`, en: `The cold-wind side (${dir}) is open.` }), T({ ko: "그쪽 창에 두꺼운 커튼이 도움돼요.", en: "Heavy curtains on that side help." })] });
+    else add({ id: "wind", comp: "jangpung", kind: D.score >= 60 ? "good" : "know", img: "wind", title: T({ ko: "겨울바람이 막혀요", en: "Sheltered from the winter wind" }),
+      lines: [T({ ko: `찬 바람이 부는 ${dir}쪽이 막혀 있어요.`, en: `The cold-wind side (${dir}) is sheltered.` })] }); }
+  { const E = c.deuksu, f = E.facts;
+    if (f.distance_m == null) add({ id: "water", comp: "deuksu", kind: "weak", img: "land-solid", title: T({ ko: "가까운 물이 없어요", en: "No water close by" }),
+      lines: [T({ ko: "풍수에서는 물이 기운을 머물게 한다고 봐요.", en: "In feng shui, water is what holds energy in place." }), T({ ko: "작은 수반이나 어항으로 보완하기도 해요.", en: "A small water bowl or fish tank is a common fix." })] });
+    else {
+      const d = f.distance_m >= 1000 ? (f.distance_m / 1000).toFixed(1) + "km" : f.distance_m + "m";
+      add({ id: "water", comp: "deuksu", kind: f.bend === "hwanpo" || E.score >= 70 ? "good" : f.bend === "bangung" ? "weak" : "know", img: "river",
+        title: f.bend === "hwanpo" ? T({ ko: "물이 집을 감싸 흘러요", en: "Water curves toward the home" })
+          : f.bend === "bangung" ? T({ ko: "물이 바깥으로 굽어요", en: "Water bends away" }) : T({ ko: "가까이에 물이 있어요", en: "Water nearby" }),
+        big: d, bigLabel: T({ ko: "가까운 물까지", en: "to the nearest water" }),
+        lines: [`${riverName(f)} ${bend(f.bend)}`.trim(),
+          f.bend === "hwanpo" ? T({ ko: "풍수에서는 이렇게 안기는 물을 기운이 머무는 자리로 봐요.", en: "Feng shui sees water that wraps a home as energy that stays." }) : ""].filter(Boolean) });
+    } }
+  { const F = c.jwahyang, f = F.facts, lost = f.sun_lost_h || 0;
+    if (lost >= 2) add({ id: "sun", comp: "jwahyang", kind: "weak", img: "sun", title: T({ ko: "겨울 햇빛이 적어요", en: "Little winter sun" }),
+      big: T({ ko: `${lost}시간`, en: `${lost} h` }), bigLabel: T({ ko: "동짓날 산에 가리는 해", en: "of solstice sun blocked by hills" }),
+      lines: [T({ ko: "따뜻한 색 조명으로 집 안을 밝혀 주세요.", en: "Warm lighting inside helps." })] });
+    else add({ id: "sun", comp: "jwahyang", kind: "good", img: "sun", title: T({ ko: "겨울에도 해가 잘 들어요", en: "Good sun even in winter" }),
+      big: f.sun_possible_h != null ? T({ ko: `${f.sun_possible_h}시간`, en: `${f.sun_possible_h} h` }) : null, bigLabel: T({ ko: "동짓날 해", en: "of sun on the winter solstice" }),
+      lines: [lost >= 0.5 ? T({ ko: `산에 가리는 해는 ${lost}시간뿐이에요.`, en: `Hills block only ${lost} h of it.` }) : T({ ko: "산에 가려 잃는 해가 거의 없어요.", en: "Hills block almost none of it." })] }); }
+  { const G = c.stability, f = G.facts;
+    if (G.score >= 80) add({ id: "land", comp: "stability", kind: "good", img: "land-solid", title: T({ ko: "땅이 평평하고 단단해요", en: "Level, steady ground" }),
+      lines: [T({ ko: `경사가 ${f.slope_deg}°로 완만해요.`, en: `A gentle ${f.slope_deg}° slope.` })] });
+    else add({ id: "land", comp: "stability", kind: G.score <= 40 ? "weak" : "know", img: "land-solid", title: G.score <= 40 ? T({ ko: "경사가 있어요", en: "Sloping ground" }) : T({ ko: "조금 기운 땅이에요", en: "Slightly sloping ground" }),
+      lines: [T({ ko: `대지 경사가 ${f.slope_deg}°예요.`, en: `The ground slopes ${f.slope_deg}°.` })] }); }
+  // things to watch (살): each its own card
+  r.sal.forEach((x) => {
+    const ws = (w.sal || {})[x.id] || {}, fix = ws.bibo || (en ? "" : (x.bibo || []).join(", "));
+    out.push({ id: "sal_" + x.id, topic: "sal", kind: "weak", img: SAL_IMG[x.id] || null, title: salName(x), impact: x.penalty || 5,
+      lines: [ws.line, fix ? T({ ko: "보완법: ", en: "Fix: " }) + fix : ""].filter(Boolean) });
+  });
+  // US living: separate from the stars, so it never outranks a 풍수 card by default
+  const fixUS = (s) => (en ? String(s || "").replace(/풍수/g, "feng shui") : String(s || ""));
+  const sentences = (s) => fixUS(s).split(/(?<=[.。])\s+/).filter(Boolean);
+  const sn = sunNote(r);
+  if (sn) { const parts = sentences(sn.text.replace(/^[^·]*·\s*/, ""));
+    out.push({ id: "us_sun", topic: "us", kind: sn.kind, img: "sun", title: T({ ko: "해와 향", en: "Sun and facing" }), lines: parts.slice(0, 3), impact: 0 }); }
+  const ul = r.us_living ? (en && r.us_living.en) || r.us_living.ko : null;
+  if (ul) ul.items.forEach((x) => {
+    const parts = sentences(x.text);
+    out.push({ id: "us_" + x.id, topic: "us", kind: x.kind === "mixed" ? "know" : x.kind, img: US_IMG[x.id] || null,
+      title: parts[0].replace(/[.。]$/, ""), lines: parts.slice(1, 3), impact: 0 });
+  });
+  return out.sort((a, b) => b.impact - a.impact);
+}
+
+const cardPrefs = () => Object.assign({ order: [], starred: [], hidden: [] }, store.get("cards", {}));
+function arrangeCards(all, withHidden) {   // hidden cards keep their place, so showing one puts it back there
+  const p = cardPrefs(), pos = new Map(all.map((c, i) => [c.id, i]));
+  const rank = (c) => { const k = p.order.indexOf(c.id); return k >= 0 ? k : 1000 + pos.get(c.id); };
+  const vis = all.filter((c) => withHidden || !p.hidden.includes(c.id)).sort((a, b) => rank(a) - rank(b));
+  return [...vis.filter((c) => p.starred.includes(c.id)), ...vis.filter((c) => !p.starred.includes(c.id))];
+}
+function cardName(c) { return c.block ? T(CARD_BLOCK_NAME[c.id]) : `${T(CARD_TOPIC[c.topic])} · ${c.title}`; }
+
+function cardHtml(c, size, i, starred) {
+  const big = c.big ? `<div class="kc-num"><b>${c.big}</b><span>${c.bigLabel || ""}</span></div>` : "";
+  return `<button type="button" class="kc kc-${size}" data-card="${c.id}" style="animation-delay:${Math.min(i * 0.07, 0.9).toFixed(2)}s">
+    ${c.img ? `<span class="kc-pic"><img src="${CARD_IMG(c.img)}" alt="" loading="lazy"></span>` : ""}
+    <span class="kc-body"><span class="kc-tag ${c.kind}">${starred ? "★ " : ""}${T(CARD_TAG[c.kind])} · ${T(CARD_TOPIC[c.topic])}</span>
+      <span class="kc-title">${c.title}</span>${big}
+      ${c.lines.length ? `<span class="kc-lines">${c.lines.join(" ")}</span>` : ""}</span></button>`;
+}
+function feedHtml(list) {
+  const pat = ["big", "side", "half", "half", "big", "side r", "half", "half"], starred = cardPrefs().starred;
+  let p = 0, i = 0, html = "", pend = [];
+  const flush = () => {
+    if (pend.length === 2) html += `<div class="kc-pair">${pend.join("")}</div>`;
+    else if (pend.length === 1) html += pend[0].replace("kc kc-half", "kc kc-side");
+    pend = [];
+  };
+  list.forEach((c) => {
+    if (c.block) { flush(); html += `<div class="kc-block" data-block="${c.id}" style="animation-delay:${Math.min(i++ * 0.07, 0.9).toFixed(2)}s">${c.html}</div>`; return; }
+    const size = c.img ? pat[p++ % pat.length] : "row";
+    if (size === "half") { pend.push(cardHtml(c, "half", i++, starred.includes(c.id))); if (pend.length === 2) flush(); return; }
+    flush(); html += cardHtml(c, size, i++, starred.includes(c.id));
+  });
+  flush();
+  return html;
+}
+function cardsSection(all) {
+  const ins = all.filter((c) => !c.block);
+  const n = { good: ins.filter((c) => c.kind === "good" && c.topic !== "us").length, weak: ins.filter((c) => c.kind === "weak").length, us: ins.filter((c) => c.topic === "us").length };
+  let list = arrangeCards(all);
+  if (cardFilter === "good") list = list.filter((c) => !c.block && c.kind === "good" && c.topic !== "us");
+  else if (cardFilter === "weak") list = list.filter((c) => !c.block && c.kind === "weak");
+  else if (cardFilter === "us") list = list.filter((c) => !c.block && c.topic === "us");
+  const chip = (f, label) => `<button type="button" data-f="${f}" class="${cardFilter === f ? "on" : ""}" aria-pressed="${cardFilter === f}">${label}</button>`;
+  return `<div class="kc-head"><h2>${T({ ko: "내 카드", en: "My cards" })} <small>${T({ ko: `${all.length}장`, en: `${all.length}` })}</small></h2>
+      <button type="button" id="cards-edit">${T({ ko: "편집", en: "Edit" })}</button></div>
+    <div class="kc-chips">${chip("all", T({ ko: "전체", en: "All" }))}${chip("good", T({ ko: `좋은 점 ${n.good}`, en: `Good ${n.good}` }))}${chip("weak", T({ ko: `아쉬운 점 ${n.weak}`, en: `Falls short ${n.weak}` }))}${n.us ? chip("us", T({ ko: `미국 생활 ${n.us}`, en: `US living ${n.us}` })) : ""}</div>
+    <div id="cards-feed">${feedHtml(list)}</div>`;
+}
+
+function rerenderKeepScroll(id) { const y = scrollY; renderReport(id); scrollTo({ top: y }); }
+function togglePref(key, cid) {
+  const p = cardPrefs();
+  p[key] = p[key].includes(cid) ? p[key].filter((x) => x !== cid) : [...p[key], cid];
+  store.set("cards", p);
+}
+function cardSheet(id, c, r) {
+  const p = cardPrefs(), starred = p.starred.includes(c.id);
+  const big = c.big ? `<div class="kd-num"><b>${c.big}</b><span>${c.bigLabel || ""}</span></div>` : "";
+  sheet(`<div class="kd">${c.img ? `<img class="kd-pic" src="${CARD_IMG(c.img)}" alt="">` : ""}
+      <span class="kc-tag ${c.kind}">${T(CARD_TAG[c.kind])} · ${T(CARD_TOPIC[c.topic])}</span>
+      <h3>${c.title}</h3>${big}
+      ${c.lines.map((l) => `<p>${l}</p>`).join("")}
+      ${c.comp && c.comp !== "deuksu" ? `<p class="small">${factLine(c.comp, r.score.components[c.comp].facts)}</p>` : ""}
+      ${c.topic === "us" ? `<p class="small">${T({ ko: "풍수 별점과는 별개예요.", en: "Separate from the feng shui stars." })}</p>` : ""}
+      <div class="kd-actions">
+        <button type="button" class="kd-star${starred ? " on" : ""}" id="kd-star">★ ${starred ? T({ ko: "즐겨찾기 빼기", en: "Unstar" }) : T({ ko: "즐겨찾는 카드", en: "Star this card" })}</button>
+        <button type="button" id="kd-hide">${T({ ko: "이 카드 숨기기", en: "Hide this card" })}</button>
+      </div></div>`, () => cardSheet(id, c, r));
+  $("kd-star").addEventListener("click", () => { togglePref("starred", c.id); closeSheet(); rerenderKeepScroll(id);
+    toast(starred ? T({ ko: "즐겨찾기에서 뺐어요.", en: "Unstarred." }) : T({ ko: "맨 위에 둘게요. 모든 집에서요.", en: "Pinned to the top, for every home." })); });
+  $("kd-hide").addEventListener("click", () => { togglePref("hidden", c.id); closeSheet(); rerenderKeepScroll(id);
+    toast(T({ ko: "숨겼어요. '편집'에서 다시 볼 수 있어요.", en: "Hidden. Bring it back from Edit." })); });
+}
+function cardEdit(id, all) {
+  const p = cardPrefs(), vis = arrangeCards(all), hidden = all.filter((c) => p.hidden.includes(c.id));
+  const favs_ = vis.filter((c) => p.starred.includes(c.id)), mine = vis.filter((c) => !p.starred.includes(c.id));
+  const ico = (d) => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+  const row = (c, on) => `<div class="ke-row">
+      <span class="ke-name">${cardName(c)}</span>
+      <button type="button" data-act="up" data-id="${c.id}" aria-label="${T({ ko: "위로", en: "Move up" })}">${ico("M6 15l6-6 6 6")}</button>
+      <button type="button" data-act="down" data-id="${c.id}" aria-label="${T({ ko: "아래로", en: "Move down" })}">${ico("M6 9l6 6 6-6")}</button>
+      <button type="button" data-act="star" data-id="${c.id}" class="${on ? "on" : ""}" aria-pressed="${on}" aria-label="${T({ ko: "즐겨찾기", en: "Star" })}">★</button>
+      <button type="button" data-act="hide" data-id="${c.id}" aria-label="${T({ ko: "숨기기", en: "Hide" })}">${ico("M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6")}</button></div>`;
+  sheet(`<div class="ke"><div class="ke-top"><h3>${T({ ko: "카드 편집", en: "Edit cards" })}</h3><button type="button" class="btn small" id="ke-done">${T({ ko: "완료", en: "Done" })}</button></div>
+    <p class="small">${T({ ko: "별을 누르면 맨 위로 와요. 화살표로 순서를 바꾸고, 눈을 눌러 숨겨요. 이 휴대폰의 모든 집에 똑같이 적용돼요.",
+      en: "Star a card to keep it on top. Use the arrows to reorder, the eye to hide. This applies to every home on this phone." })}</p>
+    <div class="ke-list">
+      ${favs_.length ? `<div class="ke-sec">★ ${T({ ko: "즐겨찾는 카드", en: "Starred" })}</div>${favs_.map((c) => row(c, true)).join("")}` : ""}
+      <div class="ke-sec">${T({ ko: "내 카드", en: "My cards" })}</div>${mine.map((c) => row(c, false)).join("")}
+      ${hidden.length ? `<div class="ke-sec">${T({ ko: "숨긴 카드", en: "Hidden" })}</div>${hidden.map((c) => `<div class="ke-row off"><span class="ke-name">${cardName(c)}</span>
+        <button type="button" class="btn small ghost" data-act="show" data-id="${c.id}">${T({ ko: "다시 보기", en: "Show" })}</button></div>`).join("")}` : ""}
+    </div>
+    <button type="button" class="link-btn" id="ke-reset">${T({ ko: "처음 순서로 되돌리기", en: "Reset to the default order" })}</button></div>`, () => cardEdit(id, all));
+  $("ke-done").addEventListener("click", closeSheet);
+  $("ke-reset").addEventListener("click", () => { store.set("cards", { order: [], starred: [], hidden: [] }); renderReport(id); cardEdit(id, all); });
+  document.querySelectorAll("#sheet [data-act]").forEach((b) => b.addEventListener("click", () => {
+    const cid = b.dataset.id, act = b.dataset.act;
+    if (act === "star") togglePref("starred", cid);
+    else if (act === "hide" || act === "show") togglePref("hidden", cid);
+    else {
+      const q = cardPrefs(), fav = q.starred.includes(cid), seq = arrangeCards(all, true).map((c) => c.id);
+      const same = arrangeCards(all).filter((c) => q.starred.includes(c.id) === fav).map((c) => c.id);
+      const i = same.indexOf(cid), j = i + (act === "up" ? -1 : 1);
+      if (j >= 0 && j < same.length) {
+        const a = seq.indexOf(cid), bb = seq.indexOf(same[j]);
+        [seq[a], seq[bb]] = [seq[bb], seq[a]];
+        q.order = [...seq, ...q.order.filter((x) => !seq.includes(x))];
+        store.set("cards", q);
+      }
+    }
+    const y = scrollY; renderReport(id); scrollTo({ top: y });
+    cardEdit(id, all);
+  }));
+}
+function bindCards(id, all, r) {
+  document.querySelectorAll("#cards-feed .kc").forEach((b) => b.addEventListener("click", () => {
+    const c = all.find((x) => x.id === b.dataset.card); if (c) cardSheet(id, c, r);
+  }));
+  document.querySelectorAll(".kc-chips [data-f]").forEach((b) => b.addEventListener("click", () => { cardFilter = b.dataset.f; rerenderKeepScroll(id); }));
+  if ($("cards-edit")) $("cards-edit").addEventListener("click", () => cardEdit(id, all));
+}
+
 function renderReport(id) {
   current = id;
   const live = window.GILJI && GILJI.isLive(id);
@@ -1364,6 +1637,52 @@ function renderReport(id) {
   const shareSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>`;
   const heartSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="${favNow ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>`;
 
+  const mapHtml = `<div class="card map" id="sec-land"><h2>${T({ ko: "집 주변 땅", en: "Land around the home" })} <small>${T({ ko: "지도는 북쪽이 위", en: "North is up" })}</small></h2>
+      <div id="sasinsa-map" class="leaf" role="img" aria-label="${T({ ko: "집 주변 지도: 사방의 산과 물길", en: "Map around the home: hills and water on all four sides" })}"></div>
+      <div class="legend">
+        <span><span class="dot" style="background:var(--accent)"></span>${T({ ko: "집과 현관 방향", en: "Home and door direction" })}</span>
+        <span><span class="dot" style="background:var(--water)"></span>${T({ ko: "물길", en: "Water" })}</span>
+        ${r.sal.some((x) => x.id === "overpass") ? `<span><span class="dot" style="background:#c0392b"></span>${T({ ko: "살펴볼 곳", en: "Spot to watch" })}</span>` : ""}
+        <span>▲ ${T({ ko: "주변 산", en: "Nearby hills" })}</span></div>
+      <div class="sasinsa">${Object.keys(SECT).map((k) => `<div><b>${T(SIDE[k])}</b><span>${verdict(r, k)}</span></div>`).join("")}</div>
+      <div class="water-note">${T({ ko: "물길", en: "Water" })}: <b>${riverName(deuksu)}</b>, ${bend(deuksu.bend)}${r.sal.filter((x) => x.id === "overpass" && x.evidence).map((x) => `<br><span class="watch-note">${isEn()
+        ? `Spot to watch: the ${place(x.evidence.road)} overpass, ${x.evidence.distance_m} m in front of the door (red dashes)`
+        : `살펴볼 곳: ${x.evidence.road} 고가, 현관 앞 ${x.evidence.distance_m}m (빨간 점선)`}</span>`).join("")}</div>
+    </div>`;
+  const readingHtml = `<div id="sec-reading"></div>
+    ${paid ? paidBlock : BETA_FREE ? `
+    <div class="card" style="text-align:center">
+      <h3>${T({ ko: "이 집만을 위한 해설을 쓰고 있어요", en: "Writing a reading just for this home" })}</h3>
+      <p>${T({ ko: "베타 테스터는 모두 무료예요. 20초쯤 걸려요.", en: "Everything is free for beta testers. It takes about 20 seconds." })}</p>
+      <button class="btn accent" id="buy">${T({ ko: "다시 불러오기", en: "Try again" })}</button>
+    </div>` : `
+    <div class="locked">
+      <div class="blur" aria-hidden="true">${paidBlock}</div>
+      <div class="pay">
+        <h3>${T({ ko: "이 집만을 위한 전체 해설", en: "The full reading for this home" })}</h3>
+        <p>${T({ ko: `한눈에 · 보완법 ${siteTips.length}가지 · 풍수로 보면`, en: `At a glance · ${siteTips.length} fixes · In feng shui terms` })}</p>
+        <div class="price">$1 <small style="font-size:14px;color:var(--ink-3)">${T({ ko: "베타 동안 무료", en: "free during the beta" })}</small></div>
+        <button class="btn accent" id="buy">${T({ ko: "전체 해설 열기", en: "Open the full reading" })}</button>
+        <p style="font-size:12px">${T({ ko: "구독 없이, 한 집에 한 번만", en: "No subscription. Once per home." })}</p>
+      </div>
+    </div>`}`;
+  const askHtml = window.GILJI && GILJI.api ? `<div class="card ask-card" id="sec-ask">
+      <div class="ask-row">${CH.toad(52, { pose: "hello" })}<div><b>${T({ ko: "터주에게 물어보세요", en: "Ask Teoju" })}</b>
+        <p>${T({ ko: "이 집 땅에 대해 궁금한 건 무엇이든요.", en: "Anything about this home's land." })}</p></div></div>
+      <button class="btn accent block" id="ask-open">${T({ ko: "대화 열기", en: "Open chat" })}</button></div>` : "";
+  const detailHtml = `<details class="card" open><summary>${T({ ko: "자세한 지형 판독", en: "Detailed land reading" })} <span class="fold">${T({ ko: "일곱 가지", en: "Seven parts" })}</span></summary>
+      <div class="comp">${Object.keys(COMP).map((k) => {
+        const v = comps[k].score;
+        return `<div class="row"><span class="name"><b>${T(COMP[k][1])}</b><span>${T(COMP[k][0])}</span></span><span class="val">${v}</span>
+          <div class="track"><div class="fill${v < 50 ? " low" : ""}" style="width:0" data-w="${v}%"></div></div>
+          <div class="fact">${factLine(k, comps[k].facts)}</div></div>`;
+      }).join("")}</div>
+    </details>`;
+  // the card feed: insight cards in fair order, with the bigger blocks slotted between them
+  const ins = insightCards(r, w);
+  const blk = (bid, html) => (html ? [{ id: bid, block: true, html }] : []);
+  const allCards = [...ins.slice(0, 3), ...blk("tip", tipCard(id, { saveBtn: true })), ...ins.slice(3, 6), ...blk("map", mapHtml),
+    ...ins.slice(6), ...blk("reading", readingHtml), ...blk("ask", askHtml), ...blk("detail7", detailHtml)];
   $("report").innerHTML = `
     ${heroMedia}
     <div class="card" id="sec-sum">
@@ -1385,7 +1704,6 @@ function renderReport(id) {
       </div>
       <div class="says">${CH.toad(64, { pose: s.stars >= 4 ? "yay" : "hello", cls: "pop" })}<div class="bubble">${s.level_land ? levelLine(r) : w.headline}</div></div>
       ${s.level_land ? levelChips(r) : ""}
-      ${prosConsHtml(r)}
     </div>
 
     <nav class="jump" aria-label="${T({ ko: "바로 가기", en: "Jump to" })}">
@@ -1393,61 +1711,15 @@ function renderReport(id) {
     </nav>
     <div class="fold-all"><button type="button" id="fold-all" aria-expanded="true">${T({ ko: "모두 접기", en: "Close all" })}</button></div>
 
-    ${tipCard(id, { saveBtn: true })}
+    ${cardsSection(allCards)}
 
-    <div class="card map" id="sec-land"><h2>${T({ ko: "집 주변 땅", en: "Land around the home" })} <small>${T({ ko: "지도는 북쪽이 위", en: "North is up" })}</small></h2>
-      <div id="sasinsa-map" class="leaf" role="img" aria-label="${T({ ko: "집 주변 지도: 사방의 산과 물길", en: "Map around the home: hills and water on all four sides" })}"></div>
-      <div class="legend">
-        <span><span class="dot" style="background:var(--accent)"></span>${T({ ko: "집과 현관 방향", en: "Home and door direction" })}</span>
-        <span><span class="dot" style="background:var(--water)"></span>${T({ ko: "물길", en: "Water" })}</span>
-        ${r.sal.some((x) => x.id === "overpass") ? `<span><span class="dot" style="background:#c0392b"></span>${T({ ko: "살펴볼 곳", en: "Spot to watch" })}</span>` : ""}
-        <span>▲ ${T({ ko: "주변 산", en: "Nearby hills" })}</span></div>
-      <div class="sasinsa">${Object.keys(SECT).map((k) => `<div><b>${T(SIDE[k])}</b><span>${verdict(r, k)}</span></div>`).join("")}</div>
-      <div class="water-note">${T({ ko: "물길", en: "Water" })}: <b>${riverName(deuksu)}</b>, ${bend(deuksu.bend)}${r.sal.filter((x) => x.id === "overpass" && x.evidence).map((x) => `<br><span class="watch-note">${isEn()
-        ? `Spot to watch: the ${place(x.evidence.road)} overpass, ${x.evidence.distance_m} m in front of the door (red dashes)`
-        : `살펴볼 곳: ${x.evidence.road} 고가, 현관 앞 ${x.evidence.distance_m}m (빨간 점선)`}</span>`).join("")}</div>
-    </div>
-
-    <div id="sec-reading"></div>
-    ${paid ? paidBlock : BETA_FREE ? `
-    <div class="card" style="text-align:center">
-      <h3>${T({ ko: "이 집만을 위한 해설을 쓰고 있어요", en: "Writing a reading just for this home" })}</h3>
-      <p>${T({ ko: "베타 테스터는 모두 무료예요. 20초쯤 걸려요.", en: "Everything is free for beta testers. It takes about 20 seconds." })}</p>
-      <button class="btn accent" id="buy">${T({ ko: "다시 불러오기", en: "Try again" })}</button>
-    </div>` : `
-    <div class="locked">
-      <div class="blur" aria-hidden="true">${paidBlock}</div>
-      <div class="pay">
-        <h3>${T({ ko: "이 집만을 위한 전체 해설", en: "The full reading for this home" })}</h3>
-        <p>${T({ ko: `한눈에 · 보완법 ${siteTips.length}가지 · 풍수로 보면`, en: `At a glance · ${siteTips.length} fixes · In feng shui terms` })}</p>
-        <div class="price">$1 <small style="font-size:14px;color:var(--ink-3)">${T({ ko: "베타 동안 무료", en: "free during the beta" })}</small></div>
-        <button class="btn accent" id="buy">${T({ ko: "전체 해설 열기", en: "Open the full reading" })}</button>
-        <p style="font-size:12px">${T({ ko: "구독 없이, 한 집에 한 번만", en: "No subscription. Once per home." })}</p>
-      </div>
-    </div>`}
-
-    ${usLiving(r)}
-
-    ${window.GILJI && GILJI.api ? `<div class="card ask-card" id="sec-ask">
-      <div class="ask-row">${CH.toad(52, { pose: "hello" })}<div><b>${T({ ko: "터주에게 물어보세요", en: "Ask Teoju" })}</b>
-        <p>${T({ ko: "이 집 땅에 대해 궁금한 건 무엇이든요.", en: "Anything about this home's land." })}</p></div></div>
-      <button class="btn accent block" id="ask-open">${T({ ko: "대화 열기", en: "Open chat" })}</button></div>
-    <button class="fab" id="fab" aria-label="${T({ ko: "터주에게 묻기", en: "Ask Teoju" })}">${CH.toad(44, { pose: "hello" })}<span>${T({ ko: "묻기", en: "Ask" })}</span></button>
+    ${window.GILJI && GILJI.api ? `<button class="fab" id="fab" aria-label="${T({ ko: "터주에게 묻기", en: "Ask Teoju" })}">${CH.toad(44, { pose: "hello" })}<span>${T({ ko: "묻기", en: "Ask" })}</span></button>
     <div class="chat-sheet" id="chat-sheet" aria-hidden="true">
       <div class="cs-backdrop" data-close></div>
       <div class="cs-panel" role="dialog" aria-label="${T({ ko: "터주에게 물어보기", en: "Ask Teoju" })}">
         <div class="cs-grab"></div><button class="cs-x" data-close aria-label="${T({ ko: "닫기", en: "Close" })}">✕</button>
         ${GILJI.chatCard(id)}
       </div></div>` : ""}
-
-    <details class="card" open><summary>${T({ ko: "자세한 지형 판독", en: "Detailed land reading" })} <span class="fold">${T({ ko: "일곱 가지", en: "Seven parts" })}</span></summary>
-      <div class="comp">${Object.keys(COMP).map((k) => {
-        const v = comps[k].score;
-        return `<div class="row"><span class="name"><b>${T(COMP[k][1])}</b><span>${T(COMP[k][0])}</span></span><span class="val">${v}</span>
-          <div class="track"><div class="fill${v < 50 ? " low" : ""}" style="width:0" data-w="${v}%"></div></div>
-          <div class="fact">${factLine(k, comps[k].facts)}</div></div>`;
-      }).join("")}</div>
-    </details>
 
     <div class="card photo-up"><div class="ico" aria-hidden="true">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="14" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg></div>
@@ -1514,11 +1786,12 @@ function renderReport(id) {
     try { await navigator.clipboard.writeText(url); toast(T({ ko: "링크를 복사했어요.", en: "Link copied." })); } catch (e) { toast(url); }
   });
   if (window.GILJI) GILJI.bindChat(id);
+  bindCards(id, allCards, r);
   bindFolds();
   if ($("fix-door")) $("fix-door").addEventListener("click", () => doorSheet(id));
   bindTip(id);
   setTimeout(() => drawMap(id), 0);   // after show("report") makes the container visible
-  $("to-compare").addEventListener("click", () => openCompare(id));
+  if ($("to-compare")) $("to-compare").addEventListener("click", () => openCompare(id));
   $("to-home").addEventListener("click", () => show("home"));
 }
 
