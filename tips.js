@@ -34,7 +34,7 @@ window.PUNGSU_TIPS = (function () {
     const facing = r.site.facing_deg;
     const left = dir(facing - 90), right = dir(facing + 90), back = dir(facing + 180);
     const out = [];
-    const add = (id, tg, title, body) => out.push({ id, tag: tag(tg), title, body });
+    const add = (id, tg, title, body) => out.push({ id, tag: tag(tg), key: tg, title, body });   // key: the Korean type, for its icon
     const enc = f("enclosure");
     if (enc.weak_side === "cheongryong") {
       add("weak_cr", "가구", tr(`${left}쪽을 높여 주세요`, `Raise the ${left} side`),

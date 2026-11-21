@@ -169,6 +169,48 @@ html[lang="en"] .brand b.ko-name { display: none; }
 .kc-lines { font-size: 14px; line-height: 1.55; color: var(--ink-3); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .kc-half .kc-lines { font-size: 12.5px; -webkit-line-clamp: 2; }
 .kc-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.kc-ico { display: grid; place-items: center; height: 96px; background: #fff; }
+/* the 3D icons have transparent backgrounds (cut out from their off-white ground) */
+.kc-ico img { width: 84px; height: 84px; object-fit: contain; animation: kcbob 4s ease-in-out infinite; }
+.kc-tag.fix { color: #2f7f6f; }
+@keyframes kcbob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+/* 다섯 기운: the main card */
+.kg-head { display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
+.kg-head h2 { margin: 0; font: 800 20px var(--display); }
+.kg-head small { color: var(--ink-3); font-size: 13px; }
+.kg-row { display: flex; align-items: center; gap: 12px; width: 100%; border: 0; background: none; text-align: left; padding: 10px 0; border-top: 1px solid var(--line); color: var(--ink); animation: kcrise .5s both; }
+.kg-row img { width: 54px; height: 54px; flex: none; object-fit: contain; }
+.kg-mid { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.kg-mid b { font: 800 16px var(--display); }
+.kg-line { font-size: 13px; color: var(--ink-3); line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.kg-stars { flex: none; font-size: 15px; }
+/* 오행 pentagon */
+.oh-pent { display: block; width: 100%; max-width: 320px; margin: 0 auto; }
+.oh-lab { font-size: 10.5px; fill: var(--ink-2); font-family: var(--display); }
+.oh-shape { transform-origin: 110px 104px; animation: ohgrow .9s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes ohgrow { from { transform: scale(.1); opacity: 0; } to { transform: none; opacity: 1; } }
+/* 풍수 용어: the four guardians */
+.kt { display: block; width: 100%; text-align: left; border: 0; font: inherit; color: var(--ink); cursor: pointer; }
+.kt-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 4px 0 10px; }
+.kt-g { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px; }
+.kt-g img { width: 64px; height: 64px; object-fit: contain; animation: kcbob 4s ease-in-out infinite; }
+.kt-g:nth-child(2) img { animation-delay: .5s; } .kt-g:nth-child(3) img { animation-delay: 1s; } .kt-g:nth-child(4) img { animation-delay: 1.5s; }
+.kt-g b { font: 800 14px var(--display); }
+.kt-g span { font-size: 11.5px; color: var(--ink-3); line-height: 1.35; }
+.kt-list { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 12px; }
+.kt-row { display: flex; gap: 12px; align-items: center; }
+.kt-row img { width: 56px; height: 56px; object-fit: contain; flex: none; }
+.kt-row b { display: block; font-size: 15px; } .kt-row b small { color: var(--ink-3); font-weight: 500; font-size: 12px; }
+.kt-row span { font-size: 14px; color: var(--ink-2); }
+/* sheets */
+.kd.kd-icon { text-align: left; }
+.kd-ico { width: 110px; height: 110px; object-fit: contain; display: block; margin: 0 auto 6px; }
+.kd-score { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; align-items: baseline; }
+.kd-score span small { color: var(--ink-3); font-size: 12px; }
+.kd-score b { font: 800 20px var(--display); }
+.kd-score .track { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.kd-score .fill { height: 100%; border-radius: 3px; background: #2fb36b; } .kd-score .fill.low { background: var(--accent); }
+.kd-score .small { grid-column: 1 / -1; margin: 4px 0 0; }
 @keyframes kcrise { from { transform: translateY(18px); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes kcfloat { 0%, 100% { transform: scale(1.03); } 50% { transform: scale(1.07) translateY(-3px); } }
 /* a card opened, and card editing (in the sheet) */
@@ -459,7 +501,7 @@ body { padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
 #toast { position: fixed; left: 50%; bottom: 96px; transform: translate(-50%, 20px); opacity: 0; z-index: 20; background: rgba(25,31,40,.92); color: #fff; font-size: 14px; padding: 10px 16px; border-radius: 12px; max-width: 86vw; text-align: center; transition: opacity .25s, transform .25s; pointer-events: none; }
 #toast.show { opacity: 1; transform: translate(-50%, 0); }
 #new-version { position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 72px); white-space: nowrap; transform: translateX(-50%); z-index: 30; border: 0; border-radius: 999px; padding: 10px 18px; background: var(--ink); color: #fff; font: 600 14px var(--display, inherit); box-shadow: 0 6px 20px rgba(25,31,40,.25); }
-@media (prefers-reduced-motion: reduce) { .hero-media img, .dock, .icon-btn.beat, .kc, .kc-block, .kc-pic img, .top .rate-stars .sp { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .hero-media img, .dock, .icon-btn.beat, .kc, .kc-block, .kc-pic img, .top .rate-stars .sp, .kc-ico img, .kg-row, .oh-shape, .kt-g img { animation: none !important; } }
 
 /* 좋은 점 / 아쉬운 점 tabs */
 .pros { margin-top: 16px; }
@@ -587,19 +629,19 @@ body.noscroll { overflow: hidden; }
   <div class="sheet" id="sheet"></div>
 </div>
 
-<script src="i18n.js?v=20261121074718"></script>
-<script src="data.js?v=20261121074718"></script>
-<script src="writer.js?v=20261121074718"></script>
-<script src="tips.js?v=20261121074718"></script>
-<script src="characters.js?v=20261121074718"></script>
-<script src="config.js?v=20261121074718"></script>
-<script src="live.js?v=20261121074718"></script>
+<script src="i18n.js?v=20261121081736"></script>
+<script src="data.js?v=20261121081736"></script>
+<script src="writer.js?v=20261121081736"></script>
+<script src="tips.js?v=20261121081736"></script>
+<script src="characters.js?v=20261121081736"></script>
+<script src="config.js?v=20261121081736"></script>
+<script src="live.js?v=20261121081736"></script>
 <script>
 /* Auto-update: phones and browsers keep an old copy of this page for a while after a publish.
    deploy/publish-page.sh stamps PAGE_VERSION here and writes version.json. On opening, a newer
    version reloads the page at once (nothing has been touched yet). Coming back to the app later,
    it offers a button instead of reloading under the person. Each version is tried once. */
-const PAGE_VERSION = "20261121074718";
+const PAGE_VERSION = "20261121081736";
 (function () {
   if (PAGE_VERSION === "dev") return;
   let last = 0;
@@ -1489,11 +1531,20 @@ const CARD_IMG = (n) => `img/cards/${n}.webp`;
 const CARD_WEIGHT = { hyeonmu: .20, deuksu: .20, jujak: .15, enclosure: .15, jangpung: .15, jwahyang: .10, stability: .05 };
 const US_IMG = { park: "park", golf: "park", water: "flood-check", busy_road: "busy-road", freeway: "busy-road", power: "power-lines" };
 const SAL_IMG = { overpass: "busy-road", nochung: "busy-road", power: "power-lines", halgak: "river", bangung: "river", eumseup: "flood-check" };
-const CARD_TAG = { good: { ko: "좋아요", en: "Nice" }, weak: { ko: "아쉬워요", en: "Could be better" }, know: { ko: "알아 두세요", en: "Good to know" } };
+const CARD_TAG = { fix: { ko: "해 볼 것", en: "Try this" }, good: { ko: "좋아요", en: "Nice" }, weak: { ko: "아쉬워요", en: "Could be better" }, know: { ko: "알아 두세요", en: "Good to know" } };
 const CARD_TOPIC = { back: { ko: "뒤", en: "Behind" }, front: { ko: "앞", en: "Front" }, sides: { ko: "양옆", en: "Sides" },
   wind: { ko: "바람", en: "Wind" }, water: { ko: "물", en: "Water" }, sun: { ko: "해", en: "Sun" }, land: { ko: "땅", en: "Ground" },
-  sal: { ko: "살펴볼 점", en: "Worth a look" }, us: { ko: "미국 생활", en: "US living" } };
-const CARD_BLOCK_NAME = { tip: { ko: "오늘의 박씨", en: "Today's tip" }, map: { ko: "집 주변 지도", en: "Map around the home" },
+  sal: { ko: "살펴볼 점", en: "Worth a look" }, us: { ko: "미국 생활", en: "US living" }, fix: { ko: "집 안에서 해 볼 것", en: "Try at home" } };
+const ICON = (n) => `img/icons/${n}.webp`;
+const TIP_ICON = { 가구: "furniture", 거실: "furniture", 침실: "bedroom", 창: "window", 현관: "entry", 조명: "lighting", 색: "color",
+  주방: "kitchen", 환기: "air", 습기: "damp", 패브릭: "fabric", 보온: "warmth" };
+const GIUN_ICON = { wealth: "wealth", health: "health", harmony: "harmony", career: "career", stability: "stability" };
+const GUARD = [["hyeonmu", "현무", { ko: "뒤", en: "Behind" }, { ko: "거북과 뱀", en: "the Black Tortoise" }],
+  ["jujak", "주작", { ko: "앞", en: "Front" }, { ko: "붉은 새", en: "the Vermilion Bird" }],
+  ["cheongryong", "청룡", { ko: "왼쪽", en: "Left" }, { ko: "푸른 용", en: "the Azure Dragon" }],
+  ["baekho", "백호", { ko: "오른쪽", en: "Right" }, { ko: "흰 호랑이", en: "the White Tiger" }]];
+const CARD_BLOCK_NAME = { giun: { ko: "다섯 기운", en: "Five fortunes" }, ohaeng: { ko: "오행", en: "Five elements" }, terms: { ko: "풍수 용어로 보면", en: "In feng shui terms" },
+  tip: { ko: "오늘의 박씨", en: "Today's tip" }, map: { ko: "집 주변 지도", en: "Map around the home" },
   reading: { ko: "터주의 해설", en: "Teoju's reading" }, ask: { ko: "터주에게 묻기", en: "Ask Teoju" }, detail7: { ko: "자세한 지형 판독", en: "Detailed land reading" } };
 let cardFilter = "all";
 
@@ -1506,8 +1557,7 @@ function insightCards(r, w) {
     else if (A.score >= 55) add({ id: "back", comp: "hyeonmu", kind: "know", img: "back-strong", title: T({ ko: "뒤가 보통이에요", en: "A little support behind you" }),
       lines: [T({ ko: "뒤에 기댈 땅이 조금 있어요.", en: "There's some rising ground at your back." })] });
     else add({ id: "back", comp: "hyeonmu", kind: "weak", img: "lowhill", title: T({ ko: "뒤를 받쳐 줄 언덕이 낮아요", en: "Not much behind you to lean on" }),
-      lines: [T({ ko: `뒤쪽 하늘선이 ${f.back_horizon_deg}°로 낮아 기댈 곳이 약해요.`, en: `The land behind sits low, only ${f.back_horizon_deg}° above the horizon.` }),
-              T({ ko: "침대 머리를 단단한 벽에 붙이면 보완돼요.", en: "A bed with its headboard on a solid wall helps you feel supported." })] }); }
+      lines: [T({ ko: `뒤쪽 하늘선이 ${f.back_horizon_deg}°로 낮아 기댈 곳이 약해요.`, en: `The land behind sits low, only ${f.back_horizon_deg}° above the horizon.` })] }); }
   { const B = c.jujak, f = B.facts;
     if (f.front_overbearing) add({ id: "front", comp: "jujak", kind: "weak", img: "back-strong", title: T({ ko: "앞산이 뒤보다 높아요", en: "The hill in front stands taller than the one behind" }),
       lines: [T({ ko: "앞이 막혀 답답하게 느껴질 수 있어요.", en: "The front can feel a little crowded." })] });
@@ -1520,13 +1570,13 @@ function insightCards(r, w) {
       lines: [T({ ko: `왼쪽 ${f.cheongryong_deg}°, 오른쪽 ${f.baekho_deg}°로 감싸요.`, en: `Rising land on the left (${f.cheongryong_deg}°) and right (${f.baekho_deg}°) wraps around you.` })] });
     else if (f.weak_side) add({ id: "sides", comp: "enclosure", kind: "weak", img: "sides-open",
       title: f.weak_side === "cheongryong" ? T({ ko: "왼쪽이 낮아요", en: "The left side is a bit open" }) : T({ ko: "오른쪽이 낮아요", en: "The right side is a bit open" }),
-      lines: [T({ ko: "그쪽이 비어 바람과 시선이 들어와요.", en: "Wind and curious eyes can come in from that side." }), T({ ko: "그쪽에 낮은 울타리나 나무를 두면 도움돼요.", en: "A low fence, hedge or trees there make it cozier." })] });
+      lines: [T({ ko: "그쪽이 비어 바람과 시선이 들어와요.", en: "Wind and curious eyes can come in from that side." })] });
     else add({ id: "sides", comp: "enclosure", kind: C.score >= 55 ? "know" : "weak", img: "sides-open", title: T({ ko: "양옆이 열려 있어요", en: "Open on both sides" }),
-      lines: [T({ ko: "좌우로 감싸 주는 산줄기가 없어요.", en: "No ridges wrap around you on the sides." }), T({ ko: "낮은 울타리나 나무가 도움돼요.", en: "A low fence, hedge or trees make it cozier." })] }); }
+      lines: [T({ ko: "좌우로 감싸 주는 산줄기가 없어요.", en: "No ridges wrap around you on the sides." })] }); }
   { const D = c.jangpung, f = D.facts, IX = { N: 0, NE: 1, E: 2, SE: 3, S: 4, SW: 5, W: 6, NW: 7 };
     const dir = DIR8[en ? "en" : "ko"][IX[f.wind_from] != null ? IX[f.wind_from] : 7];
     if (f.wind_open) add({ id: "wind", comp: "jangpung", kind: "weak", img: "front-open", title: T({ ko: "겨울바람이 들어요", en: "Winter wind can reach you" }),
-      lines: [T({ ko: `찬 바람이 부는 ${dir}쪽이 열려 있어요.`, en: `The side the cold wind comes from (${dir}) is open.` }), T({ ko: "그쪽 창에 두꺼운 커튼이 도움돼요.", en: "Thick curtains on that side keep things snug." })] });
+      lines: [T({ ko: `찬 바람이 부는 ${dir}쪽이 열려 있어요.`, en: `The side the cold wind comes from (${dir}) is open.` })] });
     else add({ id: "wind", comp: "jangpung", kind: D.score >= 60 ? "good" : "know", img: "wind", title: T({ ko: "겨울바람이 막혀요", en: "Tucked away from the winter wind" }),
       lines: [T({ ko: `찬 바람이 부는 ${dir}쪽이 막혀 있어요.`, en: `Land shields the side the cold wind comes from (${dir}).` })] }); }
   { const E = c.deuksu, f = E.facts;
@@ -1544,7 +1594,7 @@ function insightCards(r, w) {
   { const F = c.jwahyang, f = F.facts, lost = f.sun_lost_h || 0;
     if (lost >= 2) add({ id: "sun", comp: "jwahyang", kind: "weak", img: "sun", title: T({ ko: "겨울 햇빛이 적어요", en: "Not much winter sun" }),
       big: T({ ko: `${lost}시간`, en: `${lost} h` }), bigLabel: T({ ko: "동짓날 산에 가리는 해", en: "of winter sun hidden by hills" }),
-      lines: [T({ ko: "따뜻한 색 조명으로 집 안을 밝혀 주세요.", en: "Warm lights inside make it cozy." })] });
+      lines: [] });
     else add({ id: "sun", comp: "jwahyang", kind: "good", img: "sun", title: T({ ko: "겨울에도 해가 잘 들어요", en: "Sunny, even in winter" }),
       big: f.sun_possible_h != null ? T({ ko: `${f.sun_possible_h}시간`, en: `${f.sun_possible_h} h` }) : null, bigLabel: T({ ko: "동짓날 해", en: "of sun on the shortest day" }),
       lines: [lost >= 0.5 ? T({ ko: `산에 가리는 해는 ${lost}시간뿐이에요.`, en: `Hills hide only ${lost} h of it.` }) : T({ ko: "산에 가려 잃는 해가 거의 없어요.", en: "Hills hardly block any of it." })] }); }
@@ -1574,6 +1624,62 @@ function insightCards(r, w) {
   return out.sort((a, b) => b.impact - a.impact);
 }
 
+// 집 안에서 해 볼 것: each fix once, as its own small card with its picture
+function fixCards(r) {
+  return TIPS.siteTips(r).map((t) => ({ id: "fix_" + t.id.replace(/^oh_.*/, "oh"), topic: "fix", kind: "fix", icon: TIP_ICON[t.key] || "furniture",
+    title: t.title, lines: [t.body], impact: -1 }));
+}
+// 다섯 기운: the owner's favourite, so one big main card
+function giunCard(r, w) {
+  const g = r.giun || [], txt = (w.pungsu && w.pungsu.giun) || {};
+  if (!g.length) return "";
+  return `<div class="card kg"><div class="kg-head"><h2>${T({ ko: "다섯 기운", en: "Five fortunes" })}</h2>
+      <small>${T({ ko: "풍수에서 이 땅이 돕는다고 보는 것", en: "what feng shui says this land helps with" })}</small></div>
+    ${g.map((x, i) => `<button type="button" class="kg-row" data-giun="${x.key}" style="animation-delay:${(0.15 + i * 0.08).toFixed(2)}s">
+      <img src="${ICON(GIUN_ICON[x.key] || "stability")}" alt="" loading="lazy">
+      <span class="kg-mid"><b>${T(GIUN[x.key])}</b>${txt[x.key] ? `<span class="kg-line">${txt[x.key]}</span>` : ""}</span>
+      <span class="stars kg-stars" aria-label="${T({ ko: `별 ${x.stars}개`, en: `${x.stars} stars` })}">${stars(x.stars)}</span></button>`).join("")}</div>`;
+}
+// 오행: a pentagon chart (wood, fire, earth, metal, water around the generating cycle)
+function ohaengCard(r, w) {
+  const keys = ["wood", "fire", "earth", "metal", "water"], v = keys.map((k) => r.ohaeng[k] || 0);
+  const peak = Math.max(0.35, ...v), R = 74, cx = 110, cy = 104;
+  const pt = (i, f) => { const a = -Math.PI / 2 + (i * 2 * Math.PI) / 5; return [cx + Math.cos(a) * R * f, cy + Math.sin(a) * R * f]; };
+  const poly = (f) => keys.map((_, i) => pt(i, typeof f === "number" ? f : f[i]).map((n) => n.toFixed(1)).join(",")).join(" ");
+  const COLOR = { wood: "#5fae6b", fire: "#e2674f", earth: "#c9a15a", metal: "#9aa3ad", water: "#4f86d9" };
+  const labels = keys.map((k, i) => { const [x, y] = pt(i, 1.28);
+    return `<text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle" class="oh-lab"><tspan fill="${COLOR[k]}" font-weight="800">${OH[k][0]}</tspan> ${T(OH[k][1])} ${Math.round(v[i] * 100)}%</text>`; }).join("");
+  return `<div class="card ko"><div class="kg-head"><h2>${T({ ko: "오행", en: "Five elements" })}</h2><small>${T({ ko: "주변 봉우리의 모양", en: "the shapes of nearby peaks" })}</small></div>
+    <svg viewBox="-34 -6 288 226" class="oh-pent" role="img" aria-label="${T({ ko: "오행 오각형 그래프", en: "Five elements pentagon chart" })}">
+      ${[1, 0.66, 0.33].map((f) => `<polygon points="${poly(f)}" fill="none" stroke="var(--line)" stroke-width="1"/>`).join("")}
+      ${keys.map((_, i) => { const [x, y] = pt(i, 1); return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="var(--line)" stroke-width="1"/>`; }).join("")}
+      <polygon class="oh-shape" points="${poly(v.map((x) => Math.max(0.04, x / peak)))}" fill="rgba(240,103,92,.22)" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>
+      ${keys.map((k, i) => { const [x, y] = pt(i, Math.max(0.04, v[i] / peak)); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5" fill="${COLOR[k]}"/>`; }).join("")}
+      ${labels}</svg>
+    ${w.pungsu && w.pungsu.ohaeng ? `<p class="kc-lines" style="margin:4px 2px 0">${w.pungsu.ohaeng}</p>` : ""}</div>`;
+}
+// 풍수 용어로 보면: the four guardians, each with what it is like here
+function termsCard(r, w) {
+  return `<button type="button" class="card kt" data-terms="1"><div class="kg-head"><h2>${T({ ko: "풍수 용어로 보면", en: "In feng shui terms" })}</h2>
+      <small>${T({ ko: "사신사: 집을 지키는 네 수호신", en: "the four guardians around a home" })}</small></div>
+    <span class="kt-grid">${GUARD.map(([k, name, side, who]) => `<span class="kt-g"><img src="${ICON(k)}" alt="" loading="lazy">
+      <b>${name}</b><span>${T(side)} · ${verdict(r, k)}</span></span>`).join("")}</span>
+    ${w.pungsu && w.pungsu.sides ? `<span class="kc-lines">${w.pungsu.sides}</span>` : ""}</button>`;
+}
+function giunSheet(r, w, key) {
+  const x = (r.giun || []).find((g) => g.key === key); if (!x) return;
+  const txt = ((w.pungsu && w.pungsu.giun) || {})[key] || "";
+  sheet(`<div class="kd kd-icon"><img class="kd-ico" src="${ICON(GIUN_ICON[key])}" alt="">
+    <span class="kc-tag know">${T({ ko: "다섯 기운", en: "Five fortunes" })}</span><h3>${T(GIUN[key])}</h3>
+    <div class="stars" style="font-size:24px">${stars(x.stars)}</div><p>${txt}</p>
+    <p class="small">${T({ ko: "풍수 전통에서 이 땅의 모양이 무엇을 돕는다고 보는지예요. 사람에게 일어날 일을 말하는 건 아니에요.", en: "This is what the feng shui tradition says the land's shape supports, not a prediction about anyone." })}</p></div>`);
+}
+function termsSheet(r, w) {
+  sheet(`<div class="kd"><h3>${T({ ko: "풍수 용어로 보면", en: "In feng shui terms" })}</h3>
+    <div class="kt-list">${GUARD.map(([k, name, side, who]) => `<div class="kt-row"><img src="${ICON(k)}" alt=""><div><b>${name} <small>${T(who)} · ${T(side)}</small></b><span>${verdict(r, k)}</span></div></div>`).join("")}</div>
+    ${w.pungsu && w.pungsu.sides ? `<p>${w.pungsu.sides}</p>` : ""}</div>`);
+}
+
 const cardPrefs = () => Object.assign({ order: [], starred: [], hidden: [] }, store.get("cards", {}));
 function arrangeCards(all, withHidden) {   // hidden cards keep their place, so showing one puts it back there
   const p = cardPrefs(), pos = new Map(all.map((c, i) => [c.id, i]));
@@ -1586,8 +1692,8 @@ function cardName(c) { return c.block ? T(CARD_BLOCK_NAME[c.id]) : `${T(CARD_TOP
 function cardHtml(c, size, i, starred) {
   const big = c.big ? `<div class="kc-num"><b>${c.big}</b><span>${c.bigLabel || ""}</span></div>` : "";
   return `<button type="button" class="kc kc-${size}" data-card="${c.id}" style="animation-delay:${Math.min(i * 0.07, 0.9).toFixed(2)}s">
-    ${c.img ? `<span class="kc-pic"><img src="${CARD_IMG(c.img)}" alt="" loading="lazy"></span>` : ""}
-    <span class="kc-body"><span class="kc-tag ${c.kind}">${starred ? "★ " : ""}${T(CARD_TAG[c.kind])} · ${T(CARD_TOPIC[c.topic])}</span>
+    ${c.img ? `<span class="kc-pic"><img src="${CARD_IMG(c.img)}" alt="" loading="lazy"></span>` : c.icon ? `<span class="kc-ico"><img src="${ICON(c.icon)}" alt="" loading="lazy"></span>` : ""}
+    <span class="kc-body"><span class="kc-tag ${c.kind}">${starred ? "★ " : ""}${c.kind === "fix" ? T(CARD_TOPIC.fix) : `${T(CARD_TAG[c.kind])} · ${T(CARD_TOPIC[c.topic])}`}</span>
       <span class="kc-title">${c.title}</span>${big}
       ${c.lines.length ? `<span class="kc-lines">${c.lines.map((l) => (/[.!?。)]$/.test(l) ? l : l + ".")).join(" ")}</span>` : ""}</span></button>`;
 }
@@ -1601,7 +1707,7 @@ function feedHtml(list) {
   };
   list.forEach((c) => {
     if (c.block) { flush(); html += `<div class="kc-block" data-block="${c.id}" style="animation-delay:${Math.min(i++ * 0.07, 0.9).toFixed(2)}s">${c.html}</div>`; return; }
-    const size = c.img ? pat[p++ % pat.length] : "row";
+    const size = c.icon ? "half" : c.img ? pat[p++ % pat.length] : "row";
     if (size === "half") { pend.push(cardHtml(c, "half", i++, starred.includes(c.id))); if (pend.length === 2) flush(); return; }
     flush(); html += cardHtml(c, size, i++, starred.includes(c.id));
   });
@@ -1631,11 +1737,14 @@ function togglePref(key, cid) {
 function cardSheet(id, c, r) {
   const p = cardPrefs(), starred = p.starred.includes(c.id);
   const big = c.big ? `<div class="kd-num"><b>${c.big}</b><span>${c.bigLabel || ""}</span></div>` : "";
-  sheet(`<div class="kd">${c.img ? `<img class="kd-pic" src="${CARD_IMG(c.img)}" alt="">` : ""}
-      <span class="kc-tag ${c.kind}">${T(CARD_TAG[c.kind])} · ${T(CARD_TOPIC[c.topic])}</span>
+  const sc = c.comp ? r.score.components[c.comp].score : null;
+  sheet(`<div class="kd${c.icon ? " kd-icon" : ""}">${c.img ? `<img class="kd-pic" src="${CARD_IMG(c.img)}" alt="">` : c.icon ? `<img class="kd-ico" src="${ICON(c.icon)}" alt="">` : ""}
+      <span class="kc-tag ${c.kind}">${c.kind === "fix" ? T(CARD_TOPIC.fix) : `${T(CARD_TAG[c.kind])} · ${T(CARD_TOPIC[c.topic])}`}</span>
       <h3>${c.title}</h3>${big}
       ${c.lines.map((l) => `<p>${l}</p>`).join("")}
-      ${c.comp && c.comp !== "deuksu" ? `<p class="small">${factLine(c.comp, r.score.components[c.comp].facts)}</p>` : ""}
+      ${c.comp ? `<div class="kd-score"><span>${T(COMP[c.comp][1])} <small>${T(COMP[c.comp][0])}</small></span><b>${sc}</b>
+        <div class="track"><div class="fill${sc < 50 ? " low" : ""}" style="width:${sc}%"></div></div>
+        ${c.comp !== "deuksu" ? `<p class="small">${factLine(c.comp, r.score.components[c.comp].facts)}</p>` : ""}</div>` : ""}
       ${c.topic === "us" ? `<p class="small">${T({ ko: "풍수 별점과는 별개예요.", en: "Not part of the feng shui stars." })}</p>` : ""}
       <div class="kd-actions">
         <button type="button" class="kd-star${starred ? " on" : ""}" id="kd-star">★ ${starred ? T({ ko: "즐겨찾기 빼기", en: "Unpin" }) : T({ ko: "즐겨찾는 카드", en: "Pin to top" })}</button>
@@ -1687,7 +1796,9 @@ function cardEdit(id, all) {
     cardEdit(id, all);
   }));
 }
-function bindCards(id, all, r) {
+function bindCards(id, all, r, w) {
+  document.querySelectorAll("#cards-feed [data-giun]").forEach((b) => b.addEventListener("click", () => giunSheet(r, w, b.dataset.giun)));
+  document.querySelectorAll("#cards-feed [data-terms]").forEach((b) => b.addEventListener("click", () => termsSheet(r, w)));
   document.querySelectorAll("#cards-feed .kc").forEach((b) => b.addEventListener("click", () => {
     const c = all.find((x) => x.id === b.dataset.card); if (c) cardSheet(id, c, r);
   }));
@@ -1804,10 +1915,12 @@ function renderReport(id) {
       }).join("")}</div>
     </details>`;
   // the card feed: insight cards in fair order, with the bigger blocks slotted between them
-  const ins = insightCards(r, w);
+  const ins = insightCards(r, w), land = ins.filter((c) => c.topic !== "us"), us = ins.filter((c) => c.topic === "us");
   const blk = (bid, html) => (html ? [{ id: bid, block: true, html }] : []);
-  const allCards = [...ins.slice(0, 3), ...blk("tip", tipCard(id, { saveBtn: true })), ...ins.slice(3, 6), ...blk("map", mapHtml),
-    ...ins.slice(6), ...blk("reading", readingHtml), ...blk("ask", askHtml), ...blk("detail7", detailHtml)];
+  const hasText = paid && w.pungsu;
+  const allCards = [...blk("giun", giunCard(r, hasText ? w : {})), ...land.slice(0, 3), ...blk("map", mapHtml), ...land.slice(3),
+    ...fixCards(r), ...blk("ohaeng", ohaengCard(r, hasText ? w : {})), ...blk("terms", termsCard(r, hasText ? w : {})), ...us,
+    ...(paid ? [] : blk("reading", readingHtml))];
   $("report").innerHTML = `
     ${heroMedia}
     <div class="card" id="sec-sum">
@@ -1831,10 +1944,7 @@ function renderReport(id) {
       ${s.level_land ? levelChips(r) : ""}
     </div>
 
-    <nav class="jump" aria-label="${T({ ko: "바로 가기", en: "Jump to" })}">
-      <a href="#sec-sum">${T({ ko: "요약", en: "Summary" })}</a><a href="#sec-land">${T({ ko: "땅", en: "Land" })}</a><a href="#sec-reading">${T({ ko: "해설", en: "Reading" })}</a><a href="#sec-ask">${T({ ko: "묻기", en: "Ask" })}</a>
-    </nav>
-    <div class="fold-all"><button type="button" id="fold-all" aria-expanded="true">${T({ ko: "모두 접기", en: "Close all" })}</button></div>
+
 
     ${cardsSection(allCards)}
 
@@ -1911,7 +2021,7 @@ function renderReport(id) {
     try { await navigator.clipboard.writeText(url); toast(T({ ko: "링크를 복사했어요.", en: "Link copied." })); } catch (e) { toast(url); }
   });
   if (window.GILJI) GILJI.bindChat(id);
-  bindCards(id, allCards, r);
+  bindCards(id, allCards, r, w);
   bindFolds();
   if ($("fix-door")) $("fix-door").addEventListener("click", () => doorSheet(id));
   bindTip(id);
