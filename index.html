@@ -406,6 +406,9 @@ details.card[open] > summary .fold::after { transform: rotate(180deg); }
 .hr-name { font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hr-meta { font-size: 12px; color: var(--ink-3); }
 .hr-x { flex: none; background: none; border: 0; color: var(--ink-3); font-size: 14px; padding: 12px 16px; }
+.recent-link { display: flex; justify-content: flex-end; margin: -4px 2px 0; min-height: 4px; }
+.link-quiet { background: none; border: 0; padding: 6px 2px; font-size: 12px; color: var(--ink-3); text-decoration: underline; text-underline-offset: 3px; }
+.sheet-list { margin: 8px 0 12px; background: #f6f7f9; border-radius: 16px; max-height: 50vh; overflow-y: auto; }
 .icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 0; background: #f2f4f6; color: var(--ink-2); display: grid; place-items: center; }
 .icon-btn.on { color: var(--accent); background: var(--accent-soft); }
 .icon-btn.beat { animation: beat .45s ease; }
@@ -504,10 +507,10 @@ body.noscroll { overflow: hidden; }
       <button class="btn" type="submit" data-i18n="go">보기</button>
     </form>
     <p class="hint" id="hint">캘리포니아·텍사스 집 주소를 넣거나, 아래 세 곳을 먼저 둘러보세요.</p>
+    <div class="recent-link" id="recent-link"></div>
 
     <div id="saved-tip"></div>
     <div id="fav-list"></div>
-    <div id="recent-list"></div>
 
     <div class="section-label" data-i18n="nine">이런 곳은 어떻게 읽힐까요?</div>
     <div class="sample" id="samples"></div>
@@ -548,19 +551,19 @@ body.noscroll { overflow: hidden; }
   <div class="sheet" id="sheet"></div>
 </div>
 
-<script src="i18n.js?v=20261121064625"></script>
-<script src="data.js?v=20261121064625"></script>
-<script src="writer.js?v=20261121064625"></script>
-<script src="tips.js?v=20261121064625"></script>
-<script src="characters.js?v=20261121064625"></script>
-<script src="config.js?v=20261121064625"></script>
-<script src="live.js?v=20261121064625"></script>
+<script src="i18n.js?v=20261121065628"></script>
+<script src="data.js?v=20261121065628"></script>
+<script src="writer.js?v=20261121065628"></script>
+<script src="tips.js?v=20261121065628"></script>
+<script src="characters.js?v=20261121065628"></script>
+<script src="config.js?v=20261121065628"></script>
+<script src="live.js?v=20261121065628"></script>
 <script>
 /* Auto-update: phones and browsers keep an old copy of this page for a while after a publish.
    deploy/publish-page.sh stamps PAGE_VERSION here and writes version.json. On opening, a newer
    version reloads the page at once (nothing has been touched yet). Coming back to the app later,
    it offers a button instead of reloading under the person. Each version is tried once. */
-const PAGE_VERSION = "20261121064625";
+const PAGE_VERSION = "20261121065628";
 (function () {
   if (PAGE_VERSION === "dev") return;
   let last = 0;
@@ -878,20 +881,32 @@ function renderLists() {
   const f = favs();
   $("fav-list").innerHTML = f.length ? `<div class="section-label">♥ ${T({ ko: "찜한 집", en: "Favorites" })}</div>
     <div class="card home-list">${f.map((id) => homeRow(id, { remove: true })).join("")}</div>` : "";
+  // 최근 본 집 stays out of sight (owner: searches can be private): a small quiet link, the list only in a sheet
   const recent = window.GILJI ? GILJI.recent() : [];
-  $("recent-list").innerHTML = recent.length ? `<div class="section-label">🕘 ${T({ ko: "최근 본 집", en: "Recently viewed" })}</div>
-    <div class="card home-list">${recent.slice(0, 10).map((h) => homeRow(h.id, { remove: true, when: ago(h.at) })).join("")}</div>` : "";
+  $("recent-link").innerHTML = recent.length ? `<button type="button" class="link-quiet" id="open-recent">${T({ ko: "최근 본 집", en: "Recently viewed" })}</button>` : "";
+  if ($("open-recent")) $("open-recent").addEventListener("click", recentSheet);
   $("fav-list").querySelectorAll("[data-x]").forEach((b) => b.addEventListener("click", () => {
     store.set("favs", favs().filter((x) => x !== b.dataset.x)); renderLists();
   }));
-  $("recent-list").querySelectorAll("[data-x]").forEach((b) => b.addEventListener("click", () => {
-    GILJI.forget(b.dataset.x); renderLists();
-  }));
-  document.querySelectorAll("#fav-list .hr-open, #recent-list .hr-open").forEach((b) => b.addEventListener("click", () => {
-    const id = b.dataset.id;
-    if (window.GILJI) GILJI.touch(id);
-    dayOffset = 0; renderReport(id); show("report"); scrollTo({ top: 0 });
-  }));
+  document.querySelectorAll("#fav-list .hr-open").forEach((b) => b.addEventListener("click", () => openHome(b.dataset.id)));
+}
+function openHome(id) {
+  if (window.GILJI) GILJI.touch(id);
+  dayOffset = 0; renderReport(id); show("report"); scrollTo({ top: 0 });
+}
+function recentSheet() {
+  const recent = window.GILJI ? GILJI.recent() : [];
+  sheet(`<h3>${T({ ko: "최근 본 집", en: "Recently viewed" })}</h3>
+    <p class="small">${T({ ko: "이 휴대폰에만 남아요. 언제든 지울 수 있어요.", en: "Kept on this phone only. Clear it any time." })}</p>
+    ${recent.length ? `<div class="home-list sheet-list">${recent.slice(0, 20).map((h) => homeRow(h.id, { remove: true, when: ago(h.at) })).join("")}</div>
+    <button type="button" class="btn ghost block" id="recent-clear">${T({ ko: "모두 지우기", en: "Clear all" })}</button>`
+      : `<p>${T({ ko: "기록이 없어요.", en: "Nothing here." })}</p>`}`, recentSheet);
+  document.querySelectorAll("#sheet .hr-open").forEach((b) => b.addEventListener("click", () => { closeSheet(); openHome(b.dataset.id); }));
+  document.querySelectorAll("#sheet [data-x]").forEach((b) => b.addEventListener("click", () => { GILJI.forget(b.dataset.x); renderLists(); recentSheet(); }));
+  if ($("recent-clear")) $("recent-clear").addEventListener("click", () => {
+    GILJI.recent().forEach((h) => GILJI.forget(h.id)); renderLists(); closeSheet();
+    toast(T({ ko: "최근 본 집을 모두 지웠어요.", en: "Cleared." }));
+  });
 }
 
 /* ---------- reading animation ---------- */
