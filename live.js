@@ -194,6 +194,7 @@
     let r;
     try { r = await call("POST", "/api/homes", { address: q }); } catch (e) { fail(e.code); return; }
     const label = pretty(r.matched) || q;
+    if ($("q")) $("q").value = "";       // like Zillow: the box is empty again, so tapping it shows recent homes
     $("reading-addr").textContent = label;
     const t0 = Date.now();
     while (r.status === "working") {

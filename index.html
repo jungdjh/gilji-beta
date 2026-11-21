@@ -409,6 +409,26 @@ details.card[open] > summary .fold::after { transform: rotate(180deg); }
 .recent-link { display: flex; justify-content: flex-end; margin: -4px 2px 0; min-height: 4px; }
 .link-quiet { background: none; border: 0; padding: 6px 2px; font-size: 12px; color: var(--ink-3); text-decoration: underline; text-underline-offset: 3px; }
 .sheet-list { margin: 8px 0 12px; background: #f6f7f9; border-radius: 16px; max-height: 50vh; overflow-y: auto; }
+/* bottom tab bar (owner: "take hints from Zillow") */
+body { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+.tabbar { position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; z-index: 9; width: 100%; max-width: 480px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  background: rgba(255,255,255,.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--line); padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); }
+.tabbar button { border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 0; color: var(--ink-3); font: 600 11.5px var(--display, inherit); border-radius: 14px; }
+.tabbar button[aria-current] { color: var(--accent); }
+.fab { bottom: calc(88px + env(safe-area-inset-bottom)) !important; }
+.dock { bottom: calc(64px + env(safe-area-inset-bottom)) !important; }
+#toast { bottom: calc(150px + env(safe-area-inset-bottom)); }
+.tab-title { font: 800 24px var(--display); margin: 8px 4px 14px; }
+.empty-tab { text-align: center; padding: 26px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.empty-tab p { margin: 0; color: var(--ink-2); line-height: 1.6; }
+.more-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.more-list button { text-align: left; border: 0; background: #f6f7f9; border-radius: 14px; padding: 14px 16px; font: 600 15px var(--display, inherit); color: var(--ink); }
+#recent-panel { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 15; background: #fff; border-radius: 16px; box-shadow: 0 8px 28px rgba(25,31,40,.16); padding: 6px 0; }
+.rp-head { display: flex; justify-content: space-between; align-items: center; padding: 6px 16px 4px; font-size: 14px; }
+.rp-head button { border: 0; background: none; color: var(--accent); font: 700 13px var(--display, inherit); padding: 4px 0; }
+.rp-row { display: flex; align-items: center; gap: 12px; width: 100%; border: 0; background: none; text-align: left; padding: 10px 16px; font-size: 15px; color: var(--ink); }
+.rp-row svg { flex: none; color: var(--ink-3); }
+.rp-row span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 0; background: #f2f4f6; color: var(--ink-2); display: grid; place-items: center; }
 .icon-btn.on { color: var(--accent); background: var(--accent-soft); }
 .icon-btn.beat { animation: beat .45s ease; }
@@ -507,10 +527,7 @@ body.noscroll { overflow: hidden; }
       <button class="btn" type="submit" data-i18n="go">보기</button>
     </form>
     <p class="hint" id="hint">캘리포니아·텍사스 집 주소를 넣거나, 아래 세 곳을 먼저 둘러보세요.</p>
-    <div class="recent-link" id="recent-link"></div>
 
-    <div id="saved-tip"></div>
-    <div id="fav-list"></div>
 
     <div class="section-label" data-i18n="nine">이런 곳은 어떻게 읽힐까요?</div>
     <div class="sample" id="samples"></div>
@@ -545,25 +562,36 @@ body.noscroll { overflow: hidden; }
 
   <!-- S7 Compare -->
   <section id="compare" class="hidden"></section>
+
+  <!-- 찜한 집 and 우리 집 tabs -->
+  <section id="favs" class="hidden"><h1 class="tab-title" id="favs-title">찜한 집</h1><div id="fav-list"></div></section>
+  <section id="mine" class="hidden"><h1 class="tab-title" id="mine-title">우리 집</h1><div id="saved-tip"></div><div id="mine-body"></div></section>
 </div>
+
+<nav class="tabbar" id="tabbar" aria-label="메뉴">
+  <button type="button" data-tab="home" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span>찾기</span></button>
+  <button type="button" data-tab="favs"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><span>찜</span></button>
+  <button type="button" data-tab="mine"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></svg><span>우리 집</span></button>
+  <button type="button" data-tab="more"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg><span>더보기</span></button>
+</nav>
 
 <div class="modal hidden" id="modal" role="dialog" aria-modal="true">
   <div class="sheet" id="sheet"></div>
 </div>
 
-<script src="i18n.js?v=20261121065628"></script>
-<script src="data.js?v=20261121065628"></script>
-<script src="writer.js?v=20261121065628"></script>
-<script src="tips.js?v=20261121065628"></script>
-<script src="characters.js?v=20261121065628"></script>
-<script src="config.js?v=20261121065628"></script>
-<script src="live.js?v=20261121065628"></script>
+<script src="i18n.js?v=20261121071020"></script>
+<script src="data.js?v=20261121071020"></script>
+<script src="writer.js?v=20261121071020"></script>
+<script src="tips.js?v=20261121071020"></script>
+<script src="characters.js?v=20261121071020"></script>
+<script src="config.js?v=20261121071020"></script>
+<script src="live.js?v=20261121071020"></script>
 <script>
 /* Auto-update: phones and browsers keep an old copy of this page for a while after a publish.
    deploy/publish-page.sh stamps PAGE_VERSION here and writes version.json. On opening, a newer
    version reloads the page at once (nothing has been touched yet). Coming back to the app later,
    it offers a button instead of reloading under the person. Each version is tried once. */
-const PAGE_VERSION = "20261121065628";
+const PAGE_VERSION = "20261121071020";
 (function () {
   if (PAGE_VERSION === "dev") return;
   let last = 0;
@@ -766,8 +794,12 @@ let screen = "home";
 function show(id) {
   screen = id;
   document.body.classList.remove("noscroll");
-  ["home", "reading", "report", "compare"].forEach((s) => $(s).classList.toggle("hidden", s !== id));
-  if (id === "home") { renderSavedTip(); renderLists(); }
+  ["home", "reading", "report", "compare", "favs", "mine"].forEach((s) => $(s).classList.toggle("hidden", s !== id));
+  if (id === "home") { renderLists(); }
+  if (id === "favs") renderLists();
+  if (id === "mine") renderMine();
+  if (["home", "favs", "mine"].includes(id)) navTab = id;
+  document.querySelectorAll("#tabbar [data-tab]").forEach((b) => b.toggleAttribute("aria-current", b.dataset.tab === navTab));
   if (id === "report" && leafMap) setTimeout(() => leafMap.invalidateSize(), 50);
   window.scrollTo(0, 0);
   riseIn(id);
@@ -850,7 +882,7 @@ function tipCard(id, opts = {}) {
 function renderSavedTip() {
   const id = store.get("saved", null);
   if (!id || !R[id] || LANDMARK.has(id)) { $("saved-tip").innerHTML = ""; return; }
-  $("saved-tip").innerHTML = `<div class="section-label">🏠 ${T({ ko: "우리 집", en: "My home" })} · ${shortName(id)}</div>` +
+  $("saved-tip").innerHTML = `<div class="section-label">${esc(shortName(id))}</div>` +
     tipCard(id, { nextId: "home-tip-next" });
   $("home-tip-next").addEventListener("click", () => { dayOffset++; renderSavedTip(); });
 }
@@ -879,12 +911,11 @@ function ago(t) {
 }
 function renderLists() {
   const f = favs();
-  $("fav-list").innerHTML = f.length ? `<div class="section-label">♥ ${T({ ko: "찜한 집", en: "Favorites" })}</div>
-    <div class="card home-list">${f.map((id) => homeRow(id, { remove: true })).join("")}</div>` : "";
-  // 최근 본 집 stays out of sight (owner: searches can be private): a small quiet link, the list only in a sheet
-  const recent = window.GILJI ? GILJI.recent() : [];
-  $("recent-link").innerHTML = recent.length ? `<button type="button" class="link-quiet" id="open-recent">${T({ ko: "최근 본 집", en: "Recently viewed" })}</button>` : "";
-  if ($("open-recent")) $("open-recent").addEventListener("click", recentSheet);
+  $("favs-title").textContent = T({ ko: "찜한 집", en: "Favorites" });
+  $("fav-list").innerHTML = f.length ? `<div class="card home-list">${f.map((id) => homeRow(id, { remove: true })).join("")}</div>`
+    : `<div class="card empty-tab">${CH.swallow(72, { pose: "hello" })}<p>${T({ ko: "아직 찜한 집이 없어요.<br>집을 보다가 ♥를 누르면 여기에 모여요.", en: "No favorites yet.<br>Tap ♥ on a home to keep it here." })}</p>
+      <button type="button" class="btn" data-go="home">${T({ ko: "주소 찾기", en: "Find an address" })}</button></div>`;
+  document.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => { show(b.dataset.go); if (b.dataset.go === "home") setTimeout(() => $("q").focus(), 300); }));
   $("fav-list").querySelectorAll("[data-x]").forEach((b) => b.addEventListener("click", () => {
     store.set("favs", favs().filter((x) => x !== b.dataset.x)); renderLists();
   }));
@@ -894,6 +925,76 @@ function openHome(id) {
   if (window.GILJI) GILJI.touch(id);
   dayOffset = 0; renderReport(id); show("report"); scrollTo({ top: 0 });
 }
+let navTab = "home";
+// 우리 집 tab: the home's daily tip and a way in, or how to set one
+function renderMine() {
+  $("mine-title").textContent = T({ ko: "우리 집", en: "My home" });
+  const id = store.get("saved", null);
+  if (id && R[id] && !LANDMARK.has(id)) {
+    renderSavedTip();
+    $("mine-body").innerHTML = `<button type="button" class="btn block" id="mine-open">${T({ ko: "우리 집 카드 보기", en: "See my home's cards" })}</button>`;
+    $("mine-open").addEventListener("click", () => openHome(id));
+  } else {
+    $("saved-tip").innerHTML = "";
+    $("mine-body").innerHTML = `<div class="card empty-tab">${CH.swallow(72, { pose: "yay" })}<p>${T({ ko: "우리 집을 정하면 흥이가<br>매일 우리 집에 맞는 박씨를 물어 와요.", en: "Set your home and Heungi<br>brings a tip made for it every day." })}</p>
+      <p class="small">${T({ ko: "집을 찾은 뒤 '🏠 우리 집으로 정하기'를 누르세요.", en: "Find it, then tap '🏠 Set as my home'." })}</p>
+      <button type="button" class="btn" data-go="home">${T({ ko: "주소 찾기", en: "Find an address" })}</button></div>`;
+    document.querySelectorAll("#mine-body [data-go]").forEach((b) => b.addEventListener("click", () => { show("home"); setTimeout(() => $("q").focus(), 300); }));
+  }
+}
+// 더보기: the rest, in a sheet
+function moreSheet() {
+  const nRecent = window.GILJI ? GILJI.recent().length : 0;
+  sheet(`<h3>${T({ ko: "더보기", en: "More" })}</h3>
+    <div class="more-list">
+      <button type="button" id="more-about">${T({ ko: "박씨는 어떻게 읽나요?", en: "How does Bakseed read a home?" })}</button>
+      <button type="button" id="more-lang">${T({ ko: "English로 보기", en: "한국어로 보기" })}</button>
+      ${nRecent ? `<button type="button" id="more-recent">${T({ ko: `최근 본 집 (${nRecent})`, en: `Recently viewed (${nRecent})` })}</button>` : ""}
+    </div>
+    <p class="small" style="margin-top:12px">${T({ ko: "박씨 클로즈드 베타 · 초대받은 분만 써요", en: "Bakseed closed beta · invited people only" })}</p>`, moreSheet);
+  $("more-about").addEventListener("click", () => { closeSheet(); openAbout(); });
+  $("more-lang").addEventListener("click", () => { closeSheet(); I18N.setLang(isEn() ? "ko" : "en"); });
+  if ($("more-recent")) $("more-recent").addEventListener("click", recentSheet);
+}
+$("tabbar").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-tab]"); if (!b) return;
+  if (b.dataset.tab === "more") { moreSheet(); return; }
+  show(b.dataset.tab);
+});
+function tabbarLabels() {
+  const L = { home: { ko: "찾기", en: "Search" }, favs: { ko: "찜", en: "Saved" }, mine: { ko: "우리 집", en: "My home" }, more: { ko: "더보기", en: "More" } };
+  document.querySelectorAll("#tabbar [data-tab]").forEach((b) => (b.querySelector("span").textContent = T(L[b.dataset.tab])));
+  $("tabbar").setAttribute("aria-label", T({ ko: "메뉴", en: "Menu" }));
+}
+
+/* 최근 검색: like Zillow, shown only while the search box is tapped and empty (searches can be private) */
+function bindRecentPanel() {
+  const input = $("q"), form = $("search");
+  const panel = document.createElement("div");
+  panel.id = "recent-panel"; panel.hidden = true;
+  form.appendChild(panel);
+  const paint = () => {
+    const rec = window.GILJI ? GILJI.recent() : [];
+    if (input.value.trim() || !rec.length) { panel.hidden = true; return; }
+    panel.innerHTML = `<div class="rp-head"><b>${T({ ko: "최근 본 집", en: "Recently viewed" })}</b>
+        <button type="button" data-rp="all">${T({ ko: "모두 보기", en: "See all" })}</button></div>
+      ${rec.slice(0, 4).map((h) => `<button type="button" class="rp-row" data-rp-id="${h.id}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <span>${esc(shortName(h.id))}</span></button>`).join("")}`;
+    panel.hidden = false;
+  };
+  input.addEventListener("focus", paint);
+  input.addEventListener("input", paint);
+  input.addEventListener("blur", () => setTimeout(() => (panel.hidden = true), 180));
+  panel.addEventListener("pointerdown", (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    e.preventDefault();
+    panel.hidden = true; input.blur();
+    if (b.dataset.rp === "all") recentSheet(); else openHome(b.dataset.rpId);
+  });
+}
+bindRecentPanel();
+
 function recentSheet() {
   const recent = window.GILJI ? GILJI.recent() : [];
   sheet(`<h3>${T({ ko: "최근 본 집", en: "Recently viewed" })}</h3>
@@ -1479,7 +1580,7 @@ function cardHtml(c, size, i, starred) {
     ${c.img ? `<span class="kc-pic"><img src="${CARD_IMG(c.img)}" alt="" loading="lazy"></span>` : ""}
     <span class="kc-body"><span class="kc-tag ${c.kind}">${starred ? "★ " : ""}${T(CARD_TAG[c.kind])} · ${T(CARD_TOPIC[c.topic])}</span>
       <span class="kc-title">${c.title}</span>${big}
-      ${c.lines.length ? `<span class="kc-lines">${c.lines.join(" ")}</span>` : ""}</span></button>`;
+      ${c.lines.length ? `<span class="kc-lines">${c.lines.map((l) => (/[.!?。)]$/.test(l) ? l : l + ".")).join(" ")}</span>` : ""}</span></button>`;
 }
 function feedHtml(list) {
   const pat = ["big", "side", "half", "half", "big", "side r", "half", "half"], starred = cardPrefs().starred;
@@ -1934,7 +2035,8 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSheet
 I18N.onLang(() => {
   applyStatic();
   renderHome();
-  renderSavedTip(); renderLists();
+  renderLists(); tabbarLabels();
+  if (screen === "mine") renderMine();
   if (screen === "reading" && current && SHORT[current]) $("reading-addr").textContent = shortName(current);
   if (screen === "compare") renderCompare();
   if (screen === "report" && current && R[current]) {
@@ -1951,7 +2053,7 @@ I18N.onLang(() => {
 });
 
 applyStatic();
-renderSavedTip(); renderLists();
+renderSavedTip(); renderLists(); tabbarLabels();
 </script>
 </body>
 </html>
