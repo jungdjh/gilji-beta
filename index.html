@@ -150,7 +150,7 @@ html[lang="en"] .brand b.ko-name { display: none; }
 .ks-head h2 { font: 800 20px var(--display); margin: 0; }
 .ks-head button { border: 0; background: none; color: var(--accent); font: 700 14px var(--display, inherit); padding: 6px 2px 6px 12px; }
 .ks > .card:first-of-type { margin-top: 0; }
-.ks > .card + .cards-feed { margin-top: 12px; }
+.ks > .card + .cards-feed, .ks > .kc.wk + .cards-feed { margin-top: 12px; }
 /* 사신사 bar chart: the animal stands on its bar, taller = stronger side */
 .sb { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; align-items: start; margin: 6px 0 4px; }
 .sb-col { display: flex; flex-direction: column; align-items: center; gap: 4px; border: 0; background: none; padding: 0; font: inherit; color: var(--ink); cursor: pointer; }
@@ -733,20 +733,20 @@ body.noscroll { overflow: hidden; }
   <div class="sheet" id="sheet"></div>
 </div>
 
-<script src="i18n.js?v=20261122075713"></script>
-<script src="data.js?v=20261122075713"></script>
-<script src="writer.js?v=20261122075713"></script>
-<script src="tips.js?v=20261122075713"></script>
-<script src="seasons.js?v=20261122075713"></script>
-<script src="characters.js?v=20261122075713"></script>
-<script src="config.js?v=20261122075713"></script>
-<script src="live.js?v=20261122075713"></script>
+<script src="i18n.js?v=20261122080519"></script>
+<script src="data.js?v=20261122080519"></script>
+<script src="writer.js?v=20261122080519"></script>
+<script src="tips.js?v=20261122080519"></script>
+<script src="seasons.js?v=20261122080519"></script>
+<script src="characters.js?v=20261122080519"></script>
+<script src="config.js?v=20261122080519"></script>
+<script src="live.js?v=20261122080519"></script>
 <script>
 /* Auto-update: phones and browsers keep an old copy of this page for a while after a publish.
    deploy/publish-page.sh stamps PAGE_VERSION here and writes version.json. On opening, a newer
    version reloads the page at once (nothing has been touched yet). Coming back to the app later,
    it offers a button instead of reloading under the person. Each version is tried once. */
-const PAGE_VERSION = "20261122075713";
+const PAGE_VERSION = "20261122080519";
 (function () {
   if (PAGE_VERSION === "dev") return;
   let last = 0;
@@ -1779,7 +1779,7 @@ function fixCards(r) {
 function giunCard(r, w) {
   const g = r.giun || [], txt = (w.pungsu && w.pungsu.giun) || {};
   if (!g.length) return "";
-  return `<div class="card kg"><div class="kg-head"><h2>${T({ ko: "다섯 기운", en: "Five fortunes" })}</h2>
+  return `<div class="card kg"><div class="kg-head">
       <small>${T({ ko: "풍수에서 이 땅이 돕는다고 보는 것", en: "what feng shui says this land helps with" })}</small></div>
     ${g.map((x, i) => `<button type="button" class="kg-row" data-giun="${x.key}" style="animation-delay:${(0.15 + i * 0.08).toFixed(2)}s">
       <img src="${ICON(GIUN_ICON[x.key] || "stability")}" alt="" loading="lazy">
@@ -1882,12 +1882,13 @@ function feedHtml(list) {
 const SECTIONS = [
   { id: "glance", ko: "한눈에 보기", en: "At a glance" },
   { id: "shape", ko: "산과 땅의 모양", en: "The hills and land" },
+  { id: "fortune", ko: "다섯 기운", en: "Five fortunes" },   // owner Nov 22: after the land, by default
   { id: "water", ko: "물과 해", en: "Water and sun" },
   { id: "site", ko: "집터", en: "The lot" },
   { id: "ohaeng", ko: "오행", en: "Five elements" },
   { id: "us", ko: "미국에서 볼 점", en: "Good to know in the US" },
   { id: "fix", ko: "집 안에서 해 볼 것", en: "Easy things to try inside" }];
-const SEC_OF = { giun: "glance", reading: "glance", map: "shape", bars: "shape", ohaeng: "ohaeng",
+const SEC_OF = { giun: "fortune", reading: "glance", map: "shape", bars: "shape", ohaeng: "ohaeng",
   wind: "shape", water: "water", sun: "water", land: "site", sal: "site", us: "us", fix: "fix" };
 const secOf = (c) => SEC_OF[c.block ? c.id : c.topic] || "site";
 // the back / front / sides cards live behind the 사신사 bars, so each fact shows once
