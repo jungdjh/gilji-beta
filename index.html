@@ -217,7 +217,22 @@ html[lang="en"] .brand b.ko-name { display: none; }
 .ks .kc-tile .kc-lines { display: none; }
 .kc.wk { flex-direction: row; align-items: center; gap: 12px; padding: 14px 16px; margin-top: 12px;
   background: linear-gradient(135deg, #fff6e9 0%, #fdeef0 55%, #eef6f1 100%); }
-.wk-emoji { font-size: 40px; line-height: 1; flex: none; width: 56px; height: 56px; display: grid; place-items: center; background: rgba(255,255,255,.7); border-radius: 18px; }
+.wk-pic { position: relative; flex: none; width: 84px; height: 84px; border-radius: 18px; overflow: hidden; background: #fff; }
+.wk-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.wk-pic i { position: absolute; right: 3px; bottom: 1px; font-style: normal; font-size: 22px; filter: drop-shadow(0 1px 2px rgba(0,0,0,.25)); }
+.wk-sheet .kd-pic { border-radius: 0; }
+.wk-home-box { display: grid; grid-template-columns: 56px 1fr; gap: 12px; align-items: center; margin-top: 12px; padding: 12px 14px;
+  border-radius: 16px; background: linear-gradient(135deg, #fff6e9, #fdeef0); }
+.wk-home-box img { width: 56px; height: 56px; object-fit: contain; }
+.wk-home-box b, .wk-steps > b, .wk-why b { display: block; font-size: 13px; color: #b8684e; margin-bottom: 2px; }
+.wk-home-box p, .wk-why p { margin: 0; }
+.wk-steps { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.wk-step { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; padding: 10px 12px; background: #f6f8f7; border-radius: 14px; }
+.wk-step span { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font: 800 14px/28px var(--display); text-align: center; }
+.wk-step p, .kd .wk-step p { margin: 3px 0 0; line-height: 1.5; }
+.kd .wk-home-box p, .kd .wk-why p { margin: 0; }
+.wk-why { margin-top: 14px; padding: 12px 14px; border-radius: 16px; background: #eef6f1; }
+.wk-why b { color: #2f7f6f; }
 .wk-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .wk-when { font-size: 12px; font-weight: 700; color: #b8684e; }
 .wk .kc-title { font-size: 16px; }
@@ -544,6 +559,15 @@ body { padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
   background: rgba(255,255,255,.72) !important; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
 body .fab .char { height: 34px !important; width: auto; }
 body .fab { padding: 2px 11px 2px 2px !important; font-size: 13px; }
+/* bar alone: a little wider, centered */
+.tabbar { width: calc(100% - 48px); max-width: 360px; min-height: 52px; }
+/* bar + 묻기: one row, the bar shifts left and 묻기 is its own oval on the right, same height */
+body.has-ask .tabbar { left: max(16px, calc(50% - 200px)); transform: none; width: calc(min(100vw - 32px, 400px) - 106px); max-width: none; box-sizing: border-box; }
+body.has-ask .tabbar.mini { transform: scale(.86); transform-origin: 0 100%; }
+body.has-ask .fab { right: max(16px, calc(50% - 200px)) !important; bottom: calc(10px + env(safe-area-inset-bottom)) !important; width: 96px !important; height: 52px !important; box-sizing: border-box; padding: 0 10px 0 4px !important; gap: 2px;
+  justify-content: center; border: 1px solid rgba(255,255,255,.6); box-shadow: 0 8px 24px rgba(25,31,40,.12), inset 0 1px 0 rgba(255,255,255,.7);
+  background: rgba(255,255,255,.58) !important; backdrop-filter: blur(22px) saturate(1.8); -webkit-backdrop-filter: blur(22px) saturate(1.8); z-index: 9; }
+body.has-ask .fab::after { display: none; }
 .dock { bottom: calc(70px + env(safe-area-inset-bottom)) !important; }
 #toast { bottom: calc(160px + env(safe-area-inset-bottom)); }
 .tab-title { font: 800 24px var(--display); margin: 8px 4px 14px; }
@@ -707,20 +731,20 @@ body.noscroll { overflow: hidden; }
   <div class="sheet" id="sheet"></div>
 </div>
 
-<script src="i18n.js?v=20261122072917"></script>
-<script src="data.js?v=20261122072917"></script>
-<script src="writer.js?v=20261122072917"></script>
-<script src="tips.js?v=20261122072917"></script>
-<script src="seasons.js?v=20261122072917"></script>
-<script src="characters.js?v=20261122072917"></script>
-<script src="config.js?v=20261122072917"></script>
-<script src="live.js?v=20261122072917"></script>
+<script src="i18n.js?v=20261122074828"></script>
+<script src="data.js?v=20261122074828"></script>
+<script src="writer.js?v=20261122074828"></script>
+<script src="tips.js?v=20261122074828"></script>
+<script src="seasons.js?v=20261122074828"></script>
+<script src="characters.js?v=20261122074828"></script>
+<script src="config.js?v=20261122074828"></script>
+<script src="live.js?v=20261122074828"></script>
 <script>
 /* Auto-update: phones and browsers keep an old copy of this page for a while after a publish.
    deploy/publish-page.sh stamps PAGE_VERSION here and writes version.json. On opening, a newer
    version reloads the page at once (nothing has been touched yet). Coming back to the app later,
    it offers a button instead of reloading under the person. Each version is tried once. */
-const PAGE_VERSION = "20261122072917";
+const PAGE_VERSION = "20261122074828";
 (function () {
   if (PAGE_VERSION === "dev") return;
   let last = 0;
@@ -933,7 +957,10 @@ function show(id) {
   if (id === "report" && leafMap) setTimeout(() => leafMap.invalidateSize(), 50);
   window.scrollTo(0, 0);
   riseIn(id);
+  syncAsk();
 }
+// 묻기 sits beside the bar as its own oval when it's on this screen; otherwise the bar widens and centers (owner Nov 21)
+function syncAsk() { document.body.classList.toggle("has-ask", screen === "report" && !!$("fab")); }
 function riseIn(id) {     // cards float up one after another when a screen opens
   $(id).querySelectorAll(".hero, .search, .section-label, .sample > button, .ladder, .card").forEach((e, i) => {
     e.classList.remove("rise"); void e.offsetWidth;
@@ -1871,17 +1898,18 @@ function weekCard(r, opts = {}) {
   if (!r || !window.PUNGSU_SEASONS) return "";
   const w = PUNGSU_SEASONS.weekly(r, tipDate());
   return `<button type="button" class="kc wk" id="${opts.btnId || "week-card"}">
-    <span class="wk-emoji" aria-hidden="true">${w.emoji}</span>
+    <span class="wk-pic"><img src="${w.pic}" alt="" loading="lazy"><i aria-hidden="true">${w.emoji}</i></span>
     <span class="wk-body"><span class="wk-when">${T({ ko: "이번 주 박씨", en: "This week's tip" })} · ${weekRange(w.weekOf)}</span>
       <span class="kc-title">${w.title}</span><span class="wk-home">${w.home}</span></span></button>`;
 }
 function weekSheet(r) {
   const w = PUNGSU_SEASONS.weekly(r, tipDate());
-  sheet(`<div class="kd"><div class="wk-big" aria-hidden="true">${w.emoji}</div>
-    <span class="kc-tag fix">${T({ ko: "이번 주 박씨", en: "This week's tip" })} · ${weekRange(w.weekOf)}</span><h3>${w.title}</h3>
-    <div class="kd-part"><b>${T({ ko: "이 집에 맞게", en: "For this home" })}</b><p>${w.home}</p></div>
-    <div class="kd-part"><b>${T({ ko: "풍수에서 보는 이유", en: "Why it helps, in feng shui" })}</b><p>${w.why}</p></div>
-    <div class="kd-part"><b>${T({ ko: "이렇게 해 보세요", en: "How to do it" })}</b><ol>${w.steps.map((h) => `<li>${h}</li>`).join("")}</ol></div>
+  sheet(`<div class="kd wk-sheet"><img class="kd-pic" src="${w.pic}" alt="">
+    <span class="kc-tag fix">${w.emoji} ${T({ ko: "이번 주 박씨", en: "This week's tip" })} · ${weekRange(w.weekOf)}</span><h3>${w.title}</h3>
+    <div class="wk-home-box"><img src="${ICON("oh-" + w.element)}" alt=""><div><b>${T({ ko: "이 집에 맞게", en: "For this home" })}</b><p>${w.home}</p></div></div>
+    <div class="wk-steps"><b>${T({ ko: "이렇게 해 보세요", en: "How to do it" })}</b>
+      ${w.steps.map((h, i) => `<div class="wk-step"><span>${i + 1}</span><p>${h}</p></div>`).join("")}</div>
+    <div class="wk-why"><b>🌿 ${T({ ko: "풍수에서 보는 이유", en: "Why it helps, in feng shui" })}</b><p>${w.why}</p></div>
     <p class="small">${T({ ko: "매주 월요일에 새 박씨가 와요. 풍수 전통에서 권하는 방법이에요. 결과를 약속하는 건 아니에요.", en: "A new tip arrives every Monday. This is what the feng shui tradition suggests, not a promise of any result." })}</p></div>`, () => weekSheet(r));
 }
 function sectionsHtml(all, topHtml) {
@@ -1922,9 +1950,10 @@ function cardSheet(id, c, r) {
       ${c.kind === "fix" ? "" : `<span class="kc-tag ${c.kind}">${T(CARD_TAG[c.kind])} · ${T(CARD_TOPIC[c.topic])}${c.watch ? " · " + T(CARD_TOPIC.sal) : ""}</span>`}
       <h3>${c.title}</h3>${big}
       ${c.kind === "fix" && c.why ? `
-        <div class="kd-part"><b>${T({ ko: "왜 이 집에 필요해요", en: "Why this home" })}</b><p>${c.fact || c.lines[0]}</p></div>
-        <div class="kd-part"><b>${T({ ko: "풍수에서 보는 이유", en: "Why it helps, in feng shui" })}</b><p>${c.why}</p></div>
-        ${c.how && c.how.length ? `<div class="kd-part"><b>${T({ ko: "이렇게 해 보세요", en: "How to do it" })}</b><ol>${c.how.map((h) => `<li>${h}</li>`).join("")}</ol></div>` : ""}
+        <div class="wk-home-box"><img src="${ICON("compass")}" alt=""><div><b>${T({ ko: "왜 이 집에 필요해요", en: "Why this home" })}</b><p>${c.fact || c.lines[0]}</p></div></div>
+        ${c.how && c.how.length ? `<div class="wk-steps"><b>${T({ ko: "이렇게 해 보세요", en: "How to do it" })}</b>
+          ${c.how.map((h, i) => `<div class="wk-step"><span>${i + 1}</span><p>${h}</p></div>`).join("")}</div>` : ""}
+        <div class="wk-why"><b>🌿 ${T({ ko: "풍수에서 보는 이유", en: "Why it helps, in feng shui" })}</b><p>${c.why}</p></div>
         <p class="small">${T({ ko: "풍수 전통에서 권하는 방법이에요. 결과를 약속하는 건 아니에요.", en: "This is what the feng shui tradition suggests, not a promise of any result." })}</p>`
       : c.lines.map((l) => `<p>${l}</p>`).join("")}
       ${c.comp ? `<div class="kd-score"><span>${T(COMP[c.comp][1])} <small>${T(COMP[c.comp][0])}</small></span><b>${sc}</b>
@@ -2168,6 +2197,7 @@ function renderReport(id) {
   };
   const closeChat = () => { const sh = $("chat-sheet"); if (!sh) return; sh.classList.remove("open"); sh.setAttribute("aria-hidden", "true"); document.body.classList.remove("noscroll"); };
   ["fab", "ask-open"].forEach((k) => { if ($(k)) $(k).addEventListener("click", openChat); });
+  syncAsk();
   if ($("chat-sheet")) $("chat-sheet").addEventListener("click", (e) => { if (e.target.closest("[data-close]")) closeChat(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeChat(); }, { once: true });
   $("report").querySelectorAll(".pc-tabs button").forEach((b) => b.addEventListener("click", () => {

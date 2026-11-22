@@ -176,7 +176,9 @@ window.PUNGSU_SEASONS = (function () {
     const mon = monday(date), dj = new Date(mon.getFullYear(), 11, 21);
     if (mo.kind === "holiday" && dj >= mon && dj <= new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + 6))
       steps = [...steps, L(["이번 주에는 밤이 가장 긴 동지도 있어요. 팥죽 한 그릇이나 붉은 소품으로 챙겨 보세요.", "This week also has the winter solstice, the longest night. Koreans mark it with red bean porridge or a red accent."])];
-    return { id: mo.id, kind: mo.kind, emoji: mo.emoji, title: L(mo.title), why: L(mo.why), steps, home: hp.line, element: hp.element,
+    // a soft 3D picture: the holiday's own, or the season's for a 절기 week
+    const pic = `img/season/${mo.kind === "holiday" ? mo.id : mo.season}.webp`;
+    return { id: mo.id, kind: mo.kind, emoji: mo.emoji, pic, title: L(mo.title), why: L(mo.why), steps, home: hp.line, element: hp.element,
              weekOf: monday(date) };
   }
   return { weekly, moment, HOLIDAYS, JEOLGI };
