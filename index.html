@@ -301,7 +301,12 @@ html[lang="en"] .brand b.ko-name { display: none; }
 .leaf .peak { white-space: nowrap; }
 .leaf .peak i { display: block; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 12px solid; transform: translate(-50%, -100%); filter: drop-shadow(0 0 1px #fff); }
 .leaf .peak span { display: block; transform: translate(-50%, -6px); font: 700 11px var(--display); color: #2e2925; text-shadow: 0 0 3px #fff, 0 0 3px #fff; }
-.leaf .face-arrow span { display: block; color: #b8684e; font-size: 16px; line-height: 18px; text-align: center; }
+.leaf .face-arrow span { display: block; color: #b8684e; font-size: 20px; line-height: 22px; text-align: center; text-shadow: 0 0 3px #fff; }
+.leaf .guard-mark { text-align: center; pointer-events: auto; }
+.leaf .guard-mark img { width: 34px; height: 34px; display: block; margin: 0 auto; filter: drop-shadow(0 2px 3px rgba(0,0,0,.25)); }
+.leaf .guard-mark span { display: inline-block; font: 800 11px var(--display); color: #2e2925; background: rgba(255,255,255,.85); border-radius: 6px; padding: 0 4px; }
+.map .legend .lg-arrow { color: #b8684e; font-weight: 800; margin-right: 3px; }
+.map .legend .lg-peak { color: #8a6d3b; margin-right: 3px; }
 .leaf .home-pin img { filter: drop-shadow(0 3px 4px rgba(0,0,0,.25)); }
 .leaf .sal-mark { background: #c0392b; color: #fff; border-radius: 50%; font: 700 13px/20px sans-serif; text-align: center; box-shadow: 0 0 0 2px #fff; }
 .watch-note { color: #c0392b; }
@@ -650,19 +655,19 @@ body.noscroll { overflow: hidden; }
   <div class="sheet" id="sheet"></div>
 </div>
 
-<script src="i18n.js?v=20261121165151"></script>
-<script src="data.js?v=20261121165151"></script>
-<script src="writer.js?v=20261121165151"></script>
-<script src="tips.js?v=20261121165151"></script>
-<script src="characters.js?v=20261121165151"></script>
-<script src="config.js?v=20261121165151"></script>
-<script src="live.js?v=20261121165151"></script>
+<script src="i18n.js?v=20261122054236"></script>
+<script src="data.js?v=20261122054236"></script>
+<script src="writer.js?v=20261122054236"></script>
+<script src="tips.js?v=20261122054236"></script>
+<script src="characters.js?v=20261122054236"></script>
+<script src="config.js?v=20261122054236"></script>
+<script src="live.js?v=20261122054236"></script>
 <script>
 /* Auto-update: phones and browsers keep an old copy of this page for a while after a publish.
    deploy/publish-page.sh stamps PAGE_VERSION here and writes version.json. On opening, a newer
    version reloads the page at once (nothing has been touched yet). Coming back to the app later,
    it offers a button instead of reloading under the person. Each version is tried once. */
-const PAGE_VERSION = "20261121165151";
+const PAGE_VERSION = "20261122054236";
 (function () {
   if (PAGE_VERSION === "dev") return;
   let last = 0;
@@ -1214,12 +1219,14 @@ function drawMap(id) {
   const m = L.map(el, { scrollWheelZoom: false, zoomControl: true, attributionControl: true });
   m.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
   leafMap = m;
-  // quiet light-gray base (Esri Light Gray Canvas) so the home, water and hills stand out
-  const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/";
-  L.tileLayer(ESRI + "World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
-    maxZoom: 16, attribution: "Esri, HERE, Garmin, © OpenStreetMap contributors",
+  // 지형도 (Cowork note 2): Esri hillshade shows the hills and valleys, with a faint light-gray street layer
+  // and labels on top so the home, water and hills still stand out
+  const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/";
+  L.tileLayer(ESRI + "Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 16, attribution: "Esri, USGS, NASA, HERE, Garmin, © OpenStreetMap contributors",
   }).addTo(m);
-  L.tileLayer(ESRI + "World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16, opacity: .7 }).addTo(m);
+  L.tileLayer(ESRI + "Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16, opacity: .32, className: "tile-soft" }).addTo(m);
+  L.tileLayer(ESRI + "Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16, opacity: .7 }).addTo(m);
 
   // the area the engine read, as one faint ring; the four sides are listed under the map
   const RAD = 3300;
@@ -1243,18 +1250,28 @@ function drawMap(id) {
     }
   });
 
-  // named hills the engine read
-  r.peaks.filter((p) => p.name).forEach((p) => {
+  // every hill the engine read, named or not
+  r.peaks.forEach((p) => {
+    const nm = p.name ? place(p.name) : T({ ko: "봉우리", en: "Hilltop" });
     L.marker(dest(lat, lng, p.bearing_deg, p.distance_m), { icon: L.divIcon({ className: "peak",
-      html: `<i style="border-bottom-color:${OH_COLOR[p.shape]}"></i><span>${place(p.name)}</span>`, iconSize: null }) })
-      .bindTooltip(`${place(p.name)} · ${Math.round(p.elev_m)}m · ${(p.distance_m / 1000).toFixed(1)}km`).addTo(m);
+      html: `<i style="border-bottom-color:${OH_COLOR[p.shape]}"></i><span>${p.name ? nm : Math.round(p.elev_m) + "m"}</span>`, iconSize: null }) })
+      .bindTooltip(`${nm} · ${Math.round(p.elev_m)}m · ${(p.distance_m / 1000).toFixed(1)}km`).addTo(m);
+  });
+
+  // 사신사 on the map (Cowork note 3): placed by the way the house faces, not by the compass.
+  // 주작 in front, 현무 behind, 청룡 on the left and 백호 on the right as you look out the front door.
+  const GBEAR = { jujak: 0, baekho: 90, hyeonmu: 180, cheongryong: 270 };
+  GUARD.forEach(([k, name]) => {
+    L.marker(dest(lat, lng, (facing + GBEAR[k]) % 360, RAD * 0.62), { icon: L.divIcon({ className: "guard-mark",
+      html: `<img src="${ICON(k)}" alt=""><span>${name}</span>`, iconSize: [44, 52], iconAnchor: [22, 26] }) })
+      .bindTooltip(`${name} · ${T(GUARD.find((g) => g[0] === k)[2])} · ${verdict(r, k)}`).addTo(m);
   });
 
   // the house: 터주 with an arrow for the way it faces
-  const tip = dest(lat, lng, facing, 520);
+  const tip = dest(lat, lng, facing, 1150);
   L.polyline([[lat, lng], tip], { color: "#b8684e", weight: 4, opacity: .95, interactive: false }).addTo(m);
   L.marker(tip, { interactive: false, icon: L.divIcon({ className: "face-arrow",
-    html: `<span style="transform:rotate(${facing}deg)">▲</span>`, iconSize: [18, 18], iconAnchor: [9, 9] }) }).addTo(m);
+    html: `<span style="transform:rotate(${facing}deg)">▲</span>`, iconSize: [22, 22], iconAnchor: [11, 11] }) }).addTo(m);
   L.marker([lat, lng], { icon: L.divIcon({ className: "home-pin", html: CH.toad(40), iconSize: [34, 46], iconAnchor: [17, 44] }) })
     .bindTooltip(T({ ko: "이 집 · 화살표가 현관 방향", en: "This home · the arrow shows the door's direction" })).addTo(m);
 
@@ -1551,8 +1568,10 @@ async function startCompass(id) {
    star, reorder and hide cards; that layout is kept on the phone and used for every home. */
 const CARD_IMG = (n) => `img/cards/${n}.webp`;
 const CARD_WEIGHT = { hyeonmu: .20, deuksu: .20, jujak: .15, enclosure: .15, jangpung: .15, jwahyang: .10, stability: .05 };
-const US_IMG = { park: "park", golf: "park", water: "flood-check", busy_road: "busy-road", freeway: "busy-road", power: "power-lines" };
-const SAL_IMG = { overpass: "busy-road", nochung: "busy-road", power: "power-lines", halgak: "river", bangung: "river", eumseup: "flood-check" };
+const US_IMG = { park: "park", golf: "park", water: "flood-check", busy_road: "busy-road", freeway: "busy-road", power: "power-lines", corner: "corner", cul_de_sac: "dead-end" };
+const SAL_IMG = { overpass: "busy-road", nochung: "busy-road", power: "power-lines", halgak: "river", bangung: "river", eumseup: "flood-check", dead_end: "dead-end", gak: "corner" };
+// pictures that show the advice itself (Cowork note 6); other fixes keep their type icon
+const FIX_IMG = { open_sides: "sofa-pair", weak_cr: "side-tall", weak_bh: "side-tall", bangung: "sill-plants", overpass: "sill-plants", oh_wood: "plants-wood" };
 const CARD_TAG = { fix: { ko: "해 볼 것", en: "Try this" }, good: { ko: "좋아요", en: "Nice" }, weak: { ko: "아쉬워요", en: "Could be better" }, know: { ko: "알아 두세요", en: "Good to know" } };
 const CARD_TOPIC = { back: { ko: "뒤", en: "Behind" }, front: { ko: "앞", en: "Front" }, sides: { ko: "양옆", en: "Sides" },
   wind: { ko: "바람", en: "Wind" }, water: { ko: "물", en: "Water" }, sun: { ko: "해", en: "Sun" }, land: { ko: "땅", en: "Ground" },
@@ -1590,7 +1609,7 @@ function insightCards(r, w) {
     else add({ id: "front", comp: "jujak", kind: B.score >= 60 ? "good" : "know", img: "front-open", title: T({ ko: "앞이 탁 트였어요", en: "Wide open in front" }),
       lines: [T({ ko: "앞을 막는 것 없이 시원해요.", en: "Nothing crowds your view." }), T({ ko: "마주 볼 낮은 산은 없어요.", en: "There's no little hill across the way to hold the energy." })] }); }
   { const C = c.enclosure, f = C.facts;
-    if (C.score >= 80) add({ id: "sides", comp: "enclosure", kind: "good", img: "back-strong", title: T({ ko: "양옆이 감싸 줘요", en: "Hugged on both sides" }),
+    if (C.score >= 80) add({ id: "sides", comp: "enclosure", kind: "good", img: "sides-hug", title: T({ ko: "양옆이 감싸 줘요", en: "Hugged on both sides" }),
       lines: [T({ ko: `왼쪽 ${f.cheongryong_deg}°, 오른쪽 ${f.baekho_deg}°로 감싸요.`, en: `Rising land on the left (${f.cheongryong_deg}°) and right (${f.baekho_deg}°) wraps around you.` })] });
     else if (f.weak_side) add({ id: "sides", comp: "enclosure", kind: "weak", img: "sides-open",
       title: f.weak_side === "cheongryong" ? T({ ko: "왼쪽이 낮아요", en: "The left side is a bit open" }) : T({ ko: "오른쪽이 낮아요", en: "The right side is a bit open" }),
@@ -1599,7 +1618,7 @@ function insightCards(r, w) {
       lines: [T({ ko: "양옆을 감싸 주는 산줄기가 없어요.", en: "No ridges wrap around you on the sides." })] }); }
   { const D = c.jangpung, f = D.facts, IX = { N: 0, NE: 1, E: 2, SE: 3, S: 4, SW: 5, W: 6, NW: 7 };
     const dir = DIR8[en ? "en" : "ko"][IX[f.wind_from] != null ? IX[f.wind_from] : 7];
-    if (f.wind_open) add({ id: "wind", comp: "jangpung", kind: "weak", img: "front-open", title: T({ ko: "겨울바람이 들어요", en: "Winter wind can reach you" }),
+    if (f.wind_open) add({ id: "wind", comp: "jangpung", kind: "weak", img: "wind-open", title: T({ ko: "겨울바람이 들어요", en: "Winter wind can reach you" }),
       lines: [T({ ko: `찬 바람이 부는 ${dir}쪽이 열려 있어요.`, en: `The side the cold wind comes from (${dir}) is open.` })] });
     else add({ id: "wind", comp: "jangpung", kind: D.score >= 60 ? "good" : "know", img: "wind", title: T({ ko: "겨울바람이 막혀요", en: "Tucked away from the winter wind" }),
       lines: [T({ ko: `찬 바람이 부는 ${dir}쪽이 막혀 있어요.`, en: `Land shields the side the cold wind comes from (${dir}).` })] }); }
@@ -1641,7 +1660,10 @@ function insightCards(r, w) {
     out.push({ id: "us_sun", topic: "us", kind: sn.kind, img: "sun", title: T({ ko: "해와 향", en: "Sun and facing" }), lines: parts.slice(0, 3), impact: 0 }); }
   const ul = r.us_living ? (en && r.us_living.en) || r.us_living.ko : null;
   if (ul) ul.items.forEach((x) => {
-    const parts = sentences(x.text);
+    let parts = sentences(x.text);
+    // the flood card talks only about flood risk (Cowork note 7); older readings led with "water nearby"
+    if (x.id === "water") parts = [T({ ko: "홍수 지도를 확인해 보세요", en: "Check the flood map" }),
+      ...parts.filter((p) => !/^(가까이에 물이 있어요|Water nearby|홍수 지도를 확인해 보세요|Check the flood map)/.test(p))];
     out.push({ id: "us_" + x.id, topic: "us", kind: x.kind === "mixed" ? "know" : x.kind, img: US_IMG[x.id] || null,
       title: parts[0].replace(/[.。]$/, ""), lines: parts.slice(1, 3), impact: 0 });
   });
@@ -1650,7 +1672,7 @@ function insightCards(r, w) {
 
 // 집 안에서 해 볼 것: each fix once, as its own small card with its picture
 function fixCards(r) {
-  return TIPS.siteTips(r).map((t) => ({ id: "fix_" + t.id.replace(/^oh_.*/, "oh"), topic: "fix", kind: "fix", icon: TIP_ICON[t.key] || "furniture",
+  return TIPS.siteTips(r).map((t) => ({ id: "fix_" + t.id.replace(/^oh_.*/, "oh"), topic: "fix", kind: "fix", icon: FIX_IMG[t.id] || TIP_ICON[t.key] || "furniture",
     title: t.title, lines: [t.body], impact: -1 }));
 }
 // 다섯 기운: the owner's favourite, so one big main card
@@ -1689,13 +1711,20 @@ const SIDE_DEG = { hyeonmu: (c) => c.hyeonmu.facts.back_horizon_deg, jujak: (c) 
   cheongryong: (c) => c.enclosure.facts.cheongryong_deg, baekho: (c) => c.enclosure.facts.baekho_deg };
 const SIDE_CARD = { hyeonmu: "back", jujak: "front", cheongryong: "sides", baekho: "sides" };
 function sideStrength(r, k) { const d = SIDE_DEG[k](r.score.components); return Math.max(0, Math.min(100, Math.round((d || 0) * 12.5))); }
+// the writer's 사신사 paragraph minus its water sentence: the stream has its own card in 물과 해 (Cowork note 1)
+function sidesText(r, w) {
+  const t = (w.pungsu && w.pungsu.sides) || ""; if (!t) return "";
+  const f = r.score.components.deuksu.facts, names = [f.bend_river, f.river_name, f.name].filter(Boolean).map(String);
+  const wet = /물길|물이 |물은 |물도 |개울|하천|호수|시내|\b(water|river|creek|stream|lake|brook|bay)\b/i;
+  return t.split(/(?<=[.。!?])\s+/).filter((x) => !wet.test(x) && !names.some((n) => x.includes(n) || x.includes(place(n)))).join(" ");
+}
 function sasinsaBars(r, w) {
   return `<div class="card kt"><div class="kg-head"><small>${T({ ko: "사신사: 집을 지키는 네 수호신. 막대가 높을수록 그쪽 땅이 높고 가까워요.", en: "The four guardians around a home. A taller bar means higher, closer land on that side." })}</small></div>
     <div class="sb">${GUARD.map(([k, name, side]) => { const v = sideStrength(r, k);
       return `<button type="button" class="sb-col" data-side="${k}" aria-label="${name} ${T(side)} ${v}">
         <span class="sb-well"><img src="${ICON(k)}" alt="" loading="lazy"><span class="sb-bar${v < 25 ? " low" : ""}" style="height:${Math.max(6, Math.round(v))}px"></span></span>
         <span class="sb-num">${v}</span><b>${name}</b><small>${T(side)}<br>${verdict(r, k)}</small></button>`; }).join("")}</div>
-    ${w.pungsu && w.pungsu.sides ? `<p class="kc-lines" style="margin:10px 2px 0;-webkit-line-clamp:unset">${w.pungsu.sides}</p>` : ""}
+    ${sidesText(r, w) ? `<p class="kc-lines" style="margin:10px 2px 0;-webkit-line-clamp:unset">${sidesText(r, w)}</p>` : ""}
     <p class="sb-note">${T({ ko: "막대를 누르면 그쪽을 자세히 봐요.", en: "Tap a bar for that side." })}</p></div>`;
 }
 function giunSheet(r, w, key) {
@@ -1932,10 +1961,11 @@ function renderReport(id) {
   const mapHtml = `<div class="card map" id="sec-land"><div class="kg-head"><small>${T({ ko: "집 주변 지도 · 북쪽이 위", en: "Map around your home · north is up" })}</small></div>
       <div id="sasinsa-map" class="leaf" role="img" aria-label="${T({ ko: "집 주변 지도: 사방의 산과 물길", en: "Map around the home: hills and water on all four sides" })}"></div>
       <div class="legend">
-        <span><span class="dot" style="background:var(--accent)"></span>${T({ ko: "집과 현관 방향", en: "Home and door direction" })}</span>
+        <span><span class="lg-arrow">➔</span>${T({ ko: "집과 현관 방향", en: "Home and door direction" })}</span>
         <span><span class="dot" style="background:var(--water)"></span>${T({ ko: "물길", en: "Water" })}</span>
         ${r.sal.some((x) => x.id === "overpass") ? `<span><span class="dot" style="background:#c0392b"></span>${T({ ko: "살펴볼 곳", en: "Spot worth a look" })}</span>` : ""}
-        <span>▲ ${T({ ko: "주변 산", en: "Nearby hills" })}</span></div>
+        ${r.peaks.length ? `<span><span class="lg-peak">▲</span>${T({ ko: "주변 산", en: "Nearby hills" })}</span>` : ""}
+        <span>${T({ ko: "현무·주작·청룡·백호: 현관 방향 기준", en: "The four guardians, set by the door's direction" })}</span></div>
     </div>`;
   const readingHtml = `<div id="sec-reading"></div>
     ${paid ? paidBlock : BETA_FREE ? `
