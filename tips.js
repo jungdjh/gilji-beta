@@ -7,6 +7,13 @@ window.PUNGSU_TIPS = (function () {
   const en = () => I && I.isEn();
   const tr = (ko, eng) => (en() ? eng : ko);
   const place = (n) => (I ? I.place(n) : n);
+  // subject particle after a name: Korean names take 이/가 by their last syllable; an English name
+  // ("Potomac River") gets a plain noun after it so the particle attaches to Korean ("Potomac River 물길이")
+  const subj = (name, noun) => {
+    const c = String(name).trim().slice(-1).charCodeAt(0);
+    if (c >= 0xac00 && c <= 0xd7a3) return name + ((c - 0xac00) % 28 ? "이" : "가");
+    return `${name} ${noun}`;
+  };
   const DIR = { ko: ["북", "북동", "동", "남동", "남", "남서", "서", "북서"],
                 en: ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"] };
   const dir = (b) => DIR[en() ? "en" : "ko"][Math.floor((((b % 360) + 360) % 360) / 45 + 0.5 - 1e-9) % 8];  // 337.5 → 북서
@@ -133,7 +140,7 @@ window.PUNGSU_TIPS = (function () {
     if (d.bend === "hwanpo") {
       const river = d.bend_river ? place(d.bend_river) : null;
       add("hwanpo", "창", tr("물길 쪽 창을 열어 두세요", "Keep the water-side windows clear"),
-        tr(`${river ? river + "이" : "가까운 물이"} 집 쪽으로 감싸 흘러요. 풍수에서는 이런 물을 반겨요. 물길 쪽 창은 가리지 말고 깨끗하게 두세요.`,
+        tr(`${river ? subj(river, "물길이") : "가까운 물이"} 집 쪽으로 감싸 흘러요. 풍수에서는 이런 물을 반겨요. 물길 쪽 창은 가리지 말고 깨끗하게 두세요.`,
            `${river || "The water nearby"} curves toward the home. Feng shui welcomes water like this. Don't cover the windows on the water side, and keep them clean.`));
     } else if (d.bend === "straight") {
       add("straight", "현관", tr("흐르는 기운을 붙잡아요", "Hold on to the flowing energy"),
@@ -143,11 +150,11 @@ window.PUNGSU_TIPS = (function () {
     r.sal.forEach((s) => {
       if (s.id === "bangung") {
         add("bangung", "창", tr("물이 등진 쪽을 채워요", "Fill in the water side"),
-          tr(`${s.evidence.river}이 집 바깥쪽으로 굽어 흘러요. 물 쪽 창가에 화분을 두고, 마당이 있다면 나무나 울타리로 물 쪽을 채워 주세요.`,
+          tr(`${subj(s.evidence.river, "물길이")} 집 바깥쪽으로 굽어 흘러요. 물 쪽 창가에 화분을 두고, 마당이 있다면 나무나 울타리로 물 쪽을 채워 주세요.`,
              `${place(s.evidence.river)} bends away from the home. Put plants by the windows on the water side, and if you have a yard, fill the water side with trees or a fence.`));
       } else if (s.id === "overpass") {
         add("overpass", "창", tr("고가 쪽을 부드럽게 가려요", "Soften the overpass side"),
-          tr(`${s.evidence.road}가 가까이 지나가요. 그쪽 창에는 두꺼운 커튼이나 블라인드를, 창가에는 키 큰 화분을 두어 시선과 소음을 가려 주세요.`,
+          tr(`${subj(s.evidence.road, "도로가")} 가까이 지나가요. 그쪽 창에는 두꺼운 커튼이나 블라인드를, 창가에는 키 큰 화분을 두어 시선과 소음을 가려 주세요.`,
              `The ${place(s.evidence.road)} passes close by. Use thick curtains or blinds on that side's windows, and tall plants by the window, to screen the view and the noise.`));
       }
     });
