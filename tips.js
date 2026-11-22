@@ -26,6 +26,64 @@ window.PUNGSU_TIPS = (function () {
              how: ["남색이나 짙은 색 포인트, 유리 화병과 물결무늬", "navy or dark accents, glass vases and wave patterns"] },
   };
   const oh = (m, k) => OH[m][k][en() ? 1 : 0];
+  // Opened fix card (owner Nov 21: "explain why this helps and how it helps"): the 풍수 reason in plain words,
+  // then 2–3 concrete steps. Advice only, never a promise about money, health or luck.
+  const DETAIL = {
+    weak_cr: { why: ["풍수에서는 집 양옆의 땅이 두 팔처럼 집을 감싸 줄 때 기운이 흩어지지 않고 머문다고 봐요. 한쪽이 낮으면 그쪽으로 기운이 샌다고 해서, 집 안에서 그쪽을 높여 균형을 맞춰요.",
+                     "Feng shui sees the land on both sides as two arms that hold a home, so good energy stays instead of drifting off. When one side is low, energy is said to leak out that way, so you raise that side indoors to even things out."],
+                how: [["그쪽 벽이나 창가에 키 큰 화분, 높은 책장이나 수납장을 두세요.", "소파 등받이보다 높으면 좋아요.", "가볍고 흔들리는 것보다 묵직하고 단단한 것이 좋아요."],
+                      ["Put a tall plant, a high bookcase or a cabinet by that wall or window.", "Taller than the back of the sofa is best.", "Solid, heavy pieces work better than light, wobbly ones."]] },
+    open_sides: { why: ["풍수에서는 양옆의 땅이 집을 감싸 줘야 기운이 모인다고 봐요. 양쪽이 모두 트였다면, 집 안에서 짝을 맞춘 가구로 '감싸 안는' 모양을 만들어 줘요.",
+                        "Feng shui says energy gathers when the land on both sides wraps around a home. When both sides are open, a matching pair of pieces indoors recreates that hug."],
+                  how: [["거실 소파 양옆에 높이가 비슷한 화분이나 수납장을 한 쌍씩 두세요.", "침대 양옆에도 같은 협탁 두 개를 두면 좋아요.", "양쪽 높이와 크기를 비슷하게 맞추는 것이 핵심이에요."],
+                        ["Put a matching pair of plants or cabinets, about the same height, on each side of the sofa.", "Two matching nightstands on both sides of the bed help too.", "The key is that both sides are about the same height and size."]] },
+    back: { why: ["풍수에서는 집 뒤의 높은 땅(현무)이 의자 등받이처럼 집을 받쳐 준다고 봐요. 뒤가 약하면 집 안에서 '등 뒤'를 든든하게 만들어 마음 편히 쉬게 해요.",
+                  "Feng shui sees the high land behind a home (hyeonmu) as the back of a chair. When it's weak, you build that support indoors so you can rest easy."],
+            how: [["침대 머리와 소파 등은 창이 아닌 벽에 붙이세요.", "뒤가 창이라면 두꺼운 커튼을 달아 주세요.", "책상에 앉을 때도 등 뒤에 벽이 있는 자리가 좋아요."],
+                  ["Put the head of the bed and the back of the sofa against a wall, not a window.", "If a window is behind, hang thick curtains.", "At a desk, a spot with a wall behind you is best."]] },
+    front_high: { why: ["풍수에서는 앞의 산(손님)이 뒤의 산(주인)보다 높으면 손님이 주인을 누른다고 봐요. 집 안 앞쪽을 낮고 밝게, 뒤쪽을 든든하게 두어 순서를 바로잡아요.",
+                        "Feng shui calls the hill in front the guest and the hill behind the host. When the guest stands taller, it's said to press on the home, so you keep the front low and bright and the back solid."],
+                  how: [["현관과 거실 앞쪽에는 낮은 가구를 두세요.", "앞쪽에 밝은 조명을 더해 주세요.", "큰 장이나 책장은 집 안쪽 벽으로 옮겨 주세요."],
+                        ["Keep low furniture at the entry and the front of the living room.", "Add bright lights at the front.", "Move tall wardrobes and bookcases to the inner walls."]] },
+    wind: { why: ["풍수(風水)라는 이름처럼, 바람은 기운을 흩고 물은 기운을 모은다고 봐요. 찬바람이 드는 쪽을 막아 주면 집 안의 따뜻한 기운이 머물러요.",
+                  "As the name feng shui (wind and water) says, wind scatters energy and water gathers it. Blocking the side where cold wind comes in helps the home's warmth stay."],
+            how: [["바람이 드는 쪽 창에 두꺼운 커튼을 다세요.", "겨울에는 창틈과 문틈에 문풍지를 붙이세요.", "그쪽 창가에 키 큰 화분을 두면 바람막이가 돼요."],
+                  ["Hang thick curtains on the windows on the windy side.", "In winter, seal window and door gaps with weather stripping.", "A tall plant by that window works as a windbreak."]] },
+    hwanpo: { why: ["풍수에서는 집 쪽으로 감싸 흐르는 물을 가장 반겨요. 물이 기운을 모아 집에 머물게 한다고 봐서, 그쪽을 막지 않고 열어 둬요.",
+                    "Feng shui welcomes water that curves toward a home most of all. Water is said to gather energy and hold it near the home, so you keep that side open."],
+              how: [["물길 쪽 창은 큰 가구로 가리지 마세요.", "그쪽 창은 깨끗하게 닦아 두세요.", "물 쪽을 바라보는 자리에 의자 하나를 두면 좋아요."],
+                    ["Don't block the water-side windows with big furniture.", "Keep those windows clean.", "A chair that looks out toward the water is a nice touch."]] },
+    straight: { why: ["풍수에서는 곧게 흘러 지나가는 물은 기운을 머물게 하지 못하고 데려간다고 봐요. 들어온 기운이 머물도록 현관 안쪽에 둥근 것을 두어 흐름을 부드럽게 돌려요.",
+                      "Feng shui says water that runs straight past carries energy away instead of letting it stay. Something round just inside the door softens the flow so energy settles."],
+                how: [["현관 안쪽에 둥근 러그나 둥근 화분을 두세요.", "현관에서 뒷문이나 큰 창이 일직선으로 보이면 그 사이에 화분이나 가리개를 두세요.", "현관은 밝고 깔끔하게 정리해 두세요."],
+                      ["Put a round rug or a round pot just inside the door.", "If you can see straight from the front door to a back door or big window, put a plant or screen in between.", "Keep the entry bright and tidy."]] },
+    bangung: { why: ["풍수에서는 집 바깥쪽으로 굽어 흐르는 물을 '등 돌린 물'이라고 해서, 기운이 집에서 멀어진다고 봐요. 물 쪽을 초록으로 채워 기운을 붙잡아요.",
+                     "Feng shui calls water that bends away from a home 'water with its back turned', and says it draws energy away. Filling the water side with green helps hold it."],
+               how: [["물 쪽 창가에 화분을 줄지어 두세요.", "마당이 있다면 물 쪽에 나무를 심거나 울타리를 두세요.", "그쪽 창에는 밝은 색 커튼이 좋아요."],
+                     ["Line up plants on the windowsills on the water side.", "If you have a yard, plant trees or put up a fence on the water side.", "Light-colored curtains suit those windows."]] },
+    overpass: { why: ["풍수에서는 크고 빠른 길이나 고가가 날카로운 기운을 보낸다고 봐요. 그쪽을 부드럽게 가려 주면 시선과 소음도 줄고 집 안이 차분해져요.",
+                      "Feng shui says big, fast roads and overpasses send sharp energy at a home. Softly screening that side also cuts the view and the noise, so the home feels calmer."],
+                how: [["그쪽 창에 두꺼운 커튼이나 블라인드를 다세요.", "창가에 키 큰 화분을 두세요.", "침실은 되도록 반대쪽 방을 쓰세요."],
+                      ["Use thick curtains or blinds on that side's windows.", "Put tall plants by those windows.", "If you can, use a bedroom on the other side."]] },
+    light: { why: ["풍수에서는 햇빛을 집에 생기를 주는 양(陽)의 기운으로 봐요. 해가 덜 드는 집은 빛을 더하거나 들여서 그 기운을 채워요.",
+                   "Feng shui sees sunlight as yang energy that brings a home to life. Where the sun is short, you let more in or add light to make up for it."],
+             how: [["해가 덜 드는 방에 따뜻한 색 조명(2700K쯤)을 더하세요.", "낮에는 남쪽 창의 커튼을 활짝 여세요.", "창가는 비워 두고 밝은 색 패브릭을 써 보세요."],
+                   ["Add warm-colored lights (around 2700K) in rooms that get less sun.", "Open the south-facing curtains wide during the day.", "Keep windowsills clear and try light-colored fabrics."]] },
+  };
+  const OH_DETAIL = {
+    why: (m) => tr(`풍수에서는 주변 봉우리 모양으로 다섯 기운(목·화·토·금·수)을 읽고, 다섯이 고루 있을 때 조화롭다고 봐요. 이 집 주변에는 ${oh(m, "name")}의 기운이 보이지 않아서, 집 안에서 그 기운을 닮은 것으로 채워요.`,
+                   `Feng shui reads five energies (wood, fire, earth, metal, water) from the shapes of nearby peaks, and sees a home as balanced when all five are present. ${oh(m, "name")} is missing around this home, so you bring it in with things that share its character.`),
+    how: { wood: [["초록 식물을 거실과 현관에 두세요.", "원목 가구나 나무 소품을 더하세요.", "세로로 긴 화병이나 줄무늬가 목의 모양이에요."], ["Put green plants in the living room and entry.", "Add solid-wood furniture or wooden pieces.", "Tall vases and vertical stripes share wood's shape."]],
+           fire: [["따뜻한 색 조명을 더하세요.", "붉은 계열 쿠션이나 그림 한 점을 두세요.", "삼각형이나 뾰족한 모양이 화의 모양이에요."], ["Add warm-colored lights.", "Put out a red-toned cushion or a painting.", "Triangles and pointed shapes share fire's shape."]],
+           earth: [["베이지나 황토색 패브릭을 써 보세요.", "도자기와 흙으로 빚은 소품을 두세요.", "낮고 넓은 가구가 토의 모양이에요."], ["Try beige or ochre fabrics.", "Add pottery and clay pieces.", "Low, wide furniture shares earth's shape."]],
+           metal: [["흰 벽과 흰 패브릭으로 밝혀 주세요.", "둥근 금속 소품을 두세요.", "수납을 깔끔하게 정리하는 것도 금의 기운이에요."], ["Brighten with white walls and white fabrics.", "Add round metal pieces.", "Tidy, orderly storage is metal energy too."]],
+           water: [["남색이나 짙은 색으로 포인트를 주세요.", "유리 화병이나 물결무늬 소품을 두세요.", "작은 수반이나 어항도 좋아요."], ["Add navy or dark accents.", "Put out glass vases or wave-patterned pieces.", "A small tabletop fountain or fish tank works too."]] },
+  };
+  const detailOf = (id) => {
+    if (/^oh_/.test(id)) { const m = id.slice(3); return { why: OH_DETAIL.why(m), how: OH_DETAIL.how[m][en() ? 1 : 0] }; }
+    const d = DETAIL[id === "weak_bh" ? "weak_cr" : id]; if (!d) return {};
+    return { why: d.why[en() ? 1 : 0], how: d.how[en() ? 1 : 0] };
+  };
   const ORDER = ["wood", "fire", "earth", "metal", "water"];
 
   function siteTips(r) {
@@ -34,7 +92,9 @@ window.PUNGSU_TIPS = (function () {
     const facing = r.site.facing_deg;
     const left = dir(facing - 90), right = dir(facing + 90), back = dir(facing + 180);
     const out = [];
-    const add = (id, tg, title, body) => out.push({ id, tag: tag(tg), key: tg, title, body });   // key: the Korean type, for its icon
+    // fact: this home's reason only (the first sentence), so the opened card doesn't repeat its own steps
+    const add = (id, tg, title, body, fact) => out.push({ id, tag: tag(tg), key: tg, title, body, ...detailOf(id),
+      fact: fact || String(body).split(/(?<=[.!?])\s+/)[0] });   // key: the Korean type, for its icon
     const enc = f("enclosure");
     if (enc.weak_side === "cheongryong") {
       add("weak_cr", "가구", tr(`${left}쪽을 높여 주세요`, `Raise the ${left} side`),
@@ -107,7 +167,8 @@ window.PUNGSU_TIPS = (function () {
       const m = missing[0];
       add("oh_" + m, "색", oh(m, "plain"),
         tr(`풍수에서는 주변 봉우리의 모양으로 다섯 기운(오행)을 읽어요. 이 집 주변에는 ${oh(m, "name")} 모양의 봉우리가 보이지 않아서, ${oh(m, "how")} 같은 것으로 채워 보라고 해요.`,
-           `Feng shui reads five energies (the five elements) from the shapes of nearby peaks. There are no ${oh(m, "name")}-shaped peaks around this home, so it suggests filling in with things like ${oh(m, "how")}.`));
+           `Feng shui reads five energies (the five elements) from the shapes of nearby peaks. There are no ${oh(m, "name")}-shaped peaks around this home, so it suggests filling in with things like ${oh(m, "how")}.`),
+        tr(`이 집 주변에는 ${oh(m, "name")} 모양의 봉우리가 보이지 않아요.`, `There are no ${oh(m, "name")}-shaped peaks around this home.`));
     }
     return out;
   }

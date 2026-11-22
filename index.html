@@ -204,6 +204,30 @@ html[lang="en"] .brand b.ko-name { display: none; }
 .ks .kc-side .kc-num b { font-size: 22px; }
 .ks .kc-side .kc-lines { font-size: 13px; -webkit-line-clamp: 2; }
 .ks .kc-side .kc-num + .kc-lines { -webkit-line-clamp: 1; }
+.ks .kc-side.r { flex-direction: row-reverse; }
+/* soft tint by tag (owner Nov 21: option A) */
+.ks .kc.kk-good { background: #f1f9f3; } .ks .kc.kk-weak { background: #fdf3f1; } .ks .kc.kk-know { background: #fdf8ee; }
+.ks .kc.kk-good .kc-ico, .ks .kc.kk-weak .kc-ico, .ks .kc.kk-know .kc-ico { background: transparent; }
+/* small fix tiles, two per row */
+.ks .kc-tile { height: 128px; align-items: center; justify-content: center; text-align: center; padding: 10px 10px 12px; gap: 4px; background: #f3f8f6; }
+.ks .kc-tile .kc-ico { height: auto; background: transparent; }
+.ks .kc-tile .kc-ico img { width: 62px; height: 62px; }
+.ks .kc-tile .kc-body { padding: 0; align-items: center; }
+.ks .kc-tile .kc-title { font-size: 14px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.ks .kc-tile .kc-lines { display: none; }
+.kc.wk { flex-direction: row; align-items: center; gap: 12px; padding: 14px 16px; margin-top: 12px;
+  background: linear-gradient(135deg, #fff6e9 0%, #fdeef0 55%, #eef6f1 100%); }
+.wk-emoji { font-size: 40px; line-height: 1; flex: none; width: 56px; height: 56px; display: grid; place-items: center; background: rgba(255,255,255,.7); border-radius: 18px; }
+.wk-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.wk-when { font-size: 12px; font-weight: 700; color: #b8684e; }
+.wk .kc-title { font-size: 16px; }
+.wk-home { font-size: 13px; color: var(--ink-3); line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.wk-big { font-size: 64px; text-align: center; margin: 4px 0 6px; }
+#saved-tip .kc.wk { margin: 0 0 12px; }
+.kd-part { margin: 14px 0 0; padding: 12px 14px; background: #f6f8f7; border-radius: 14px; }
+.kd-part > b { display: block; font-size: 13px; color: #2f7f6f; margin-bottom: 4px; }
+.kd-part p { margin: 0; }
+.kd-part ol { margin: 2px 0 0; padding-left: 20px; } .kd-part li { margin: 3px 0; line-height: 1.5; }
 @keyframes kcbob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 /* 다섯 기운: the main card */
 .kg-head { display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
@@ -683,19 +707,20 @@ body.noscroll { overflow: hidden; }
   <div class="sheet" id="sheet"></div>
 </div>
 
-<script src="i18n.js?v=20261122062130"></script>
-<script src="data.js?v=20261122062130"></script>
-<script src="writer.js?v=20261122062130"></script>
-<script src="tips.js?v=20261122062130"></script>
-<script src="characters.js?v=20261122062130"></script>
-<script src="config.js?v=20261122062130"></script>
-<script src="live.js?v=20261122062130"></script>
+<script src="i18n.js?v=20261122072917"></script>
+<script src="data.js?v=20261122072917"></script>
+<script src="writer.js?v=20261122072917"></script>
+<script src="tips.js?v=20261122072917"></script>
+<script src="seasons.js?v=20261122072917"></script>
+<script src="characters.js?v=20261122072917"></script>
+<script src="config.js?v=20261122072917"></script>
+<script src="live.js?v=20261122072917"></script>
 <script>
 /* Auto-update: phones and browsers keep an old copy of this page for a while after a publish.
    deploy/publish-page.sh stamps PAGE_VERSION here and writes version.json. On opening, a newer
    version reloads the page at once (nothing has been touched yet). Coming back to the app later,
    it offers a button instead of reloading under the person. Each version is tried once. */
-const PAGE_VERSION = "20261122062130";
+const PAGE_VERSION = "20261122072917";
 (function () {
   if (PAGE_VERSION === "dev") return;
   let last = 0;
@@ -988,7 +1013,8 @@ function renderSavedTip() {
   const id = store.get("saved", null);
   if (!id || !R[id] || LANDMARK.has(id)) { $("saved-tip").innerHTML = ""; return; }
   $("saved-tip").innerHTML = `<div class="section-label">${esc(shortName(id))}</div>` +
-    tipCard(id, { nextId: "home-tip-next" });
+    weekCard(R[id], { btnId: "week-card-mine" }) + tipCard(id, { nextId: "home-tip-next" });
+  const wkm = $("week-card-mine"); if (wkm) wkm.addEventListener("click", () => weekSheet(R[id]));
   $("home-tip-next").addEventListener("click", () => { dayOffset++; renderSavedTip(); });
 }
 
@@ -1261,7 +1287,8 @@ function drawMap(id) {
   L.tileLayer(ESRI + "Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}", {
     maxZoom: 16, attribution: "Esri, USGS, NASA, HERE, Garmin, © OpenStreetMap contributors",
   }).addTo(m);
-  L.tileLayer(ESRI + "Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16, opacity: .32, className: "tile-soft" }).addTo(m);
+  // a very faint color layer (owner Nov 21): soft greens for parks and forests, pale blue water, light beige towns
+  L.tileLayer(ESRI + "World_Topo_Map/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16, opacity: .4, className: "tile-soft" }).addTo(m);
   L.tileLayer(ESRI + "Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16, opacity: .7 }).addTo(m);
 
   // the area the engine read, as one faint ring; the four sides are listed under the map
@@ -1717,7 +1744,7 @@ function insightCards(r, w) {
 // 집 안에서 해 볼 것: each fix once, as its own small card with its picture
 function fixCards(r) {
   return TIPS.siteTips(r).map((t) => ({ id: "fix_" + t.id.replace(/^oh_.*/, "oh"), topic: "fix", kind: "fix", icon: FIX_IMG[t.id] || TIP_ICON[t.key] || "furniture",
-    title: t.title, lines: [t.body], impact: -1 }));
+    title: t.title, lines: [t.body], fact: t.fact, why: t.why, how: t.how, impact: -1 }));
 }
 // 다섯 기운: the owner's favourite, so one big main card
 function giunCard(r, w) {
@@ -1800,7 +1827,7 @@ function cardName(c) { return c.block ? T(CARD_BLOCK_NAME[c.id]) : `${T(CARD_TOP
 
 function cardHtml(c, size, i, starred) {
   const big = c.big ? `<div class="kc-num"><b>${c.big}</b><span>${c.bigLabel || ""}</span></div>` : "";
-  return `<button type="button" class="kc kc-${size}" data-card="${c.id}" style="animation-delay:${Math.min(i * 0.07, 0.9).toFixed(2)}s">
+  return `<button type="button" class="kc kc-${size} kk-${c.kind}" data-card="${c.id}" style="animation-delay:${Math.min(i * 0.07, 0.9).toFixed(2)}s">
     ${c.img ? `<span class="kc-pic"><img src="${CARD_IMG(c.img)}" alt="" loading="lazy"></span>` : c.icon ? `<span class="kc-ico"><img src="${ICON(c.icon)}" alt="" loading="lazy"></span>` : ""}
     <span class="kc-body">${c.kind === "fix" ? (starred ? `<span class="kc-tag fix">★</span>` : "") : `<span class="kc-tag ${c.kind}">${starred ? "★ " : ""}${T(CARD_TAG[c.kind])} · ${T(CARD_TOPIC[c.topic])}${c.watch ? " · " + T(CARD_TOPIC.sal) : ""}</span>`}
       <span class="kc-title">${c.title}</span>${big}
@@ -1810,14 +1837,15 @@ function feedHtml(list) {
   const pat = ["big", "side", "half", "half", "big", "side r", "half", "half"], starred = cardPrefs().starred;
   let p = 0, i = 0, html = "", pend = [];
   const flush = () => {
-    if (pend.length === 2) html += `<div class="kc-pair">${pend.join("")}</div>`;
-    else if (pend.length === 1) html += pend[0].replace("kc kc-half", "kc kc-side");
+    if (pend.length) html += `<div class="kc-pair">${pend.join("")}${pend.length === 1 ? "<span></span>" : ""}</div>`;
     pend = [];
   };
   list.forEach((c) => {
     if (c.block) { flush(); html += `<div class="kc-block" data-block="${c.id}" style="animation-delay:${Math.min(i++ * 0.07, 0.9).toFixed(2)}s">${c.html}</div>`; return; }
-    // owner Nov 21: every regular card the same size, picture left and text right (no big/half mix)
-    flush(); html += cardHtml(c, "side", i++, starred.includes(c.id));
+    // owner Nov 21: every regular card the same size; the picture swaps sides card to card and the card is tinted by its tag.
+    // Fixes are small two-column tiles (icon + title) so they all fit on one screen; tap for why and how.
+    if (c.kind === "fix") { pend.push(cardHtml(c, "tile", i++, starred.includes(c.id))); if (pend.length === 2) flush(); return; }
+    flush(); html += cardHtml(c, p++ % 2 ? "side r" : "side", i++, starred.includes(c.id));
   });
   flush();
   return html;
@@ -1835,6 +1863,27 @@ const SEC_OF = { giun: "glance", reading: "glance", map: "shape", bars: "shape",
 const secOf = (c) => SEC_OF[c.block ? c.id : c.topic] || "site";
 // the back / front / sides cards live behind the 사신사 bars, so each fact shows once
 const inFeed = (c) => !["back", "front", "sides"].includes(c.id);
+// 이번 주 박씨 (seasons.js): the season's moment + this home's part; changes every Monday
+function weekRange(mon) { const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  const f = (d) => isEn() ? d.toLocaleDateString("en-US", { month: "short", day: "numeric" }) : `${d.getMonth() + 1}월 ${d.getDate()}일`;
+  return `${f(mon)} – ${f(sun)}`; }
+function weekCard(r, opts = {}) {
+  if (!r || !window.PUNGSU_SEASONS) return "";
+  const w = PUNGSU_SEASONS.weekly(r, tipDate());
+  return `<button type="button" class="kc wk" id="${opts.btnId || "week-card"}">
+    <span class="wk-emoji" aria-hidden="true">${w.emoji}</span>
+    <span class="wk-body"><span class="wk-when">${T({ ko: "이번 주 박씨", en: "This week's tip" })} · ${weekRange(w.weekOf)}</span>
+      <span class="kc-title">${w.title}</span><span class="wk-home">${w.home}</span></span></button>`;
+}
+function weekSheet(r) {
+  const w = PUNGSU_SEASONS.weekly(r, tipDate());
+  sheet(`<div class="kd"><div class="wk-big" aria-hidden="true">${w.emoji}</div>
+    <span class="kc-tag fix">${T({ ko: "이번 주 박씨", en: "This week's tip" })} · ${weekRange(w.weekOf)}</span><h3>${w.title}</h3>
+    <div class="kd-part"><b>${T({ ko: "이 집에 맞게", en: "For this home" })}</b><p>${w.home}</p></div>
+    <div class="kd-part"><b>${T({ ko: "풍수에서 보는 이유", en: "Why it helps, in feng shui" })}</b><p>${w.why}</p></div>
+    <div class="kd-part"><b>${T({ ko: "이렇게 해 보세요", en: "How to do it" })}</b><ol>${w.steps.map((h) => `<li>${h}</li>`).join("")}</ol></div>
+    <p class="small">${T({ ko: "매주 월요일에 새 박씨가 와요. 풍수 전통에서 권하는 방법이에요. 결과를 약속하는 건 아니에요.", en: "A new tip arrives every Monday. This is what the feng shui tradition suggests, not a promise of any result." })}</p></div>`, () => weekSheet(r));
+}
 function sectionsHtml(all, topHtml) {
   const vis = arrangeCards(all).filter(inFeed);
   return SECTIONS.map((sec) => {
@@ -1842,7 +1891,7 @@ function sectionsHtml(all, topHtml) {
     if (!list.length && sec.id !== "glance") return "";
     return `<section class="ks" id="ks-${sec.id}"><div class="ks-head"><h2>${T(sec)}</h2>${sec.id === "glance"
         ? `<button type="button" id="cards-edit">${T({ ko: "카드 편집", en: "Edit cards" })}</button>` : ""}</div>
-      ${sec.id === "glance" ? topHtml : ""}${list.length ? `<div class="cards-feed">${feedHtml(list)}</div>` : ""}</section>`;
+      ${sec.id === "glance" ? topHtml + weekCard(R[current] || null) : ""}${list.length ? `<div class="cards-feed">${feedHtml(list)}</div>` : ""}</section>`;
   }).join("");
 }
 function cardsSection_unused(all) {
@@ -1872,7 +1921,12 @@ function cardSheet(id, c, r) {
   sheet(`<div class="kd${c.icon ? " kd-icon" : ""}">${c.img ? `<img class="kd-pic" src="${CARD_IMG(c.img)}" alt="">` : c.icon ? `<img class="kd-ico" src="${ICON(c.icon)}" alt="">` : ""}
       ${c.kind === "fix" ? "" : `<span class="kc-tag ${c.kind}">${T(CARD_TAG[c.kind])} · ${T(CARD_TOPIC[c.topic])}${c.watch ? " · " + T(CARD_TOPIC.sal) : ""}</span>`}
       <h3>${c.title}</h3>${big}
-      ${c.lines.map((l) => `<p>${l}</p>`).join("")}
+      ${c.kind === "fix" && c.why ? `
+        <div class="kd-part"><b>${T({ ko: "왜 이 집에 필요해요", en: "Why this home" })}</b><p>${c.fact || c.lines[0]}</p></div>
+        <div class="kd-part"><b>${T({ ko: "풍수에서 보는 이유", en: "Why it helps, in feng shui" })}</b><p>${c.why}</p></div>
+        ${c.how && c.how.length ? `<div class="kd-part"><b>${T({ ko: "이렇게 해 보세요", en: "How to do it" })}</b><ol>${c.how.map((h) => `<li>${h}</li>`).join("")}</ol></div>` : ""}
+        <p class="small">${T({ ko: "풍수 전통에서 권하는 방법이에요. 결과를 약속하는 건 아니에요.", en: "This is what the feng shui tradition suggests, not a promise of any result." })}</p>`
+      : c.lines.map((l) => `<p>${l}</p>`).join("")}
       ${c.comp ? `<div class="kd-score"><span>${T(COMP[c.comp][1])} <small>${T(COMP[c.comp][0])}</small></span><b>${sc}</b>
         <div class="track"><div class="fill${sc < 50 ? " low" : ""}" style="width:${sc}%"></div></div>
         ${c.comp !== "deuksu" ? `<p class="small">${factLine(c.comp, r.score.components[c.comp].facts)}</p>` : ""}</div>` : ""}
@@ -1928,6 +1982,7 @@ function cardEdit(id, all) {
   }));
 }
 function bindCards(id, all, r, w) {
+  const wk = $("week-card"); if (wk) wk.addEventListener("click", () => weekSheet(r));
   document.querySelectorAll(".cards-feed [data-giun]").forEach((b) => b.addEventListener("click", () => giunSheet(r, w, b.dataset.giun)));
   document.querySelectorAll(".cards-feed [data-side]").forEach((b) => b.addEventListener("click", () => {
     const c = all.find((x) => x.id === SIDE_CARD[b.dataset.side]); if (c) cardSheet(id, c, r);
