@@ -330,7 +330,9 @@ html[lang="en"] .brand b.ko-name { display: none; }
 .chat .a.wait { color: var(--ink-3); }
 .chat .a.err { color: var(--accent); }
 .chat .facts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.chat .facts span { font-size: 12px; color: var(--ink-2); background: var(--card); border: 1px solid var(--line); border-radius: 99px; padding: 2px 9px; }
+.chat .facts span { font-size: 12px; color: var(--ink-2); background: var(--card); border: 1px solid var(--line); border-radius: 99px; padding: 3px 10px; line-height: 1.5; }
+.chat .facts span b { font-weight: 700; color: var(--ink); margin-right: 2px; }
+.chat .a .facts { border-top: 1px solid var(--line); padding-top: 8px; }
 .chat .sugg { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .chat .sugg .btn { text-align: left; }
 .chat .chat-note { font-size: 12px; color: var(--ink-3); margin: 8px 2px 0; }
@@ -585,11 +587,11 @@ body.has-ask .fab::after { display: none; }
 .icon-btn.on { color: var(--accent); background: var(--accent-soft); }
 .icon-btn.beat { animation: beat .45s ease; }
 @keyframes beat { 30% { transform: scale(1.25); } 60% { transform: scale(.92); } }
-.facts { display: grid; grid-template-columns: repeat(4, 1fr); margin: 14px 0 4px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.facts div { text-align: center; }
-.facts div + div { border-left: 1px solid var(--line); }
-.facts b { display: block; font-size: 20px; font-weight: 800; letter-spacing: -.5px; line-height: 1.3; }
-.facts span { font-size: 11.5px; color: var(--ink-3); }
+.facts:not(.chat .facts) { display: grid; grid-template-columns: repeat(4, 1fr); margin: 14px 0 4px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.facts:not(.chat .facts) div { text-align: center; }
+.facts:not(.chat .facts) div + div { border-left: 1px solid var(--line); }
+.facts:not(.chat .facts) b { display: block; font-size: 20px; font-weight: 800; letter-spacing: -.5px; line-height: 1.3; }
+.facts:not(.chat .facts) span { font-size: 11.5px; color: var(--ink-3); }
 .jump { position: sticky; top: 64px; z-index: 4; display: flex; gap: 6px; margin: 14px -16px 0; padding: 8px 16px; background: rgba(245,246,248,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); overflow-x: auto; }
 .jump a { flex: 1; text-align: center; white-space: nowrap; text-decoration: none; color: var(--ink-2); font-weight: 700; font-size: 14px; background: var(--card); border-radius: 99px; padding: 8px 12px; box-shadow: var(--shadow); }
 .jump a:active { background: var(--accent-soft); color: var(--accent); }
@@ -731,20 +733,20 @@ body.noscroll { overflow: hidden; }
   <div class="sheet" id="sheet"></div>
 </div>
 
-<script src="i18n.js?v=20261122074828"></script>
-<script src="data.js?v=20261122074828"></script>
-<script src="writer.js?v=20261122074828"></script>
-<script src="tips.js?v=20261122074828"></script>
-<script src="seasons.js?v=20261122074828"></script>
-<script src="characters.js?v=20261122074828"></script>
-<script src="config.js?v=20261122074828"></script>
-<script src="live.js?v=20261122074828"></script>
+<script src="i18n.js?v=20261122075713"></script>
+<script src="data.js?v=20261122075713"></script>
+<script src="writer.js?v=20261122075713"></script>
+<script src="tips.js?v=20261122075713"></script>
+<script src="seasons.js?v=20261122075713"></script>
+<script src="characters.js?v=20261122075713"></script>
+<script src="config.js?v=20261122075713"></script>
+<script src="live.js?v=20261122075713"></script>
 <script>
 /* Auto-update: phones and browsers keep an old copy of this page for a while after a publish.
    deploy/publish-page.sh stamps PAGE_VERSION here and writes version.json. On opening, a newer
    version reloads the page at once (nothing has been touched yet). Coming back to the app later,
    it offers a button instead of reloading under the person. Each version is tried once. */
-const PAGE_VERSION = "20261122074828";
+const PAGE_VERSION = "20261122075713";
 (function () {
   if (PAGE_VERSION === "dev") return;
   let last = 0;
